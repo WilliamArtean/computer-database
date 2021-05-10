@@ -29,7 +29,7 @@ public class CLI {
 	 * 	show details [computer name]
 	 * 	delete computer [computer name]
 	 * 	create computer
-	 * 	update computer
+	 * 	update computer [computer name]
 	 */
 	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException {
 		String commandFirstWord;
