@@ -22,8 +22,15 @@ public class CompanyDAO {
 	}
 	
 	
-	public Company getByID(long id) {
-		return null;
+	public Company getByID(long id) throws SQLException {
+		String getByIdQuery = "SELECT * FROM company WHERE id=" + id + ";";
+		Statement st = this.co.createStatement();
+		ResultSet rs = st.executeQuery(getByIdQuery);
+		
+		if (!rs.isBeforeFirst()) return null;
+		
+		rs.next();
+		return new Company(rs.getString("name"));
 	}
 	
 	public Company getByName(String name) {
@@ -31,7 +38,7 @@ public class CompanyDAO {
 	}
 	
 	public ArrayList<Company> getAll() throws SQLException {
-		String getAllQuery = "SELECT * FROM company";
+		String getAllQuery = "SELECT * FROM company;";
 		Statement st = this.co.createStatement();
 		ResultSet results = st.executeQuery(getAllQuery);
 		

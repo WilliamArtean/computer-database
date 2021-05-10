@@ -23,6 +23,8 @@ public class Runner {
 			e.printStackTrace();
 		}
 		
+		
+		
 		CLI cli = CLI.getInstance();
 		try {
 			cli.getInput();
