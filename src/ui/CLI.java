@@ -37,8 +37,8 @@ public class CLI {
 	 * 	list computers, list companies
 	 * 	show details [computer name]
 	 * 	delete computer [computer name]
-	 * 	create computer [computer name]
-	 * 	
+	 * 	create computer
+	 * 	update computer
 	 */
 	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException {
 		String commandFirstWord;
@@ -69,6 +69,13 @@ public class CLI {
 		case ("create"):
 			if (this.input.equals("create computer")) {
 				processCommandCreate();
+			} else {
+				throw new IncorrectCommandException();
+			}
+			break;
+		case ("update"):
+			if (this.input.length() >= "update computer".length() && this.input.substring(0, "update computer".length()).equals("update computer")) {
+				processCommandUpdate();
 			} else {
 				throw new IncorrectCommandException();
 			}
@@ -133,6 +140,27 @@ public class CLI {
 		String companyName = this.br.readLine().trim();
 		
 		StringBuilder sb = new StringBuilder("Computer created!\n\tName: ").append(computerName);
+		if (!introDate.isEmpty()) sb.append("\n\tIntroduction date: ").append(introDate);
+		if (!discontDate.isEmpty()) sb.append("\n\tDiscontinuation date: ").append(discontDate);
+		if (!companyName.isEmpty()) sb.append("\n\tCompany: ").append(companyName);
+		
+		System.out.println(sb);
+	}
+	
+	private void processCommandUpdate() throws IncorrectArgumentException, IOException {
+		String argument = this.input.substring("update computer".length()).trim();
+		if (argument.isEmpty()) throw new IncorrectArgumentException();
+		
+		System.out.println("Date of introduction (leave blank to make no change)");
+		String introDate = this.br.readLine().trim();
+		
+		System.out.println("Date of discontinuation (leave blank to make no change)");
+		String discontDate = this.br.readLine().trim();
+		
+		System.out.println("Company name (leave blank to make no change)");
+		String companyName = this.br.readLine().trim();
+		
+		StringBuilder sb = new StringBuilder("Computer updated!\n\tName: ").append(argument);
 		if (!introDate.isEmpty()) sb.append("\n\tIntroduction date: ").append(introDate);
 		if (!discontDate.isEmpty()) sb.append("\n\tDiscontinuation date: ").append(discontDate);
 		if (!companyName.isEmpty()) sb.append("\n\tCompany: ").append(companyName);
