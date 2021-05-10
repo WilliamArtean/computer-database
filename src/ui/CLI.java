@@ -5,11 +5,17 @@ import java.io.*;
 
 public class CLI {
 
+	private static CLI instance = new CLI();
+	
 	private BufferedReader br;
 	private String input;
 	
 	public CLI() {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
+	}
+	
+	public static CLI getInstance() {
+		return instance;
 	}
 	
 	public void getInput() throws IOException {

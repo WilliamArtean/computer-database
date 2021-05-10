@@ -9,7 +9,7 @@ import exceptions.*;
 public class Runner {
 
 	public static void main(String[] args) {
-		CLI cli = new CLI();
+		CLI cli = CLI.getInstance();
 		try {
 			cli.getInput();
 			cli.processInput();
