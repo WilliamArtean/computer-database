@@ -35,10 +35,12 @@ public class CLI {
 	/*
 	 * Legal commands :
 	 * 	list computers, list companies
-	 * 	delete computer [computer name]
 	 * 	show details [computer name]
+	 * 	delete computer [computer name]
+	 * 	create computer [computer name]
+	 * 	
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException {
 		String commandFirstWord;
 		if (this.input.indexOf(' ') != -1) {
 			commandFirstWord = this.input.substring(0, this.input.indexOf(' ')).toLowerCase();
@@ -60,6 +62,13 @@ public class CLI {
 		case ("delete"):
 			if (this.input.length() >= "delete computer".length() && this.input.substring(0, 15).equals("delete computer")) {
 				processCommandDelete();
+			} else {
+				throw new IncorrectCommandException();
+			}
+			break;
+		case ("create"):
+			if (this.input.equals("create computer")) {
+				processCommandCreate();
 			} else {
 				throw new IncorrectCommandException();
 			}
@@ -107,6 +116,28 @@ public class CLI {
 		} else {
 			throw new IncorrectArgumentException();
 		}
+	}
+	
+	private void processCommandCreate() throws IncorrectArgumentException, IOException {
+		System.out.println("Computer name");
+		String computerName = this.br.readLine().trim();
+		if (computerName.isEmpty()) throw new IncorrectArgumentException();
+		
+		System.out.println("Date of introduction (press Enter to leave blank)");
+		String introDate = this.br.readLine().trim();
+		
+		System.out.println("Date of discontinuation (press Enter to leave blank)");
+		String discontDate = this.br.readLine().trim();
+		
+		System.out.println("Company name (press Enter to leave blank)");
+		String companyName = this.br.readLine().trim();
+		
+		StringBuilder sb = new StringBuilder("Computer created!\n\tName: ").append(computerName);
+		if (!introDate.isEmpty()) sb.append("\n\tIntroduction date: ").append(introDate);
+		if (!discontDate.isEmpty()) sb.append("\n\tDiscontinuation date: ").append(discontDate);
+		if (!companyName.isEmpty()) sb.append("\n\tCompany: ").append(companyName);
+		
+		System.out.println(sb);
 	}
 	
 }
