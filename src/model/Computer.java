@@ -9,6 +9,7 @@ public class Computer {
 	private LocalDate discontinuationDate;
 	private Company manufacturer;
 	
+	
 	public Computer(String name) {
 		this.name = name;
 	}

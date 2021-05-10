@@ -2,7 +2,9 @@ package ui;
 
 import exceptions.*;
 import model.Company;
+import model.Computer;
 import persistence.CompanyDAO;
+import persistence.ComputerDAO;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -91,15 +93,20 @@ public class CLI {
 		
 		switch(argument1) {
 		case ("computers"):
-			System.out.println("List\nof\ncomputers");
+			ArrayList<Computer> computers = ComputerDAO.getInstance().getAll();
+			StringBuilder computersList = new StringBuilder();
+			for (Computer comp : computers) {
+				computersList.append(comp.getName()).append('\n');
+			}
+			System.out.println(computersList);
 			break;
 		case ("companies"):
 			ArrayList<Company> companies = CompanyDAO.getInstance().getAll();
-			StringBuilder sb = new StringBuilder();
+			StringBuilder companiesList = new StringBuilder();
 			for (Company comp : companies) {
-				sb.append(comp.getName()).append('\n');
+				companiesList.append(comp.getName()).append('\n');
 			}
-			System.out.println(sb);
+			System.out.println(companiesList);
 			break;
 		default:
 			throw new IncorrectArgumentException();

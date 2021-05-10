@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import exceptions.*;
 import persistence.CompanyDAO;
+import persistence.ComputerDAO;
 
 public class Runner {
 
@@ -17,6 +18,7 @@ public class Runner {
 			String pswd = "qwerty1234";
 			Connection co = DriverManager.getConnection(url, user, pswd);
 			CompanyDAO.getInstance().setConnection(co);
+			ComputerDAO.getInstance().setConnection(co);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
