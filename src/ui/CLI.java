@@ -7,21 +7,6 @@ public class CLI {
 
 	private BufferedReader br;
 	private String input;
-
-	public static void main(String[] args) {
-		CLI interpreter = new CLI();
-		try {
-			interpreter.getInput();
-			interpreter.processInput();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (IncorrectCommandException e) {
-			e.printStackTrace();
-		} catch (IncorrectArgumentException e) {
-			e.printStackTrace();
-		}
-		
-	}
 	
 	public CLI() {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
