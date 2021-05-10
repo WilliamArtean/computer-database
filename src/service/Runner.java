@@ -6,15 +6,19 @@ import java.sql.*;
 import java.io.IOException;
 
 import exceptions.*;
+import persistence.CompanyDAO;
 
 public class Runner {
 
 	public static void main(String[] args) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection co = DriverManager.getConnection("localhost:3306/computer-database-db", "admincdb", "qwerty1234");
-		} catch (Exception e) {
-			
+			String url = "jdbc:mysql://localhost:3306/computer-database-db";
+			String user = "admincdb";
+			String pswd = "qwerty1234";
+			Connection co = DriverManager.getConnection(url, user, pswd);
+			CompanyDAO.getInstance().setConnection(co);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
 		CLI cli = CLI.getInstance();
@@ -26,6 +30,8 @@ public class Runner {
 		} catch (IncorrectCommandException e) {
 			e.printStackTrace();
 		} catch (IncorrectArgumentException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}

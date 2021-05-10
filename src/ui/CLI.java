@@ -1,7 +1,12 @@
 package ui;
 
 import exceptions.*;
+import model.Company;
+import persistence.CompanyDAO;
+
 import java.io.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CLI {
 
@@ -31,7 +36,7 @@ public class CLI {
 	 * 	create computer
 	 * 	update computer [computer name]
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException {
 		String commandFirstWord;
 		if (this.input.indexOf(' ') != -1) {
 			commandFirstWord = this.input.substring(0, this.input.indexOf(' ')).toLowerCase();
@@ -77,7 +82,7 @@ public class CLI {
 		
 	}
 	
-	private void processCommandList() throws IncorrectArgumentException {
+	private void processCommandList() throws IncorrectArgumentException, SQLException {
 		if (this.input.indexOf(' ') == -1) {
 			throw new IncorrectArgumentException();
 		}
@@ -89,7 +94,12 @@ public class CLI {
 			System.out.println("List\nof\ncomputers");
 			break;
 		case ("companies"):
-			System.out.println("List\nof\ncompanies");
+			ArrayList<Company> companies = CompanyDAO.getInstance().getAll();
+			StringBuilder sb = new StringBuilder();
+			for (Company comp : companies) {
+				sb.append(comp.getName()).append('\n');
+			}
+			System.out.println(sb);
 			break;
 		default:
 			throw new IncorrectArgumentException();
