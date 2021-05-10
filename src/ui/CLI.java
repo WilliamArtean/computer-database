@@ -45,12 +45,14 @@ public class CLI {
 		} else {
 			commandFirstWord = this.input;
 		}
-		 
 		
 		switch (commandFirstWord) {
 		case ("list"):
 			processCommandList();
 			break;
+		case ("show"):
+			processCommandShow();
+		break;
 		default:
 			throw new IncorrectCommandException();
 		}
@@ -74,7 +76,20 @@ public class CLI {
 		default:
 			throw new IncorrectArgumentException();
 		}
+	}
+	
+	private void processCommandShow() throws IncorrectArgumentException {
+		if (this.input.indexOf(' ') == -1) {
+			throw new IncorrectArgumentException();
+		}
 		
+		String arguments = this.input.substring(this.input.indexOf(' ')).trim().toLowerCase();
+		if (arguments.length() > 8 && arguments.substring(0, 8).equals("details ")) {
+			String computerName = arguments.substring(8);
+			System.out.println("Computer details\n\tName: " + computerName + "\n\tDetailsblablabla");
+		} else {
+			throw new IncorrectArgumentException();
+		}
 	}
 	
 }
