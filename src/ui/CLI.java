@@ -29,14 +29,14 @@ public class CLI {
 	
 	public void getInput() throws IOException {
 		System.out.println("Enter command: ");
-		this.input = this.br.readLine();
+		this.input = this.br.readLine().trim();
 	}
 	
 	/*
 	 * Legal commands :
 	 * 	list computers, list companies
 	 * 	delete computer [computer name]
-	 * 	show computer details [computer name]
+	 * 	show details [computer name]
 	 */
 	public void processInput() throws IncorrectCommandException, IncorrectArgumentException {
 		String commandFirstWord;
@@ -51,8 +51,19 @@ public class CLI {
 			processCommandList();
 			break;
 		case ("show"):
-			processCommandShow();
-		break;
+			if (this.input.length() >= "show details".length() && this.input.substring(0, 12).equals("show details")) {
+				processCommandShow();
+			} else {
+				throw new IncorrectCommandException();
+			}
+			break;
+		case ("delete"):
+			if (this.input.length() >= "delete computer".length() && this.input.substring(0, 15).equals("delete computer")) {
+				processCommandDelete();
+			} else {
+				throw new IncorrectCommandException();
+			}
+			break;
 		default:
 			throw new IncorrectCommandException();
 		}
@@ -64,7 +75,7 @@ public class CLI {
 			throw new IncorrectArgumentException();
 		}
 		
-		String argument1 = this.input.substring(this.input.indexOf(' ')).trim().toLowerCase();
+		String argument1 = this.input.substring(this.input.indexOf(' ') + 1).toLowerCase();
 		
 		switch(argument1) {
 		case ("computers"):
@@ -79,14 +90,20 @@ public class CLI {
 	}
 	
 	private void processCommandShow() throws IncorrectArgumentException {
-		if (this.input.indexOf(' ') == -1) {
+		String arguments = this.input.substring("show details".length()).trim();
+		
+		if (arguments.length() > 0) {
+			System.out.println("Computer details\n\tName: " + arguments + "\n\tDetailsblablabla");
+		} else {
 			throw new IncorrectArgumentException();
 		}
+	}
+	
+	private void processCommandDelete() throws IncorrectArgumentException {
+		String arguments = this.input.substring("delete computer".length()).trim();
 		
-		String arguments = this.input.substring(this.input.indexOf(' ')).trim().toLowerCase();
-		if (arguments.length() > 8 && arguments.substring(0, 8).equals("details ")) {
-			String computerName = arguments.substring(8);
-			System.out.println("Computer details\n\tName: " + computerName + "\n\tDetailsblablabla");
+		if (arguments.length() > 0) {
+			System.out.println("Computer " + arguments + " deleted");
 		} else {
 			throw new IncorrectArgumentException();
 		}
