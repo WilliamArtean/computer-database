@@ -145,17 +145,31 @@ public class CLI {
 	}
 	
 	private void processCommandDelete() throws IncorrectArgumentException, SQLException {
-		String computerName = this.input.substring("delete computer".length()).trim();
+		String computerName = null;
+		long computerID = 0;
 		
-		if (!computerName.isEmpty()) {
-			Computer computerToDelete = ComputerDAO.getInstance().getByName(computerName);
-			if (computerToDelete != null) {
-				ComputerDAO.getInstance().delete(computerName);
-			} else {
-				System.out.println("No computer with name \"" + computerName + "\".");
+		if (this.input.contains("id =") || this.input.contains("id=")) {
+			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
+			
+			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+			
+			if (ComputerDAO.getInstance().getByID(computerID) == null) {
+				System.out.println("No computer with id " + computerID);
+				return;
 			}
+			
+			ComputerDAO.getInstance().delete(computerID);
 		} else {
-			throw new IncorrectArgumentException();
+			computerName = this.input.substring("delete computer".length()).trim();
+			
+			if (computerName.isEmpty()) throw new IncorrectArgumentException();
+			
+			if (ComputerDAO.getInstance().getByName(computerName) == null) {
+				System.out.println("No computer with name '" + computerName + "'");
+				return;
+			}
+			
+			ComputerDAO.getInstance().delete(computerName);
 		}
 	}
 	
@@ -194,7 +208,7 @@ public class CLI {
 		long computerID = 0;
 		
 		if (this.input.contains("id =") || this.input.contains("id=")) {
-			if (this.input.substring(this.input.indexOf('=')).isBlank()) throw new IncorrectArgumentException();
+			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
 			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
 			
 			if (ComputerDAO.getInstance().getByID(computerID) == null) {
@@ -203,6 +217,7 @@ public class CLI {
 			}
 		} else {
 			computerName = this.input.substring("update computer".length()).trim();
+			
 			if (ComputerDAO.getInstance().getByName(computerName) == null) {
 				System.out.println("No computer with name '" + computerID + "'");
 				return;

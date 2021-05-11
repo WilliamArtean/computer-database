@@ -164,14 +164,19 @@ public class ComputerDAO {
 	}
 	
 	public void delete(long id) throws SQLException {
+		String deleteQuery = "DELETE FROM computer WHERE id = " + id + ";";
+		System.out.println(deleteQuery);
 		
+		Statement st = this.co.createStatement();
+		st.executeUpdate(deleteQuery);
+		st.close();
 	}
 	public void delete(String name) throws SQLException {
 		String deleteQuery = "DELETE FROM computer WHERE name = '" + name + "';";
 		System.out.println(deleteQuery);
 		
 		Statement st = this.co.createStatement();
-		//st.executeUpdate(deleteQuery);
+		st.executeUpdate(deleteQuery);
 		st.close();
 	}
 	
