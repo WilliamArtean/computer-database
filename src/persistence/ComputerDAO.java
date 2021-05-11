@@ -46,6 +46,7 @@ public class ComputerDAO {
 			computer.setCompany(CompanyDAO.getInstance().getByID(companyID));
 		}
 		
+		st.close();
 		return computer;
 	}
 	
@@ -60,13 +61,19 @@ public class ComputerDAO {
 			computers.add(new Computer(results.getString("name")));
 		}
 		
+		st.close();
 		return computers;
 	}
 	
-	public void create(Computer computer) {
+	public void create(Computer computer) throws SQLException {
+		Statement st = this.co.createStatement();
 		
+		
+		
+		st.close();
 	}
 	
+	//missing Computer argument
 	public void update(long id) {
 		
 	}

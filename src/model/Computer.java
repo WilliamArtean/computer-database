@@ -48,7 +48,7 @@ public class Computer {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder('[');
+		StringBuilder sb = new StringBuilder("[");
 		sb.append(this.name);
 		sb.append(", ").append(this.introductionDate);
 		sb.append(", ").append(this.discontinuationDate);

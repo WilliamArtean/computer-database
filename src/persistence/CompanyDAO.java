@@ -30,7 +30,9 @@ public class CompanyDAO {
 		if (!rs.isBeforeFirst()) return null;
 		
 		rs.next();
-		return new Company(rs.getString("name"));
+		Company compnay = new Company(rs.getString("name"));
+		st.close();
+		return compnay;
 	}
 	
 	public Company getByName(String name) throws SQLException {
@@ -41,7 +43,9 @@ public class CompanyDAO {
 		if (!rs.isBeforeFirst()) return null;
 		
 		rs.next();
-		return new Company(rs.getString("name"));
+		Company compnay = new Company(rs.getString("name"));
+		st.close();
+		return compnay;
 	}
 	
 	public ArrayList<Company> getAll() throws SQLException {
@@ -55,6 +59,7 @@ public class CompanyDAO {
 			companies.add(new Company(results.getString("name")));
 		}
 		
+		st.close();
 		return companies;
 	}
 	
