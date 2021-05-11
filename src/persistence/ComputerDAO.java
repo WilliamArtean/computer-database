@@ -24,8 +24,28 @@ public class ComputerDAO {
 	}
 	
 	
-	public Computer getByID(long id) {
-		return null;
+	public Computer getByID(long id) throws SQLException {
+		String getByNameQuery = "SELECT * FROM computer WHERE id = " + id + ";";	//Use PreparedStatement instead?
+		Statement st = this.co.createStatement();
+		ResultSet res = st.executeQuery(getByNameQuery);
+		
+		if (!res.isBeforeFirst()) return null;
+		
+		res.next();
+		Computer computer = new Computer(res.getString("name"));
+		if (res.getString("introduced") != null) {
+			computer.setIntroductionDate(res.getDate("introduced"));
+		}
+		if (res.getString("discontinued") != null) {
+			computer.setDiscontinuationDate(res.getDate("discontinued"));
+		}
+		if (res.getString("company_id") != null) {
+			long companyID = res.getLong("company_id");
+			computer.setCompany(CompanyDAO.getInstance().getByID(companyID));
+		}
+		
+		st.close();
+		return computer;
 	}
 	
 	public Computer getByName(String name) throws SQLException {
