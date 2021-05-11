@@ -118,11 +118,21 @@ public class CLI {
 	}
 	
 	private void processCommandShow() throws IncorrectArgumentException, SQLException {
-		String computerName = this.input.substring("show details".length()).trim();
+		String computerName = null;
+		long computerID = 0;
+		Computer computer = null;
 		
-		if (computerName.length() == 0) throw new IncorrectArgumentException();
-		
-		Computer computer = ComputerDAO.getInstance().getByName(computerName);
+		if (this.input.contains("id =") || this.input.contains("id=")) {
+			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
+			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+			
+			computer = ComputerDAO.getInstance().getByID(computerID);
+		} else {
+			computerName = this.input.substring("show details".length()).trim();
+			if (computerName.isEmpty()) throw new IncorrectArgumentException();
+			
+			computer = ComputerDAO.getInstance().getByName(computerName);
+		}
 		
 		if (computer != null) {
 			StringBuilder compDetails = new StringBuilder();
@@ -140,7 +150,11 @@ public class CLI {
 			
 			System.out.println(compDetails);
 		} else {
-			System.out.println("No computer with name \"" + computerName + "\" found.");
+			if (computerName == null) {
+				System.out.println("No computer with id " + computerID + " found.");
+			} else {
+				System.out.println("No computer with name '" + computerName + "' found.");
+			}
 		}
 	}
 	
