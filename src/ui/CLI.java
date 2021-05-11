@@ -179,7 +179,7 @@ public class CLI {
 		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
 		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
 		if (!companyName.isEmpty()) {
-			Company company = CompanyDAO.getInstance().getByID(Integer.parseInt(companyName));
+			Company company = CompanyDAO.getInstance().getByName(companyName);
 			if (company != null) computerToCreate.setCompany(company);
 		}
 		

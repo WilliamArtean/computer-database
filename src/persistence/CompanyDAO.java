@@ -33,8 +33,15 @@ public class CompanyDAO {
 		return new Company(rs.getString("name"));
 	}
 	
-	public Company getByName(String name) {
-		return null;
+	public Company getByName(String name) throws SQLException {
+		String getByIdQuery = "SELECT * FROM company WHERE name=\"" + name + "\";";
+		Statement st = this.co.createStatement();
+		ResultSet rs = st.executeQuery(getByIdQuery);
+		
+		if (!rs.isBeforeFirst()) return null;
+		
+		rs.next();
+		return new Company(rs.getString("name"));
 	}
 	
 	public ArrayList<Company> getAll() throws SQLException {
