@@ -45,5 +45,23 @@ public class Computer {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder('[');
+		sb.append(this.name);
+		sb.append(", ").append(this.introductionDate);
+		sb.append(", ").append(this.discontinuationDate);
+		sb.append(", ");
+		if (this.company != null) {
+			sb.append(company.getName());
+		} else {
+			sb.append("null");
+		}
+		sb.append(']');
+		return sb.toString();
+	}
+	
+	
 	
 }

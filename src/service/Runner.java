@@ -2,7 +2,7 @@ package service;
 
 import ui.CLI;
 import java.sql.*;
-
+import java.text.ParseException;
 import java.io.IOException;
 
 import exceptions.*;
@@ -33,6 +33,8 @@ public class Runner {
 		} catch (IncorrectCommandException e) {
 			e.printStackTrace();
 		} catch (IncorrectArgumentException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
 			e.printStackTrace();
 		} finally {
 			try {

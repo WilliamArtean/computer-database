@@ -8,7 +8,10 @@ import persistence.ComputerDAO;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CLI {
 
@@ -38,7 +41,7 @@ public class CLI {
 	 * 	create computer
 	 * 	update computer [computer name]
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException {
 		String commandFirstWord;
 		if (this.input.indexOf(' ') != -1) {
 			commandFirstWord = this.input.substring(0, this.input.indexOf(' ')).toLowerCase();
@@ -89,9 +92,9 @@ public class CLI {
 			throw new IncorrectArgumentException();
 		}
 		
-		String argument1 = this.input.substring(this.input.indexOf(' ') + 1).toLowerCase();
+		String argument = this.input.substring(this.input.indexOf(' ') + 1).toLowerCase();
 		
-		switch(argument1) {
+		switch(argument) {
 		case ("computers"):
 			ArrayList<Computer> computers = ComputerDAO.getInstance().getAll();
 			StringBuilder computersList = new StringBuilder();
@@ -150,26 +153,38 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandCreate() throws IncorrectArgumentException, IOException {
+	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) throw new IncorrectArgumentException();
 		
+		Date introDate = null;
 		System.out.println("Date of introduction (press Enter to leave blank)");
-		String introDate = this.br.readLine().trim();
+		String introDateString = this.br.readLine().trim();
+		if (!introDateString.isEmpty()) introDate = df.parse(introDateString);
 		
+		Date discontDate = null;
 		System.out.println("Date of discontinuation (press Enter to leave blank)");
-		String discontDate = this.br.readLine().trim();
+		String discontDateString = this.br.readLine().trim();
+		if (!discontDateString.isEmpty()) discontDate = df.parse(discontDateString);
 		
 		System.out.println("Company name (press Enter to leave blank)");
 		String companyName = this.br.readLine().trim();
 		
-		StringBuilder sb = new StringBuilder("Computer created!\n\tName: ").append(computerName);
-		if (!introDate.isEmpty()) sb.append("\n\tIntroduction date: ").append(introDate);
-		if (!discontDate.isEmpty()) sb.append("\n\tDiscontinuation date: ").append(discontDate);
-		if (!companyName.isEmpty()) sb.append("\n\tCompany: ").append(companyName);
+		Computer computerToCreate = new Computer(computerName);
+		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
+		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
+		if (!companyName.isEmpty()) {
+			Company company = CompanyDAO.getInstance().getByID(Integer.parseInt(companyName));
+			if (company != null) computerToCreate.setCompany(company);
+		}
 		
-		System.out.println(sb);
+		System.out.println(computerToCreate.toString());
+		
 	}
 	
 	private void processCommandUpdate() throws IncorrectArgumentException, IOException {
