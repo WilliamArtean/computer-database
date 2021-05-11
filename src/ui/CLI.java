@@ -14,19 +14,23 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class CLI {
-
-	private static CLI instance = new CLI();
 	
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private BufferedReader br;
 	private String input;
-	
+	private ComputerDAO computerDAO;
+	private CompanyDAO companyDAO;
+
 	public CLI() {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public static CLI getInstance() {
-		return instance;
+	public void setComputerDAO(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
+	}
+
+	public void setCompanyDAO(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
 	}
 	
 	public void getInput() throws IOException {
@@ -97,7 +101,7 @@ public class CLI {
 		
 		switch(argument) {
 		case ("computers"):
-			ArrayList<Computer> computers = ComputerDAO.getInstance().getAll();
+			ArrayList<Computer> computers = computerDAO.getAll();
 			StringBuilder computersList = new StringBuilder();
 			for (Computer comp : computers) {
 				computersList.append(comp.getName()).append('\n');
@@ -105,7 +109,7 @@ public class CLI {
 			System.out.println(computersList);
 			break;
 		case ("companies"):
-			ArrayList<Company> companies = CompanyDAO.getInstance().getAll();
+			ArrayList<Company> companies = companyDAO.getAll();
 			StringBuilder companiesList = new StringBuilder();
 			for (Company comp : companies) {
 				companiesList.append(comp.getName()).append('\n');
@@ -126,12 +130,12 @@ public class CLI {
 			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
 			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
 			
-			computer = ComputerDAO.getInstance().getByID(computerID);
+			computer = computerDAO.getByID(computerID);
 		} else {
 			computerName = this.input.substring("show details".length()).trim();
 			if (computerName.isEmpty()) throw new IncorrectArgumentException();
 			
-			computer = ComputerDAO.getInstance().getByName(computerName);
+			computer = computerDAO.getByName(computerName);
 		}
 		
 		if (computer != null) {
@@ -167,23 +171,23 @@ public class CLI {
 			
 			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
 			
-			if (ComputerDAO.getInstance().getByID(computerID) == null) {
+			if (computerDAO.getByID(computerID) == null) {
 				System.out.println("No computer with id " + computerID);
 				return;
 			}
 			
-			ComputerDAO.getInstance().delete(computerID);
+			computerDAO.delete(computerID);
 		} else {
 			computerName = this.input.substring("delete computer".length()).trim();
 			
 			if (computerName.isEmpty()) throw new IncorrectArgumentException();
 			
-			if (ComputerDAO.getInstance().getByName(computerName) == null) {
+			if (computerDAO.getByName(computerName) == null) {
 				System.out.println("No computer with name '" + computerName + "'");
 				return;
 			}
 			
-			ComputerDAO.getInstance().delete(computerName);
+			computerDAO.delete(computerName);
 		}
 	}
 	
@@ -209,11 +213,11 @@ public class CLI {
 		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
 		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
 		if (!companyName.isEmpty()) {
-			Company company = CompanyDAO.getInstance().getByName(companyName);
+			Company company = companyDAO.getByName(companyName);
 			if (company != null) computerToCreate.setCompany(company);
 		}
 		
-		ComputerDAO.getInstance().create(computerToCreate);
+		computerDAO.create(computerToCreate);
 		
 	}
 	
@@ -225,14 +229,14 @@ public class CLI {
 			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
 			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
 			
-			if (ComputerDAO.getInstance().getByID(computerID) == null) {
+			if (computerDAO.getByID(computerID) == null) {
 				System.out.println("No computer with id '" + computerID + "'");
 				return;
 			}
 		} else {
 			computerName = this.input.substring("update computer".length()).trim();
 			
-			if (ComputerDAO.getInstance().getByName(computerName) == null) {
+			if (computerDAO.getByName(computerName) == null) {
 				System.out.println("No computer with name '" + computerID + "'");
 				return;
 			}
@@ -263,7 +267,7 @@ public class CLI {
 		System.out.println("New company name (leave blank to make no change)");
 		String companyName = this.br.readLine().trim();
 		if (!companyName.isEmpty()) {
-			Company company = CompanyDAO.getInstance().getByName(companyName);
+			Company company = companyDAO.getByName(companyName);
 			if (company != null) updatedComputer.setCompany(company);
 		}
 		
@@ -272,9 +276,9 @@ public class CLI {
 				|| updatedComputer.getDiscontinuationDate() != null
 				|| updatedComputer.getCompany() != null) {
 			if (computerName != null) {
-				ComputerDAO.getInstance().update(computerName, updatedComputer);
+				computerDAO.update(computerName, updatedComputer);
 			} else {
-				ComputerDAO.getInstance().update(computerID, updatedComputer);
+				computerDAO.update(computerID, updatedComputer);
 			}
 			
 		} else {

@@ -14,15 +14,25 @@ public class Runner {
 	public static void main(String[] args) {
 		
 		Connection co = null;
-		CLI cli = CLI.getInstance();
+		CLI cli;
+		CompanyDAO companyDAO;
+		ComputerDAO computerDAO;
 		
 		try {
 			String url = "jdbc:mysql://localhost:3306/computer-database-db";
 			String user = "admincdb";
 			String pswd = "qwerty1234";
 			co = DriverManager.getConnection(url, user, pswd);
-			CompanyDAO.getInstance().setConnection(co);
-			ComputerDAO.getInstance().setConnection(co);
+			
+			companyDAO = new CompanyDAO();
+			computerDAO = new ComputerDAO();
+			computerDAO.setCompanyDAO(companyDAO);
+			companyDAO.setConnection(co);
+			computerDAO.setConnection(co);
+			
+			cli = new CLI();
+			cli.setCompanyDAO(companyDAO);
+			cli.setComputerDAO(computerDAO);
 			
 			cli.getInput();
 			cli.processInput();

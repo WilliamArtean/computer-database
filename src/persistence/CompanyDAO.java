@@ -11,11 +11,6 @@ import model.Company;
 public class CompanyDAO {
 
 	private Connection co;
-	private static CompanyDAO instance = new CompanyDAO();
-	
-	public static CompanyDAO getInstance() {
-		return instance;
-	}
 	
 	public void setConnection(Connection connection) {
 		this.co = connection;

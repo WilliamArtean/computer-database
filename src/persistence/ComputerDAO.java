@@ -15,16 +15,14 @@ public class ComputerDAO {
 	
 	private Connection co;
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static ComputerDAO instance = new ComputerDAO();
-	
-	public static ComputerDAO getInstance() {
-		return instance;
-	}
+	private CompanyDAO companyDAO;
 	
 	public void setConnection(Connection co) {
 		this.co = co;
 	}
-	
+	public void setCompanyDAO(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
+	}
 	
 	public Computer getByID(long id) throws SQLException {
 		String getByNameQuery = "SELECT * FROM computer WHERE id = " + id + ";";	//Use PreparedStatement instead?
@@ -43,7 +41,7 @@ public class ComputerDAO {
 		}
 		if (res.getString("company_id") != null) {
 			long companyID = res.getLong("company_id");
-			computer.setCompany(CompanyDAO.getInstance().getByID(companyID));
+			computer.setCompany(companyDAO.getByID(companyID));
 		}
 		
 		st.close();
@@ -67,7 +65,7 @@ public class ComputerDAO {
 		}
 		if (res.getString("company_id") != null) {
 			long companyID = res.getLong("company_id");
-			computer.setCompany(CompanyDAO.getInstance().getByID(companyID));
+			computer.setCompany(companyDAO.getByID(companyID));
 		}
 		
 		st.close();
