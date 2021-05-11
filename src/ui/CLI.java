@@ -47,7 +47,8 @@ public class CLI {
 	 * 	update computer [computer name]
 	 */
 	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException, InconsistentDatesException {
-		String commandFirstWord;
+		String commandFirstWord = "";
+		String args = "";
 		if (this.input.indexOf(' ') != -1) {
 			commandFirstWord = this.input.substring(0, this.input.indexOf(' ')).toLowerCase();
 		} else {
@@ -56,18 +57,21 @@ public class CLI {
 		
 		switch (commandFirstWord) {
 		case ("list"):
-			processCommandList();
+			args = input.substring("list".length()).trim().toLowerCase();
+			processCommandList(args);
 			break;
 		case ("show"):
 			if (this.input.length() >= "show details".length() && this.input.substring(0, 12).equals("show details")) {
-				processCommandShow();
+				args = input.substring("show details".length()).trim();
+				processCommandShow(args);
 			} else {
 				throw new IncorrectCommandException();
 			}
 			break;
 		case ("delete"):
 			if (this.input.length() >= "delete computer".length() && this.input.substring(0, 15).equals("delete computer")) {
-				processCommandDelete();
+				args = input.substring("delete computer".length()).trim();
+				processCommandDelete(args);
 			} else {
 				throw new IncorrectCommandException();
 			}
@@ -81,7 +85,8 @@ public class CLI {
 			break;
 		case ("update"):
 			if (this.input.length() >= "update computer".length() && this.input.substring(0, "update computer".length()).equals("update computer")) {
-				processCommandUpdate();
+				args = input.substring("update computer".length()).trim();
+				processCommandUpdate(args);
 			} else {
 				throw new IncorrectCommandException();
 			}
@@ -92,14 +97,11 @@ public class CLI {
 		
 	}
 	
-	private void processCommandList() throws IncorrectArgumentException, SQLException {
-		if (this.input.indexOf(' ') == -1) {
+	private void processCommandList(String args) throws IncorrectArgumentException, SQLException {
+		if (args.isEmpty())
 			throw new IncorrectArgumentException();
-		}
 		
-		String argument = this.input.substring(this.input.indexOf(' ') + 1).toLowerCase();
-		
-		switch(argument) {
+		switch(args) {
 		case ("computers"):
 			ArrayList<Computer> computers = computerDAO.getAll();
 			StringBuilder computersList = new StringBuilder();
@@ -121,20 +123,23 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandShow() throws IncorrectArgumentException, SQLException {
+	private void processCommandShow(String args) throws IncorrectArgumentException, SQLException {
+		if (args.isEmpty())
+			throw new IncorrectArgumentException();
+		
 		String computerName = null;
 		long computerID = 0;
 		Computer computer = null;
 		
-		if (this.input.contains("id =") || this.input.contains("id=")) {
-			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
-			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+		if (args.contains("id =") || args.contains("id=")) {
+			String idString = args.substring(args.indexOf('=') + 1).trim();
+			if (idString.isBlank())
+				throw new IncorrectArgumentException();
+			computerID = Long.parseLong(idString);
 			
 			computer = computerDAO.getByID(computerID);
 		} else {
-			computerName = this.input.substring("show details".length()).trim();
-			if (computerName.isEmpty()) throw new IncorrectArgumentException();
-			
+			computerName = args;
 			computer = computerDAO.getByName(computerName);
 		}
 		
@@ -162,14 +167,19 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandDelete() throws IncorrectArgumentException, SQLException, InconsistentDatesException {
+	private void processCommandDelete(String args) throws IncorrectArgumentException, SQLException, InconsistentDatesException {
+		if (args.isEmpty()) 
+			throw new IncorrectArgumentException();
+		
 		String computerName = null;
 		long computerID = 0;
 		
-		if (this.input.contains("id =") || this.input.contains("id=")) {
-			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
+		if (args.contains("id =") || args.contains("id=")) {
+			String idString = args.substring(args.indexOf('=') + 1).trim();
+			if (idString.isBlank())
+				throw new IncorrectArgumentException();
 			
-			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+			computerID = Long.parseLong(idString);
 			
 			if (computerDAO.getByID(computerID) == null) {
 				System.out.println("No computer with id " + computerID);
@@ -178,9 +188,7 @@ public class CLI {
 			
 			computerDAO.delete(computerID);
 		} else {
-			computerName = this.input.substring("delete computer".length()).trim();
-			
-			if (computerName.isEmpty()) throw new IncorrectArgumentException();
+			computerName = args;
 			
 			if (computerDAO.getByName(computerName) == null) {
 				System.out.println("No computer with name '" + computerName + "'");
@@ -221,20 +229,26 @@ public class CLI {
 		
 	}
 	
-	private void processCommandUpdate() throws IncorrectArgumentException, IOException, ParseException, SQLException, InconsistentDatesException {
+	private void processCommandUpdate(String args) throws IncorrectArgumentException, IOException, ParseException, SQLException, InconsistentDatesException {
+		if (args.isEmpty())
+			throw new IncorrectArgumentException();
+		
 		String computerName = null;
 		long computerID = 0;
 		
-		if (this.input.contains("id =") || this.input.contains("id=")) {
-			if (this.input.substring(this.input.indexOf('=') + 1).isBlank()) throw new IncorrectArgumentException();
-			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+		if (args.contains("id =") || args.contains("id=")) {
+			String idString = args.substring(args.indexOf('=') + 1).trim();
+			if (idString.isBlank())
+				throw new IncorrectArgumentException();
+			
+			computerID = Long.parseLong(idString);
 			
 			if (computerDAO.getByID(computerID) == null) {
 				System.out.println("No computer with id '" + computerID + "'");
 				return;
 			}
 		} else {
-			computerName = this.input.substring("update computer".length()).trim();
+			computerName = args;
 			
 			if (computerDAO.getByName(computerName) == null) {
 				System.out.println("No computer with name '" + computerID + "'");
