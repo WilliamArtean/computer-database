@@ -190,8 +190,24 @@ public class CLI {
 	}
 	
 	private void processCommandUpdate() throws IncorrectArgumentException, IOException, ParseException, SQLException {
-		String computerName = this.input.substring("update computer".length()).trim();
-		if (computerName.isEmpty()) throw new IncorrectArgumentException();
+		String computerName = null;
+		long computerID = 0;
+		
+		if (this.input.contains("id =") || this.input.contains("id=")) {
+			if (this.input.substring(this.input.indexOf('=')).isBlank()) throw new IncorrectArgumentException();
+			computerID = Long.parseLong(this.input.substring(this.input.indexOf('=') + 1).trim());
+			
+			if (ComputerDAO.getInstance().getByID(computerID) == null) {
+				System.out.println("No computer with id '" + computerID + "'");
+				return;
+			}
+		} else {
+			computerName = this.input.substring("update computer".length()).trim();
+			if (ComputerDAO.getInstance().getByName(computerName) == null) {
+				System.out.println("No computer with name '" + computerID + "'");
+				return;
+			}
+		}
 		
 		Computer updatedComputer = new Computer();
 		
@@ -226,7 +242,12 @@ public class CLI {
 				|| updatedComputer.getIntroductionDate() != null
 				|| updatedComputer.getDiscontinuationDate() != null
 				|| updatedComputer.getCompany() != null) {
-			ComputerDAO.getInstance().update(computerName, updatedComputer);
+			if (computerName != null) {
+				ComputerDAO.getInstance().update(computerName, updatedComputer);
+			} else {
+				ComputerDAO.getInstance().update(computerID, updatedComputer);
+			}
+			
 		} else {
 			System.out.println("No changes made to computer " + computerName);
 		}

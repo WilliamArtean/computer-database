@@ -115,10 +115,7 @@ public class ComputerDAO {
 	}
 	
 	//missing Computer argument
-	public void update(long id) {
-		
-	}
-	public void update(String computerName, Computer updatedComputer) throws SQLException {
+	public void update(long id, Computer updatedComputer) throws SQLException {
 		StringBuilder sb = new StringBuilder("UPDATE computer SET ");
 		boolean hasPreviousArgument = false;
 		
@@ -145,7 +142,7 @@ public class ComputerDAO {
 			sb.append("company_id = '").append(updatedComputer.getCompany().getID()).append("'");
 		}
 		
-		sb.append(" WHERE name = '").append(computerName).append("';");
+		sb.append(" WHERE id = ").append(id).append(";");
 		
 		String createQuery = sb.toString();
 		System.out.println(createQuery);
@@ -153,6 +150,17 @@ public class ComputerDAO {
 		Statement st = this.co.createStatement();
 		st.executeUpdate(createQuery);		
 		st.close();
+	}
+	public void update(String computerName, Computer updatedComputer) throws SQLException {
+		String query = "SELECT id FROM computer WHERE name='" + computerName + "';";
+		
+		Statement st = this.co.createStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		long id = rs.getLong("id");
+		st.close();
+		
+		update(id, updatedComputer);
 	}
 	
 	public void delete(long id) throws SQLException {
