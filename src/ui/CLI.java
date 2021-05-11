@@ -42,7 +42,7 @@ public class CLI {
 	 * 	create computer
 	 * 	update computer [computer name]
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException, InconsistentDatesException {
 		String commandFirstWord;
 		if (this.input.indexOf(' ') != -1) {
 			commandFirstWord = this.input.substring(0, this.input.indexOf(' ')).toLowerCase();
@@ -144,7 +144,7 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandDelete() throws IncorrectArgumentException, SQLException {
+	private void processCommandDelete() throws IncorrectArgumentException, SQLException, InconsistentDatesException {
 		String computerName = null;
 		long computerID = 0;
 		
@@ -173,7 +173,7 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
+	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException, InconsistentDatesException {
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) throw new IncorrectArgumentException();
@@ -203,7 +203,7 @@ public class CLI {
 		
 	}
 	
-	private void processCommandUpdate() throws IncorrectArgumentException, IOException, ParseException, SQLException {
+	private void processCommandUpdate() throws IncorrectArgumentException, IOException, ParseException, SQLException, InconsistentDatesException {
 		String computerName = null;
 		long computerID = 0;
 		

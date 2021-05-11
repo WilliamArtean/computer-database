@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import exceptions.InconsistentDatesException;
 import model.Computer;
 
 public class ComputerDAO {
@@ -87,7 +89,12 @@ public class ComputerDAO {
 		return computers;
 	}
 	
-	public void create(Computer computer) throws SQLException {
+	public void create(Computer computer) throws SQLException, InconsistentDatesException {
+		if (computer.getIntroductionDate() != null
+				&& computer.getDiscontinuationDate() != null
+				&& computer.getIntroductionDate().after(computer.getDiscontinuationDate()))
+			throw new InconsistentDatesException();
+		
 		StringBuilder sb = new StringBuilder();
 		StringBuilder columns = new StringBuilder("name");
 		StringBuilder values = new StringBuilder("'").append(computer.getName()).append("'");
@@ -115,7 +122,7 @@ public class ComputerDAO {
 	}
 	
 	//missing Computer argument
-	public void update(long id, Computer updatedComputer) throws SQLException {
+	public void update(long id, Computer updatedComputer) throws SQLException, InconsistentDatesException {
 		StringBuilder sb = new StringBuilder("UPDATE computer SET ");
 		boolean hasPreviousArgument = false;
 		
@@ -144,14 +151,26 @@ public class ComputerDAO {
 		
 		sb.append(" WHERE id = ").append(id).append(";");
 		
+		Statement st = this.co.createStatement();
+		
+		String datesQuery = "SELECT introduced, discontinued FROM computer WHERE id=" + id;
+		ResultSet rs = st.executeQuery(datesQuery);
+		rs.next();
+		Date introDate = (updatedComputer.getIntroductionDate() != null) ?
+				updatedComputer.getIntroductionDate()
+				: rs.getDate("introduced");
+		Date disconDate = (updatedComputer.getDiscontinuationDate() != null) ?
+				updatedComputer.getDiscontinuationDate()
+				: rs.getDate("discontinued");
+		if (introDate != null && disconDate != null && introDate.after(disconDate))
+			throw new InconsistentDatesException();
+		
 		String createQuery = sb.toString();
 		System.out.println(createQuery);
-		
-		Statement st = this.co.createStatement();
-		st.executeUpdate(createQuery);		
+		st.executeUpdate(createQuery);
 		st.close();
 	}
-	public void update(String computerName, Computer updatedComputer) throws SQLException {
+	public void update(String computerName, Computer updatedComputer) throws SQLException, InconsistentDatesException {
 		String query = "SELECT id FROM computer WHERE name='" + computerName + "';";
 		
 		Statement st = this.co.createStatement();

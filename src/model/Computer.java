@@ -2,6 +2,8 @@ package model;
 
 import java.util.Date;
 
+import exceptions.InconsistentDatesException;
+
 public class Computer {
 	
 	private String name;
