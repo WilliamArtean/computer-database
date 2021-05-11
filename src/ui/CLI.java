@@ -17,6 +17,7 @@ public class CLI {
 
 	private static CLI instance = new CLI();
 	
+	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private BufferedReader br;
 	private String input;
 	
@@ -159,10 +160,6 @@ public class CLI {
 	}
 	
 	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
-		
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
-		
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) throw new IncorrectArgumentException();
@@ -192,25 +189,47 @@ public class CLI {
 		
 	}
 	
-	private void processCommandUpdate() throws IncorrectArgumentException, IOException {
-		String argument = this.input.substring("update computer".length()).trim();
-		if (argument.isEmpty()) throw new IncorrectArgumentException();
+	private void processCommandUpdate() throws IncorrectArgumentException, IOException, ParseException, SQLException {
+		String computerName = this.input.substring("update computer".length()).trim();
+		if (computerName.isEmpty()) throw new IncorrectArgumentException();
 		
-		System.out.println("Date of introduction (leave blank to make no change)");
-		String introDate = this.br.readLine().trim();
+		Computer updatedComputer = new Computer();
 		
-		System.out.println("Date of discontinuation (leave blank to make no change)");
-		String discontDate = this.br.readLine().trim();
+		System.out.println("New name (leave blank to make no change)");
+		String updatedName = this.br.readLine().trim();
+		if (!updatedName.isEmpty()) {
+			updatedComputer.setName(updatedName);
+		}
 		
-		System.out.println("Company name (leave blank to make no change)");
+		System.out.println("New date of introduction (leave blank to make no change)");
+		String introDateString = this.br.readLine().trim();
+		if (!introDateString.isEmpty()) {
+			Date introDate = df.parse(introDateString);
+			updatedComputer.setIntroductionDate(introDate);
+		}
+		
+		System.out.println("New date of discontinuation (leave blank to make no change)");
+		String discontDateString = this.br.readLine().trim();
+		if (!discontDateString.isEmpty()) {
+			Date discontDate = df.parse(discontDateString);
+			updatedComputer.setDiscontinuationDate(discontDate);
+		}
+		
+		System.out.println("New company name (leave blank to make no change)");
 		String companyName = this.br.readLine().trim();
+		if (!companyName.isEmpty()) {
+			Company company = CompanyDAO.getInstance().getByName(companyName);
+			if (company != null) updatedComputer.setCompany(company);
+		}
 		
-		StringBuilder sb = new StringBuilder("Computer updated!\n\tName: ").append(argument);
-		if (!introDate.isEmpty()) sb.append("\n\tIntroduction date: ").append(introDate);
-		if (!discontDate.isEmpty()) sb.append("\n\tDiscontinuation date: ").append(discontDate);
-		if (!companyName.isEmpty()) sb.append("\n\tCompany: ").append(companyName);
-		
-		System.out.println(sb);
+		if (updatedComputer.getName() != null
+				|| updatedComputer.getIntroductionDate() != null
+				|| updatedComputer.getDiscontinuationDate() != null
+				|| updatedComputer.getCompany() != null) {
+			ComputerDAO.getInstance().update(computerName, updatedComputer);
+		} else {
+			System.out.println("No changes made to computer " + computerName);
+		}
 	}
 	
 }
