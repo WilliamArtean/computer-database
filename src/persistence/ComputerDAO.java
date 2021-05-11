@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import model.Computer;
@@ -11,6 +12,7 @@ import model.Computer;
 public class ComputerDAO {
 	
 	private Connection co;
+	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static ComputerDAO instance = new ComputerDAO();
 	
 	public static ComputerDAO getInstance() {
@@ -66,10 +68,29 @@ public class ComputerDAO {
 	}
 	
 	public void create(Computer computer) throws SQLException {
+		StringBuilder sb = new StringBuilder();
+		StringBuilder columns = new StringBuilder("name");
+		StringBuilder values = new StringBuilder("'").append(computer.getName()).append("'");
+		
+		if (computer.getIntroductionDate() != null) {
+			columns.append(", introduced");
+			values.append(", '").append(df.format(computer.getIntroductionDate())).append("'");
+		}
+		if (computer.getDiscontinuationDate() != null) {
+			columns.append(", discontinued");
+			values.append(", '").append(df.format(computer.getDiscontinuationDate())).append("'");
+		}
+		if (computer.getCompany() != null) {
+			columns.append(", company_id");
+			values.append(", ").append(computer.getCompany().getID());
+		}
+		sb.append("INSERT INTO computer (").append(columns).append(") VALUES (").append(values).append(");");
+		
+		String createQuery = sb.toString();
+		System.out.println(createQuery);
+		
 		Statement st = this.co.createStatement();
-		
-		
-		
+		st.executeUpdate(createQuery);		
 		st.close();
 	}
 	

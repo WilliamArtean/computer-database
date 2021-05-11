@@ -183,7 +183,7 @@ public class CLI {
 			if (company != null) computerToCreate.setCompany(company);
 		}
 		
-		System.out.println(computerToCreate.toString());
+		ComputerDAO.getInstance().create(computerToCreate);
 		
 	}
 	
