@@ -49,7 +49,7 @@ public class ComputerDAO {
 	}
 	
 	public Computer getByName(String name) throws SQLException {
-		String getByNameQuery = "SELECT * FROM computer WHERE name = \"" + name + "\";";	//Use PreparedStatement instead?
+		String getByNameQuery = "SELECT * FROM computer WHERE name = '" + name + "';";	//Use PreparedStatement instead?
 		Statement st = this.co.createStatement();
 		ResultSet res = st.executeQuery(getByNameQuery);
 		
@@ -122,11 +122,16 @@ public class ComputerDAO {
 		
 	}
 	
-	public void delete(long id) {
+	public void delete(long id) throws SQLException {
 		
 	}
-	public void delete(String name) {
+	public void delete(String name) throws SQLException {
+		String deleteQuery = "DELETE FROM computer WHERE name = '" + name + "';";
+		System.out.println(deleteQuery);
 		
+		Statement st = this.co.createStatement();
+		st.executeUpdate(deleteQuery);
+		st.close();
 	}
 	
 }

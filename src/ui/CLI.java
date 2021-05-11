@@ -143,11 +143,16 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandDelete() throws IncorrectArgumentException {
-		String arguments = this.input.substring("delete computer".length()).trim();
+	private void processCommandDelete() throws IncorrectArgumentException, SQLException {
+		String computerName = this.input.substring("delete computer".length()).trim();
 		
-		if (arguments.length() > 0) {
-			System.out.println("Computer " + arguments + " deleted");
+		if (!computerName.isEmpty()) {
+			Computer computerToDelete = ComputerDAO.getInstance().getByName(computerName);
+			if (computerToDelete != null) {
+				ComputerDAO.getInstance().delete(computerName);
+			} else {
+				System.out.println("No computer with name \"" + computerName + "\".");
+			}
 		} else {
 			throw new IncorrectArgumentException();
 		}
