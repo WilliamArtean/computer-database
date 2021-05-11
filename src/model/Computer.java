@@ -1,13 +1,13 @@
 package model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Computer {
 	
 	private String name;
-	private LocalDate introductionDate;
-	private LocalDate discontinuationDate;
-	private Company manufacturer;
+	private Date introductionDate;
+	private Date discontinuationDate;
+	private Company company;
 	
 	
 	public Computer(String name) {
@@ -22,28 +22,28 @@ public class Computer {
 		this.name = name;
 	}
 
-	public LocalDate getIntroductionDate() {
+	public Date getIntroductionDate() {
 		return introductionDate;
 	}
 
-	public void setIntroductionDate(LocalDate introductionDate) {
+	public void setIntroductionDate(Date introductionDate) {
 		this.introductionDate = introductionDate;
 	}
 
-	public LocalDate getDiscontinuationDate() {
+	public Date getDiscontinuationDate() {
 		return discontinuationDate;
 	}
 
-	public void setDiscontinuationDate(LocalDate discontinuationDate) {
+	public void setDiscontinuationDate(Date discontinuationDate) {
 		this.discontinuationDate = discontinuationDate;
 	}
 
-	public Company getManufacturer() {
-		return manufacturer;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setManufacturer(Company manufacturer) {
-		this.manufacturer = manufacturer;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 }

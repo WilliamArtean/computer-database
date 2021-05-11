@@ -24,7 +24,6 @@ public class Runner {
 		}
 		
 		
-		
 		CLI cli = CLI.getInstance();
 		try {
 			cli.getInput();
