@@ -145,7 +145,9 @@ public class CLI {
 		
 		if (computer != null) {
 			StringBuilder compDetails = new StringBuilder();
-			compDetails.append("NAME: ").append(computer.getName());
+			
+			compDetails.append("ID: ").append(computer.getID());
+			compDetails.append('\n').append("NAME: ").append(computer.getName());
 			
 			if (computer.getIntroductionDate() != null) {
 				compDetails.append('\n').append("INTRODUCTION DATE: ").append(computer.getIntroductionDate());

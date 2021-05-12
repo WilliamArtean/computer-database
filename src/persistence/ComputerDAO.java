@@ -33,6 +33,7 @@ public class ComputerDAO {
 		
 		res.next();
 		Computer computer = new Computer(res.getString("name"));
+		computer.setID(res.getLong("id"));
 		if (res.getString("introduced") != null) {
 			computer.setIntroductionDate(res.getDate("introduced"));
 		}
@@ -57,6 +58,7 @@ public class ComputerDAO {
 		
 		res.next();
 		Computer computer = new Computer(res.getString("name"));
+		computer.setID(res.getLong("id"));
 		if (res.getString("introduced") != null) {
 			computer.setIntroductionDate(res.getDate("introduced"));
 		}
@@ -75,12 +77,24 @@ public class ComputerDAO {
 	public ArrayList<Computer> getAll() throws SQLException {
 		String getAllQuery = "SELECT * FROM computer;";
 		Statement st = this.co.createStatement();
-		ResultSet results = st.executeQuery(getAllQuery);
+		ResultSet res = st.executeQuery(getAllQuery);
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		
-		while (results.next()) {
-			computers.add(new Computer(results.getString("name")));
+		while (res.next()) {			
+			Computer computer = new Computer(res.getString("name"));
+			computer.setID(res.getLong("id"));
+			if (res.getString("introduced") != null) {
+				computer.setIntroductionDate(res.getDate("introduced"));
+			}
+			if (res.getString("discontinued") != null) {
+				computer.setDiscontinuationDate(res.getDate("discontinued"));
+			}
+			if (res.getString("company_id") != null) {
+				long companyID = res.getLong("company_id");
+				computer.setCompany(companyDAO.getByID(companyID));
+			}
+			computers.add(computer);
 		}
 		
 		st.close();

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Computer {
 	
+	private long id;
 	private String name;
 	private Date introductionDate;
 	private Date discontinuationDate;
@@ -17,6 +18,13 @@ public class Computer {
 		this.name = name;
 	}
 
+	public long getID() {
+		return this.id;
+	}
+	public void setID(long id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}
