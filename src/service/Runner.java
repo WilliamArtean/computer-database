@@ -33,6 +33,16 @@ public class Runner {
 			computerDAO.setConnection(co);
 			
 			Page page = new Page();
+			page.fillCompanyList(companyDAO.getAll());
+			while (page.nextPage()) {
+				System.out.println(page.showCurrentPage());
+			}
+			page.firstPage();
+			System.out.println(page.showCurrentPage());
+			System.out.println(page.hasNextPage());
+			page.lastPage();
+			System.out.println(page.showCurrentPage());
+			System.out.println(page.hasNextPage());
 			
 			cli = new CLI();
 			cli.setCompanyDAO(companyDAO);
@@ -52,9 +62,6 @@ public class Runner {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (InconsistentDatesException e) {
-			e.printStackTrace();
-		} catch (InvalidPageNumberException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
