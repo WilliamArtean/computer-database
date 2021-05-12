@@ -20,7 +20,8 @@ public class CLI {
 	private String input;
 	private ComputerDAO computerDAO;
 	private CompanyDAO companyDAO;
-
+	private Page page = new Page();
+	
 	public CLI() {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
 	}
@@ -98,27 +99,52 @@ public class CLI {
 	}
 	
 	private void processCommandList(String args) throws IncorrectArgumentException, SQLException {
-		if (args.isEmpty())
+		if (args.isEmpty() || args.length() < "computers".length())
 			throw new IncorrectArgumentException();
-		
-		switch(args) {
+
+		String firstArg = args.substring(0, "computers".length());
+		switch(firstArg) {
 		case ("computers"):
-			ArrayList<Computer> computers = computerDAO.getAll();
-			StringBuilder computersList = new StringBuilder();
-			for (Computer comp : computers) {
-				computersList.append(comp.getName()).append('\n');
-			}
-			System.out.println(computersList);
+			listComputers(args.substring("computers".length()).trim());
 			break;
 		case ("companies"):
-			ArrayList<Company> companies = companyDAO.getAll();
-			StringBuilder companiesList = new StringBuilder();
-			for (Company comp : companies) {
-				companiesList.append(comp.getName()).append('\n');
-			}
-			System.out.println(companiesList);
+			listCompanies(args.substring("companies".length()).trim());
 			break;
-		default:
+		}
+	}
+	
+	private void listComputers(String arg) throws SQLException, IncorrectArgumentException {
+		ArrayList<Computer> computers = computerDAO.getAll();
+		StringBuilder computersList = new StringBuilder();
+		for (Computer comp : computers) {
+			computersList.append(comp.getName()).append('\n');
+		}
+		
+		if (arg.isEmpty()) {
+			System.out.println(computersList);
+		} else if (arg.contains("page")) {
+			page.fillComputerList(computers);
+			int pageNumber = Integer.parseInt(arg.substring(5).trim());
+			System.out.println(page.showPage(pageNumber));
+		} else {
+			throw new IncorrectArgumentException();
+		}
+	}
+	
+	private void listCompanies(String arg) throws SQLException, IncorrectArgumentException {
+		ArrayList<Company> companies = companyDAO.getAll();
+		StringBuilder companiesList = new StringBuilder();
+		for (Company comp : companies) {
+			companiesList.append(comp.getName()).append('\n');
+		}
+		
+		if (arg.isEmpty()) {
+			System.out.println(companiesList);
+		} else if (arg.contains("page")) {
+			page.fillCompanyList(companies);
+			int pageNumber = Integer.parseInt(arg.substring(4).trim());
+			System.out.println(page.showPage(pageNumber));
+		} else {
 			throw new IncorrectArgumentException();
 		}
 	}
