@@ -1,6 +1,8 @@
 package service;
 
 import ui.CLI;
+import ui.Page;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.io.IOException;
@@ -30,12 +32,15 @@ public class Runner {
 			companyDAO.setConnection(co);
 			computerDAO.setConnection(co);
 			
+			Page page = new Page();
+			
 			cli = new CLI();
 			cli.setCompanyDAO(companyDAO);
 			cli.setComputerDAO(computerDAO);
 			
 			cli.getInput();
 			cli.processInput();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -47,6 +52,9 @@ public class Runner {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (InconsistentDatesException e) {
+			e.printStackTrace();
+		} catch (InvalidPageNumberException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
