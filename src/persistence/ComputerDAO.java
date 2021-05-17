@@ -20,6 +20,7 @@ public class ComputerDAO {
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
 	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
+	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
@@ -62,6 +63,20 @@ public class ComputerDAO {
 		PreparedStatement ps = co.prepareStatement(queryGetAll);
 		ResultSet rs = ps.executeQuery();
 		
+		ArrayList<Computer> computers = mapper.mapToComputerArray(rs);
+		
+		rs.close();
+		ps.close();
+		co.close();
+		return computers;
+	}
+	
+	public ArrayList<Computer> getSelection(int numberToReturn, int offset) throws SQLException {
+		Connection co = this.dbManager.getNewConnection();
+		PreparedStatement ps = co.prepareStatement(queryGetSelection);
+		ps.setInt(1, numberToReturn);
+		ps.setInt(2, offset);
+		ResultSet rs = ps.executeQuery();
 		ArrayList<Computer> computers = mapper.mapToComputerArray(rs);
 		
 		rs.close();
