@@ -1,7 +1,6 @@
 package service;
 
 import ui.CLI;
-import ui.Page;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -31,18 +30,6 @@ public class Runner {
 			computerDAO.setCompanyDAO(companyDAO);
 			companyDAO.setConnection(co);
 			computerDAO.setConnection(co);
-			
-			Page page = new Page();
-			page.fillCompanyList(companyDAO.getAll());
-			while (page.nextPage()) {
-				System.out.println(page.showCurrentPage());
-			}
-			page.firstPage();
-			System.out.println(page.showCurrentPage());
-			System.out.println(page.hasNextPage());
-			page.lastPage();
-			System.out.println(page.showCurrentPage());
-			System.out.println(page.hasNextPage());
 			
 			cli = new CLI();
 			cli.setCompanyDAO(companyDAO);
