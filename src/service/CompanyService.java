@@ -10,6 +10,10 @@ public class CompanyService {
 	
 	private CompanyDAO companyDAO;
 	
+	public void setCompanyDAO(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
+	}
+
 	public Optional<Company> getCompany(String name) {
 		return companyDAO.getByName(name);
 	}
