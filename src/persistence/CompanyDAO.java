@@ -17,6 +17,7 @@ public class CompanyDAO {
 	private final String queryGetByID = "SELECT id, name FROM company WHERE id=?";
 	private final String queryGetByName = "SELECT id, name FROM company WHERE name=?";
 	private final String queryGetAll = "SELECT id, name FROM company";
+	private final String queryGetSelection = "SELECT id, name FROM company ORDER BY id LIMIT ? OFFSET ?";
 	
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
@@ -51,6 +52,20 @@ public class CompanyDAO {
 	public ArrayList<Company> getAll() throws SQLException {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetAll);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Company> companies = mapper.mapToCompanyArray(rs);
+		
+		rs.close();
+		ps.close();
+		co.close();
+		return companies;
+	}
+	
+	public ArrayList<Company> getSelection(int numberToReturn, int offset) throws SQLException {
+		Connection co = this.dbManager.getNewConnection();
+		PreparedStatement ps = co.prepareStatement(queryGetSelection);
+		ps.setInt(1, numberToReturn);
+		ps.setInt(2, offset);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Company> companies = mapper.mapToCompanyArray(rs);
 		
