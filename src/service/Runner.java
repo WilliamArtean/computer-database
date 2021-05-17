@@ -29,9 +29,9 @@ public class Runner {
 			companyDAO = new CompanyDAO();
 			computerDAO = new ComputerDAO();
 			computerDAO.setCompanyDAO(companyDAO);
-			computerDAO.setConnection(co);
 			DBConnectionManager dbConnectionManager = new DBConnectionManager();
 			companyDAO.setDatabaseManager(dbConnectionManager);
+			computerDAO.setDatabaseManager(dbConnectionManager);
 			
 			cli = new CLI();
 			cli.setCompanyDAO(companyDAO);
