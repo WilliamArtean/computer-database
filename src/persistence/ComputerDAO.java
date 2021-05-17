@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import model.Computer;
@@ -130,47 +129,6 @@ public class ComputerDAO {
 		
 		ps.executeUpdate();
 		ps.close();
-	}
-	
-	public void update(long id, Computer updatedComputer) throws SQLException {
-		StringBuilder sb = new StringBuilder("UPDATE computer SET ");
-		boolean hasPreviousArgument = false;
-		
-		if (updatedComputer.getName() != null) {
-			hasPreviousArgument = true;
-			sb.append("name = '").append(updatedComputer.getName()).append("'");
-		}
-		if (updatedComputer.getIntroductionDate() != null) {
-			if (hasPreviousArgument)
-				sb.append(", ");
-			hasPreviousArgument = true;
-			sb.append("introduced = '").append(df.format(updatedComputer.getIntroductionDate())).append("'");
-		}
-		if (updatedComputer.getDiscontinuationDate() != null) {
-			if (hasPreviousArgument)
-				sb.append(", ");
-			hasPreviousArgument = true;
-			sb.append("discontinued = '").append(df.format(updatedComputer.getDiscontinuationDate())).append("'");
-		}
-		if (updatedComputer.getCompany() != null) {
-			if (hasPreviousArgument)
-				sb.append(", ");
-			hasPreviousArgument = true;
-			sb.append("company_id = '").append(updatedComputer.getCompany().getID()).append("'");
-		}
-		
-		sb.append(" WHERE id = ").append(id).append(";");
-		
-		Statement st = this.co.createStatement();
-		
-		String datesQuery = "SELECT introduced, discontinued FROM computer WHERE id=" + id;
-		ResultSet rs = st.executeQuery(datesQuery);
-		rs.next();
-		
-		String createQuery = sb.toString();
-		System.out.println(createQuery);
-		st.executeUpdate(createQuery);
-		st.close();
 	}
 	
 	/**
