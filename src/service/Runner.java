@@ -32,9 +32,12 @@ public class Runner {
 			companyDAO.setDatabaseManager(dbConnectionManager);
 			computerDAO.setDatabaseManager(dbConnectionManager);
 			
+			CompanyService companyService = new CompanyService();
+			companyService.setCompanyDAO(companyDAO);
+			
 			cli = new CLI();
-			cli.setCompanyDAO(companyDAO);
 			cli.setComputerDAO(computerDAO);
+			cli.setCompanyService(companyService);
 			
 			cli.getInput();
 			cli.processInput();

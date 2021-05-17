@@ -3,8 +3,8 @@ package ui;
 import exceptions.*;
 import model.Company;
 import model.Computer;
-import persistence.CompanyDAO;
 import persistence.ComputerDAO;
+import service.CompanyService;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class CLI {
 	private BufferedReader br;
 	private String input;
 	private ComputerDAO computerDAO;
-	private CompanyDAO companyDAO;
+	private CompanyService companyService;
 	private Page page = new Page();
 	
 	public CLI() {
@@ -30,9 +30,9 @@ public class CLI {
 	public void setComputerDAO(ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
 	}
-
-	public void setCompanyDAO(CompanyDAO companyDAO) {
-		this.companyDAO = companyDAO;
+	
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
 	}
 	
 	public void getInput() throws IOException {
@@ -152,7 +152,7 @@ public class CLI {
 	}
 	
 	private void listCompanies(String arg) throws SQLException, IncorrectArgumentException {
-		ArrayList<Company> companies = companyDAO.getAll();
+		ArrayList<Company> companies = companyService.getAllCompanies();
 		StringBuilder companiesList = new StringBuilder();
 		for (Company comp : companies) {
 			companiesList.append(comp.getName()).append('\n');
@@ -275,7 +275,7 @@ public class CLI {
 		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
 		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
 		if (!companyName.isEmpty()) {
-			Optional<Company> company = companyDAO.getByName(companyName);
+			Optional<Company> company = companyService.getCompany(companyName);
 			if (company.isPresent()) {
 				computerToCreate.setCompany(company.get());
 			}
@@ -337,7 +337,7 @@ public class CLI {
 		System.out.println("New company name (leave blank to make no change)");
 		String companyName = this.br.readLine().trim();
 		if (!companyName.isEmpty()) {
-			Optional<Company> company = companyDAO.getByName(companyName);
+			Optional<Company> company = companyService.getCompany(companyName);
 			if (company.isPresent()) {
 				updatedComputer.setCompany(company.get());
 			}
