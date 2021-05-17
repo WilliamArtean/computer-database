@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import model.Computer;
+import java.sql.Types;
 
 public class ComputerDAO {
 	
@@ -20,6 +21,7 @@ public class ComputerDAO {
 	private final String queryGetAll = "SELECT id, name, introduced, discontinued, company_id FROM computer";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
+	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	
 	public void setConnection(Connection co) {
 		this.co = co;
@@ -85,7 +87,6 @@ public class ComputerDAO {
 		ResultSet rs = ps.executeQuery();
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		
 		while (rs.next()) {			
 			Computer computer = new Computer(rs.getString("name"));
 			computer.setID(rs.getLong("id"));
@@ -107,31 +108,27 @@ public class ComputerDAO {
 		return computers;
 	}
 	
-	public void create(Computer computer) throws SQLException {		
-		StringBuilder sb = new StringBuilder();
-		StringBuilder columns = new StringBuilder("name");
-		StringBuilder values = new StringBuilder("'").append(computer.getName()).append("'");
-		
+	public void create(Computer computer) throws SQLException {
+		PreparedStatement ps = this.co.prepareStatement(queryCreate);
+		ps.setString(1, computer.getName());
 		if (computer.getIntroductionDate() != null) {
-			columns.append(", introduced");
-			values.append(", '").append(df.format(computer.getIntroductionDate())).append("'");
+			ps.setString(2, df.format(computer.getIntroductionDate()));
+		} else {
+			ps.setNull(2, Types.TIMESTAMP);
 		}
 		if (computer.getDiscontinuationDate() != null) {
-			columns.append(", discontinued");
-			values.append(", '").append(df.format(computer.getDiscontinuationDate())).append("'");
+			ps.setString(3, df.format(computer.getDiscontinuationDate()));
+		} else {
+			ps.setNull(3, Types.TIMESTAMP);
 		}
 		if (computer.getCompany() != null) {
-			columns.append(", company_id");
-			values.append(", ").append(computer.getCompany().getID());
+			ps.setLong(4, computer.getCompany().getID());
+		} else {
+			ps.setNull(4, Types.BIGINT);
 		}
-		sb.append("INSERT INTO computer (").append(columns).append(") VALUES (").append(values).append(");");
 		
-		String createQuery = sb.toString();
-		System.out.println(createQuery);
-		
-		Statement st = this.co.createStatement();
-		st.executeUpdate(createQuery);		
-		st.close();
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 	public void update(long id, Computer updatedComputer) throws SQLException {
