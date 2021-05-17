@@ -344,8 +344,6 @@ public class CLI {
 				|| updatedComputer.getCompany() != null) {
 			if (computerName != null) {
 				computerDAO.update(computerName, updatedComputer);
-			} else {
-				computerDAO.update(computerID, updatedComputer);
 			}
 			
 		} else {
