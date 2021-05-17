@@ -1,6 +1,7 @@
 package persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +18,12 @@ public class ComputerDAO {
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private CompanyDAO companyDAO;
 	
+	private final String queryGetByID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
+	private final String queryGetByName = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name=?";
+	private final String queryGetAll = "SELECT id, name, introduced, discontinued, company_id FROM computer";
+	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
+	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
+	
 	public void setConnection(Connection co) {
 		this.co = co;
 	}
@@ -25,79 +32,81 @@ public class ComputerDAO {
 	}
 	
 	public Computer getByID(long id) throws SQLException {
-		String getByNameQuery = "SELECT * FROM computer WHERE id = " + id + ";";	//Use PreparedStatement instead?
-		Statement st = this.co.createStatement();
-		ResultSet res = st.executeQuery(getByNameQuery);
+		PreparedStatement ps = this.co.prepareStatement(queryGetByID);
+		ps.setLong(1, id);
+		ResultSet rs = ps.executeQuery();
 		
-		if (!res.isBeforeFirst()) return null;
+		if (!rs.isBeforeFirst()) return null;
 		
-		res.next();
-		Computer computer = new Computer(res.getString("name"));
-		computer.setID(res.getLong("id"));
-		if (res.getString("introduced") != null) {
-			computer.setIntroductionDate(res.getDate("introduced"));
+		rs.next();
+		Computer computer = new Computer(rs.getString("name"));
+		computer.setID(rs.getLong("id"));
+		if (rs.getString("introduced") != null) {
+			computer.setIntroductionDate(rs.getDate("introduced"));
 		}
-		if (res.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(res.getDate("discontinued"));
+		if (rs.getString("discontinued") != null) {
+			computer.setDiscontinuationDate(rs.getDate("discontinued"));
 		}
-		if (res.getString("company_id") != null) {
-			long companyID = res.getLong("company_id");
+		if (rs.getString("company_id") != null) {
+			long companyID = rs.getLong("company_id");
 			computer.setCompany(companyDAO.getByID(companyID));
 		}
 		
-		st.close();
+		rs.close();
+		ps.close();
 		return computer;
 	}
 	
 	public Computer getByName(String name) throws SQLException {
-		String getByNameQuery = "SELECT * FROM computer WHERE name = '" + name + "';";	//Use PreparedStatement instead?
-		Statement st = this.co.createStatement();
-		ResultSet res = st.executeQuery(getByNameQuery);
+		PreparedStatement ps = this.co.prepareStatement(queryGetByName);
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
 		
-		if (!res.isBeforeFirst()) return null;
+		if (!rs.isBeforeFirst()) return null;
 		
-		res.next();
-		Computer computer = new Computer(res.getString("name"));
-		computer.setID(res.getLong("id"));
-		if (res.getString("introduced") != null) {
-			computer.setIntroductionDate(res.getDate("introduced"));
+		rs.next();
+		Computer computer = new Computer(rs.getString("name"));
+		computer.setID(rs.getLong("id"));
+		if (rs.getString("introduced") != null) {
+			computer.setIntroductionDate(rs.getDate("introduced"));
 		}
-		if (res.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(res.getDate("discontinued"));
+		if (rs.getString("discontinued") != null) {
+			computer.setDiscontinuationDate(rs.getDate("discontinued"));
 		}
-		if (res.getString("company_id") != null) {
-			long companyID = res.getLong("company_id");
+		if (rs.getString("company_id") != null) {
+			long companyID = rs.getLong("company_id");
 			computer.setCompany(companyDAO.getByID(companyID));
 		}
 		
-		st.close();
+		rs.close();
+		ps.close();
 		return computer;
 	}
 	
 	public ArrayList<Computer> getAll() throws SQLException {
-		String getAllQuery = "SELECT * FROM computer;";
-		Statement st = this.co.createStatement();
-		ResultSet res = st.executeQuery(getAllQuery);
+		PreparedStatement ps = this.co.prepareStatement(queryGetAll);
+		ResultSet rs = ps.executeQuery();
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		
-		while (res.next()) {			
-			Computer computer = new Computer(res.getString("name"));
-			computer.setID(res.getLong("id"));
-			if (res.getString("introduced") != null) {
-				computer.setIntroductionDate(res.getDate("introduced"));
+		while (rs.next()) {			
+			Computer computer = new Computer(rs.getString("name"));
+			computer.setID(rs.getLong("id"));
+			if (rs.getString("introduced") != null) {
+				computer.setIntroductionDate(rs.getDate("introduced"));
 			}
-			if (res.getString("discontinued") != null) {
-				computer.setDiscontinuationDate(res.getDate("discontinued"));
+			if (rs.getString("discontinued") != null) {
+				computer.setDiscontinuationDate(rs.getDate("discontinued"));
 			}
-			if (res.getString("company_id") != null) {
-				long companyID = res.getLong("company_id");
+			if (rs.getString("company_id") != null) {
+				long companyID = rs.getLong("company_id");
 				computer.setCompany(companyDAO.getByID(companyID));
 			}
 			computers.add(computer);
 		}
 		
-		st.close();
+		rs.close();
+		ps.close();
 		return computers;
 	}
 	
@@ -133,7 +142,6 @@ public class ComputerDAO {
 		st.close();
 	}
 	
-	//missing Computer argument
 	public void update(long id, Computer updatedComputer) throws SQLException, InconsistentDatesException {
 		StringBuilder sb = new StringBuilder("UPDATE computer SET ");
 		boolean hasPreviousArgument = false;
@@ -195,20 +203,16 @@ public class ComputerDAO {
 	}
 	
 	public void delete(long id) throws SQLException {
-		String deleteQuery = "DELETE FROM computer WHERE id = " + id + ";";
-		System.out.println(deleteQuery);
-		
-		Statement st = this.co.createStatement();
-		st.executeUpdate(deleteQuery);
-		st.close();
+		PreparedStatement ps = this.co.prepareStatement(queryDeleteByID);
+		ps.setLong(1, id);
+		ps.executeUpdate();
+		ps.close();
 	}
 	public void delete(String name) throws SQLException {
-		String deleteQuery = "DELETE FROM computer WHERE name = '" + name + "';";
-		System.out.println(deleteQuery);
-		
-		Statement st = this.co.createStatement();
-		st.executeUpdate(deleteQuery);
-		st.close();
+		PreparedStatement ps = this.co.prepareStatement(queryDeleteByName);
+		ps.setString(1, name);
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 }
