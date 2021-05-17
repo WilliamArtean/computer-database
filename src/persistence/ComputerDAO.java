@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import model.Company;
 import model.Computer;
 import java.sql.Types;
 
@@ -13,11 +15,10 @@ public class ComputerDAO {
 	
 	private DBConnectionManager dbManager;
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private CompanyDAO companyDAO;
 	
-	private final String queryGetByID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
-	private final String queryGetByName = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name=?";
-	private final String queryGetAll = "SELECT id, name, introduced, discontinued, company_id FROM computer";
+	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
+	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
+	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
@@ -25,9 +26,6 @@ public class ComputerDAO {
 	
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
-	}
-	public void setCompanyDAO(CompanyDAO companyDAO) {
-		this.companyDAO = companyDAO;
 	}
 	
 	public Computer getByID(long id) throws SQLException {
@@ -39,7 +37,7 @@ public class ComputerDAO {
 		if (!rs.isBeforeFirst()) return null;
 		
 		rs.next();
-		Computer computer = new Computer(rs.getString("name"));
+		Computer computer = new Computer(rs.getString("computer.name"));
 		computer.setID(rs.getLong("id"));
 		if (rs.getString("introduced") != null) {
 			computer.setIntroductionDate(rs.getDate("introduced"));
@@ -48,8 +46,7 @@ public class ComputerDAO {
 			computer.setDiscontinuationDate(rs.getDate("discontinued"));
 		}
 		if (rs.getString("company_id") != null) {
-			long companyID = rs.getLong("company_id");
-			computer.setCompany(companyDAO.getByID(companyID));
+			computer.setCompany(new Company(rs.getString("company.name")));
 		}
 		
 		rs.close();
@@ -67,7 +64,7 @@ public class ComputerDAO {
 		if (!rs.isBeforeFirst()) return null;
 		
 		rs.next();
-		Computer computer = new Computer(rs.getString("name"));
+		Computer computer = new Computer(rs.getString("computer.name"));
 		computer.setID(rs.getLong("id"));
 		if (rs.getString("introduced") != null) {
 			computer.setIntroductionDate(rs.getDate("introduced"));
@@ -76,8 +73,7 @@ public class ComputerDAO {
 			computer.setDiscontinuationDate(rs.getDate("discontinued"));
 		}
 		if (rs.getString("company_id") != null) {
-			long companyID = rs.getLong("company_id");
-			computer.setCompany(companyDAO.getByID(companyID));
+			computer.setCompany(new Company(rs.getString("company.name")));
 		}
 		
 		rs.close();
@@ -93,7 +89,7 @@ public class ComputerDAO {
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		while (rs.next()) {			
-			Computer computer = new Computer(rs.getString("name"));
+			Computer computer = new Computer(rs.getString("computer.name"));
 			computer.setID(rs.getLong("id"));
 			if (rs.getString("introduced") != null) {
 				computer.setIntroductionDate(rs.getDate("introduced"));
@@ -102,8 +98,7 @@ public class ComputerDAO {
 				computer.setDiscontinuationDate(rs.getDate("discontinued"));
 			}
 			if (rs.getString("company_id") != null) {
-				long companyID = rs.getLong("company_id");
-				computer.setCompany(companyDAO.getByID(companyID));
+				computer.setCompany(new Company(rs.getString("company.name")));
 			}
 			computers.add(computer);
 		}
