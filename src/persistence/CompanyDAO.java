@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import model.Company;
 
@@ -21,12 +22,12 @@ public class CompanyDAO {
 		this.dbManager = databaseManager;
 	}
 	
-	public Company getByID(long id) throws SQLException {
+	public Optional<Company> getByID(long id) throws SQLException {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetByID);
 		ps.setLong(1, id);
 		ResultSet rs = ps.executeQuery();
-		Company company = mapper.mapToCompany(rs);
+		Optional<Company> company = mapper.mapToCompany(rs);
 		
 		rs.close();
 		ps.close();
@@ -34,12 +35,12 @@ public class CompanyDAO {
 		return company;
 	}
 	
-	public Company getByName(String name) throws SQLException {
+	public Optional<Company> getByName(String name) throws SQLException {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetByName);
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
-		Company company = mapper.mapToCompany(rs);
+		Optional<Company> company = mapper.mapToCompany(rs);
 		
 		rs.close();
 		ps.close();

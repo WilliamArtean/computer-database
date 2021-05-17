@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 public class CLI {
 	
@@ -274,8 +275,10 @@ public class CLI {
 		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
 		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
 		if (!companyName.isEmpty()) {
-			Company company = companyDAO.getByName(companyName);
-			if (company != null) computerToCreate.setCompany(company);
+			Optional<Company> company = companyDAO.getByName(companyName);
+			if (company.isPresent()) {
+				computerToCreate.setCompany(company.get());
+			}
 		}
 		
 		computerDAO.create(computerToCreate);
@@ -334,8 +337,10 @@ public class CLI {
 		System.out.println("New company name (leave blank to make no change)");
 		String companyName = this.br.readLine().trim();
 		if (!companyName.isEmpty()) {
-			Company company = companyDAO.getByName(companyName);
-			if (company != null) updatedComputer.setCompany(company);
+			Optional<Company> company = companyDAO.getByName(companyName);
+			if (company.isPresent()) {
+				updatedComputer.setCompany(company.get());
+			}
 		}
 		
 		if (updatedComputer.getName() != null

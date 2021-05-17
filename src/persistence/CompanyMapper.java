@@ -3,16 +3,19 @@ package persistence;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import model.Company;
 
 public class CompanyMapper {
 
-	public Company mapToCompany(ResultSet rs) throws SQLException {
-		if (!rs.isBeforeFirst()) return null;
+	public Optional<Company> mapToCompany(ResultSet rs) throws SQLException {
+		if (!rs.isBeforeFirst()) {
+			return Optional.empty();
+		}
 		rs.next();
 		Company company = new Company(rs.getLong("id"), rs.getString("name"));
-		return company;
+		return Optional.of(company);
 	}
 	
 	public ArrayList<Company> mapToCompanyArray(ResultSet rs) throws SQLException {
