@@ -47,6 +47,18 @@ public class CLI {
 	 * 	create computer
 	 * 	update computer [computer name]
 	 */
+	/**
+	 * Parses user input, analyzes the command and passes argument analysis to the appropriate method
+	 * Legal commands are : "list computers (page [page number])", "list companies (page [page number])",
+	 * "show details [computer name] / id=[computer id]", "create computer",
+	 * "delete computer [computer name] / id=[computer id]", "update computer [computer name] / id=[computer id]"
+	 * @throws IncorrectCommandException
+	 * @throws IncorrectArgumentException
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws ParseException
+	 * @throws InconsistentDatesException
+	 */
 	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException, InconsistentDatesException {
 		String commandFirstWord = "";
 		String args = "";
@@ -98,6 +110,13 @@ public class CLI {
 		
 	}
 	
+	/**
+	 * Processes the "list" command
+	 * @param args A string that should either be "computers" or "companies",
+	 * possibly followed by "page [page number]
+	 * @throws IncorrectArgumentException
+	 * @throws SQLException
+	 */
 	private void processCommandList(String args) throws IncorrectArgumentException, SQLException {
 		if (args.isEmpty() || args.length() < "computers".length())
 			throw new IncorrectArgumentException();
@@ -149,6 +168,12 @@ public class CLI {
 		}
 	}
 	
+	/**
+	 * processes the "show details" command
+	 * @param args A string containing the computer name or "id = [computer id]"
+	 * @throws IncorrectArgumentException
+	 * @throws SQLException
+	 */
 	private void processCommandShow(String args) throws IncorrectArgumentException, SQLException {
 		if (args.isEmpty())
 			throw new IncorrectArgumentException();
