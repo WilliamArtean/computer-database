@@ -9,6 +9,7 @@ import java.io.IOException;
 import exceptions.*;
 import persistence.CompanyDAO;
 import persistence.ComputerDAO;
+import persistence.DBConnectionManager;
 
 public class Runner {
 
@@ -28,8 +29,9 @@ public class Runner {
 			companyDAO = new CompanyDAO();
 			computerDAO = new ComputerDAO();
 			computerDAO.setCompanyDAO(companyDAO);
-			companyDAO.setConnection(co);
 			computerDAO.setConnection(co);
+			DBConnectionManager dbConnectionManager = new DBConnectionManager();
+			companyDAO.setDatabaseManager(dbConnectionManager);
 			
 			cli = new CLI();
 			cli.setCompanyDAO(companyDAO);
