@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import model.Computer;
 import java.sql.Types;
@@ -28,13 +29,13 @@ public class ComputerDAO {
 		this.dbManager = databaseManager;
 	}
 	
-	public Computer getByID(long id) throws SQLException {
+	public Optional<Computer> getByID(long id) throws SQLException {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetByID);
 		ps.setLong(1, id);
 		ResultSet rs = ps.executeQuery();
 		
-		Computer computer = mapper.mapToComputer(rs);
+		Optional<Computer> computer = mapper.mapToComputer(rs);
 		
 		rs.close();
 		ps.close();
@@ -42,13 +43,13 @@ public class ComputerDAO {
 		return computer;
 	}
 	
-	public Computer getByName(String name) throws SQLException {
+	public Optional<Computer> getByName(String name) throws SQLException {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetByName);
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
 		
-		Computer computer = mapper.mapToComputer(rs);
+		Optional<Computer> computer = mapper.mapToComputer(rs);
 		
 		rs.close();
 		ps.close();

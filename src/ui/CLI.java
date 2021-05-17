@@ -181,23 +181,23 @@ public class CLI {
 		
 		String computerName = null;
 		long computerID = 0;
-		Computer computer = null;
+		Optional<Computer> computerOpt;
 		
 		if (args.contains("id =") || args.contains("id=")) {
 			String idString = args.substring(args.indexOf('=') + 1).trim();
 			if (idString.isBlank())
 				throw new IncorrectArgumentException();
 			computerID = Long.parseLong(idString);
-			
-			computer = computerDAO.getByID(computerID);
+			computerOpt = computerDAO.getByID(computerID);
 		} else {
 			computerName = args;
-			computer = computerDAO.getByName(computerName);
+			computerOpt = computerDAO.getByName(computerName);
 		}
 		
-		if (computer != null) {
+		if (computerOpt.isPresent()) {
 			StringBuilder compDetails = new StringBuilder();
 			
+			Computer computer = computerOpt.get();
 			compDetails.append("ID: ").append(computer.getID());
 			compDetails.append('\n').append("NAME: ").append(computer.getName());
 			

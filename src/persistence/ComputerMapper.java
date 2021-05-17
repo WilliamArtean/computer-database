@@ -3,15 +3,16 @@ package persistence;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import model.Company;
 import model.Computer;
 
 public class ComputerMapper {
 
-	public Computer mapToComputer(ResultSet rs) throws SQLException {
+	public Optional<Computer> mapToComputer(ResultSet rs) throws SQLException {
 		if (!rs.isBeforeFirst()) {
-			return null;
+			return Optional.empty();
 		}
 		rs.next();
 		
@@ -27,7 +28,7 @@ public class ComputerMapper {
 			computer.setCompany(new Company(rs.getString("company.name")));
 		}
 		
-		return computer;
+		return Optional.of(computer);
 	}
 	
 	public ArrayList<Computer> mapToComputerArray(ResultSet rs) throws SQLException {
