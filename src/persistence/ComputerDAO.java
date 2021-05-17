@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import model.Company;
 import model.Computer;
 import java.sql.Types;
 
@@ -15,6 +14,7 @@ public class ComputerDAO {
 	
 	private DBConnectionManager dbManager;
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private ComputerMapper mapper = new ComputerMapper();
 	
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
@@ -34,20 +34,7 @@ public class ComputerDAO {
 		ps.setLong(1, id);
 		ResultSet rs = ps.executeQuery();
 		
-		if (!rs.isBeforeFirst()) return null;
-		
-		rs.next();
-		Computer computer = new Computer(rs.getString("computer.name"));
-		computer.setID(rs.getLong("id"));
-		if (rs.getString("introduced") != null) {
-			computer.setIntroductionDate(rs.getDate("introduced"));
-		}
-		if (rs.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(rs.getDate("discontinued"));
-		}
-		if (rs.getString("company_id") != null) {
-			computer.setCompany(new Company(rs.getString("company.name")));
-		}
+		Computer computer = mapper.mapToComputer(rs);
 		
 		rs.close();
 		ps.close();
@@ -61,20 +48,7 @@ public class ComputerDAO {
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
 		
-		if (!rs.isBeforeFirst()) return null;
-		
-		rs.next();
-		Computer computer = new Computer(rs.getString("computer.name"));
-		computer.setID(rs.getLong("id"));
-		if (rs.getString("introduced") != null) {
-			computer.setIntroductionDate(rs.getDate("introduced"));
-		}
-		if (rs.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(rs.getDate("discontinued"));
-		}
-		if (rs.getString("company_id") != null) {
-			computer.setCompany(new Company(rs.getString("company.name")));
-		}
+		Computer computer = mapper.mapToComputer(rs);
 		
 		rs.close();
 		ps.close();
@@ -87,21 +61,7 @@ public class ComputerDAO {
 		PreparedStatement ps = co.prepareStatement(queryGetAll);
 		ResultSet rs = ps.executeQuery();
 		
-		ArrayList<Computer> computers = new ArrayList<Computer>();
-		while (rs.next()) {			
-			Computer computer = new Computer(rs.getString("computer.name"));
-			computer.setID(rs.getLong("id"));
-			if (rs.getString("introduced") != null) {
-				computer.setIntroductionDate(rs.getDate("introduced"));
-			}
-			if (rs.getString("discontinued") != null) {
-				computer.setDiscontinuationDate(rs.getDate("discontinued"));
-			}
-			if (rs.getString("company_id") != null) {
-				computer.setCompany(new Company(rs.getString("company.name")));
-			}
-			computers.add(computer);
-		}
+		ArrayList<Computer> computers = mapper.mapToComputerArray(rs);
 		
 		rs.close();
 		ps.close();
