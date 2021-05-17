@@ -30,84 +30,109 @@ public class ComputerDAO {
 		this.dbManager = databaseManager;
 	}
 	
-	public Optional<Computer> getByID(long id) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryGetByID);
-		ps.setLong(1, id);
-		ResultSet rs = ps.executeQuery();
-		
-		Optional<Computer> computer = mapper.mapToComputer(rs);
-		
-		rs.close();
-		ps.close();
-		co.close();
+	public Optional<Computer> getByID(long id) {
+		Optional<Computer> computer = Optional.empty();
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetByID);
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			
+			computer = mapper.mapToComputer(rs);
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return computer;
 	}
 	
-	public Optional<Computer> getByName(String name) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryGetByName);
-		ps.setString(1, name);
-		ResultSet rs = ps.executeQuery();
-		
-		Optional<Computer> computer = mapper.mapToComputer(rs);
-		
-		rs.close();
-		ps.close();
-		co.close();
+	public Optional<Computer> getByName(String name) {
+		Optional<Computer> computer = Optional.empty();
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetByName);
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			
+			computer = mapper.mapToComputer(rs);
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return computer;
 	}
 	
-	public ArrayList<Computer> getAll() throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryGetAll);
-		ResultSet rs = ps.executeQuery();
+	public ArrayList<Computer> getAll() {
+		ArrayList<Computer> computers = new ArrayList<Computer>();
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetAll);
+			ResultSet rs = ps.executeQuery();
+			
+			computers = mapper.mapToComputerArray(rs);
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
-		ArrayList<Computer> computers = mapper.mapToComputerArray(rs);
-		
-		rs.close();
-		ps.close();
-		co.close();
 		return computers;
 	}
 	
-	public ArrayList<Computer> getSelection(int numberToReturn, int offset) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryGetSelection);
-		ps.setInt(1, numberToReturn);
-		ps.setInt(2, offset);
-		ResultSet rs = ps.executeQuery();
-		ArrayList<Computer> computers = mapper.mapToComputerArray(rs);
-		
-		rs.close();
-		ps.close();
-		co.close();
+	public ArrayList<Computer> getSelection(int numberToReturn, int offset) {
+		ArrayList<Computer> computers = new ArrayList<Computer>();
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetSelection);
+			ps.setInt(1, numberToReturn);
+			ps.setInt(2, offset);
+			ResultSet rs = ps.executeQuery();
+			computers = mapper.mapToComputerArray(rs);
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return computers;
 	}
 	
-	public void create(Computer computer) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryCreate);
-		ps.setString(1, computer.getName());
-		if (computer.getIntroductionDate() != null) {
-			ps.setString(2, df.format(computer.getIntroductionDate()));
-		} else {
-			ps.setNull(2, Types.TIMESTAMP);
+	public void create(Computer computer) {
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryCreate);
+			ps.setString(1, computer.getName());
+			if (computer.getIntroductionDate() != null) {
+				ps.setString(2, df.format(computer.getIntroductionDate()));
+			} else {
+				ps.setNull(2, Types.TIMESTAMP);
+			}
+			if (computer.getDiscontinuationDate() != null) {
+				ps.setString(3, df.format(computer.getDiscontinuationDate()));
+			} else {
+				ps.setNull(3, Types.TIMESTAMP);
+			}
+			if (computer.getCompany() != null) {
+				ps.setLong(4, computer.getCompany().getID());
+			} else {
+				ps.setNull(4, Types.BIGINT);
+			}
+			
+			ps.executeUpdate();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		if (computer.getDiscontinuationDate() != null) {
-			ps.setString(3, df.format(computer.getDiscontinuationDate()));
-		} else {
-			ps.setNull(3, Types.TIMESTAMP);
-		}
-		if (computer.getCompany() != null) {
-			ps.setLong(4, computer.getCompany().getID());
-		} else {
-			ps.setNull(4, Types.BIGINT);
-		}
-		
-		ps.executeUpdate();
-		ps.close();
-		co.close();
 	}
 	
 	/**
@@ -117,51 +142,63 @@ public class ComputerDAO {
 	 * @param updatedComputer the updated computer containing the new fields
 	 * @throws SQLException
 	 */
-	public void update(String computerName, Computer updatedComputer) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryUpdate);
-		if(updatedComputer.getName() != null) {
-			ps.setString(1, updatedComputer.getName());			
-		} else {
-			ps.setString(1, computerName);
+	public void update(String computerName, Computer updatedComputer) {
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryUpdate);
+			if(updatedComputer.getName() != null) {
+				ps.setString(1, updatedComputer.getName());			
+			} else {
+				ps.setString(1, computerName);
+			}
+			if (updatedComputer.getIntroductionDate() != null) {
+				ps.setString(2, df.format(updatedComputer.getIntroductionDate()));
+			} else {
+				ps.setNull(2, Types.TIMESTAMP);
+			}
+			if (updatedComputer.getDiscontinuationDate() != null) {
+				ps.setString(3, df.format(updatedComputer.getDiscontinuationDate()));
+			} else {
+				ps.setNull(3, Types.TIMESTAMP);
+			}
+			if (updatedComputer.getCompany() != null) {
+				ps.setLong(4, updatedComputer.getCompany().getID());
+			} else {
+				ps.setNull(4, Types.BIGINT);
+			}
+			ps.setString(5, computerName);
+			
+			ps.executeUpdate();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		if (updatedComputer.getIntroductionDate() != null) {
-			ps.setString(2, df.format(updatedComputer.getIntroductionDate()));
-		} else {
-			ps.setNull(2, Types.TIMESTAMP);
-		}
-		if (updatedComputer.getDiscontinuationDate() != null) {
-			ps.setString(3, df.format(updatedComputer.getDiscontinuationDate()));
-		} else {
-			ps.setNull(3, Types.TIMESTAMP);
-		}
-		if (updatedComputer.getCompany() != null) {
-			ps.setLong(4, updatedComputer.getCompany().getID());
-		} else {
-			ps.setNull(4, Types.BIGINT);
-		}
-		ps.setString(5, computerName);
-		
-		ps.executeUpdate();
-		ps.close();
-		co.close();
 	}
 	
-	public void delete(long id) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryDeleteByID);
-		ps.setLong(1, id);
-		ps.executeUpdate();
-		ps.close();
-		co.close();
+	public void delete(long id) {
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
+			ps.setLong(1, id);
+			ps.executeUpdate();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	public void delete(String name) throws SQLException {
-		Connection co = this.dbManager.getNewConnection();
-		PreparedStatement ps = co.prepareStatement(queryDeleteByName);
-		ps.setString(1, name);
-		ps.executeUpdate();
-		ps.close();
-		co.close();
+	public void delete(String name) {
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryDeleteByName);
+			ps.setString(1, name);
+			ps.executeUpdate();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
