@@ -11,6 +11,7 @@ import model.Company;
 public class CompanyDAO {
 
 	private DBConnectionManager dbManager;
+	private CompanyMapper mapper = new CompanyMapper();
 	
 	private final String queryGetByID = "SELECT id, name FROM company WHERE id=?";
 	private final String queryGetByName = "SELECT id, name FROM company WHERE name=?";
@@ -25,10 +26,7 @@ public class CompanyDAO {
 		PreparedStatement ps = co.prepareStatement(queryGetByID);
 		ps.setLong(1, id);
 		ResultSet rs = ps.executeQuery();
-		
-		if (!rs.isBeforeFirst()) return null;
-		rs.next();
-		Company company = new Company(rs.getLong("id"), rs.getString("name"));
+		Company company = mapper.mapToCompany(rs);
 		
 		rs.close();
 		ps.close();
@@ -41,11 +39,9 @@ public class CompanyDAO {
 		PreparedStatement ps = co.prepareStatement(queryGetByName);
 		ps.setString(1, name);
 		ResultSet rs = ps.executeQuery();
+		Company company = mapper.mapToCompany(rs);
 		
-		if (!rs.isBeforeFirst()) return null;
-		
-		rs.next();
-		Company company = new Company(rs.getLong("id"), rs.getString("name"));
+		rs.close();
 		ps.close();
 		co.close();
 		return company;
@@ -55,12 +51,7 @@ public class CompanyDAO {
 		Connection co = this.dbManager.getNewConnection();
 		PreparedStatement ps = co.prepareStatement(queryGetAll);
 		ResultSet rs = ps.executeQuery();
-		
-		ArrayList<Company> companies = new ArrayList<Company>();
-		
-		while (rs.next()) {
-			companies.add(new Company(rs.getLong("id"), rs.getString("name")));
-		}
+		ArrayList<Company> companies = mapper.mapToCompanyArray(rs);
 		
 		rs.close();
 		ps.close();

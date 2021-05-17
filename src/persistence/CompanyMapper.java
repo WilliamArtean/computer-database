@@ -8,14 +8,14 @@ import model.Company;
 
 public class CompanyMapper {
 
-	public Company ResultSetToCompany(ResultSet rs) throws SQLException {
+	public Company mapToCompany(ResultSet rs) throws SQLException {
 		if (!rs.isBeforeFirst()) return null;
 		rs.next();
 		Company company = new Company(rs.getLong("id"), rs.getString("name"));
 		return company;
 	}
 	
-	public ArrayList<Company> ResultSetToCompanyArray(ResultSet rs) throws SQLException {
+	public ArrayList<Company> mapToCompanyArray(ResultSet rs) throws SQLException {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		while (rs.next()) {
 			companies.add(new Company(rs.getLong("id"), rs.getString("name")));
