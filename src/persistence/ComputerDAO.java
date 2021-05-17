@@ -22,6 +22,7 @@ public class ComputerDAO {
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
+	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
 	
 	public void setConnection(Connection co) {
 		this.co = co;
@@ -171,16 +172,40 @@ public class ComputerDAO {
 		st.executeUpdate(createQuery);
 		st.close();
 	}
+	
+	/**
+	 * Updates all the field in the chosen computer with the one from the updated computer.
+	 * If the name of the updated computer is null, the previous value will remain
+	 * @param computerName the name of the computer to update
+	 * @param updatedComputer the updated computer containing the new fields
+	 * @throws SQLException
+	 */
 	public void update(String computerName, Computer updatedComputer) throws SQLException {
-		String query = "SELECT id FROM computer WHERE name='" + computerName + "';";
+		PreparedStatement ps = this.co.prepareStatement(queryUpdate);
+		if(updatedComputer.getName() != null) {
+			ps.setString(1, updatedComputer.getName());			
+		} else {
+			ps.setString(1, computerName);
+		}
+		if (updatedComputer.getIntroductionDate() != null) {
+			ps.setString(2, df.format(updatedComputer.getIntroductionDate()));
+		} else {
+			ps.setNull(2, Types.TIMESTAMP);
+		}
+		if (updatedComputer.getDiscontinuationDate() != null) {
+			ps.setString(3, df.format(updatedComputer.getDiscontinuationDate()));
+		} else {
+			ps.setNull(3, Types.TIMESTAMP);
+		}
+		if (updatedComputer.getCompany() != null) {
+			ps.setLong(4, updatedComputer.getCompany().getID());
+		} else {
+			ps.setNull(4, Types.BIGINT);
+		}
+		ps.setString(5, computerName);
 		
-		Statement st = this.co.createStatement();
-		ResultSet rs = st.executeQuery(query);
-		rs.next();
-		long id = rs.getLong("id");
-		st.close();
-		
-		update(id, updatedComputer);
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 	public void delete(long id) throws SQLException {
