@@ -59,7 +59,7 @@ public class CLI {
 	 * @throws ParseException
 	 * @throws InconsistentDatesException
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException, InconsistentDatesException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException {
 		String commandFirstWord = "";
 		String args = "";
 		if (this.input.indexOf(' ') != -1) {
@@ -220,7 +220,7 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandDelete(String args) throws IncorrectArgumentException, SQLException, InconsistentDatesException {
+	private void processCommandDelete(String args) throws IncorrectArgumentException, SQLException {
 		if (args.isEmpty()) 
 			throw new IncorrectArgumentException();
 		
@@ -252,7 +252,7 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException, InconsistentDatesException {
+	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) throw new IncorrectArgumentException();
@@ -282,7 +282,7 @@ public class CLI {
 		
 	}
 	
-	private void processCommandUpdate(String args) throws IncorrectArgumentException, IOException, ParseException, SQLException, InconsistentDatesException {
+	private void processCommandUpdate(String args) throws IncorrectArgumentException, IOException, ParseException, SQLException {
 		if (args.isEmpty())
 			throw new IncorrectArgumentException();
 		
