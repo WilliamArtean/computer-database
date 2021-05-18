@@ -73,7 +73,7 @@ public class PageController {
 	
 	public void previousPage() {
 		if (currentPageIndex > 0) {
-			currentPageIndex++;
+			currentPageIndex--;
 			clear();
 			list = service.getComputerSelection(itemsPerPage, currentPageIndex);
 			for (Computer computer : list) {
