@@ -42,6 +42,15 @@ public class PageController {
 		nameList.clear();
 	}
 	
+	private void newPage() {
+		clear();
+		list = service.getComputerSelection(itemsPerPage, 0);
+		for (Computer computer : list) {
+			nameList.add(computer.getName());
+		}
+		view.displayPage(nameList);
+	}
+	
 	public void startNavigation() throws IOException {
 		list.clear();
 		nameList.clear();
