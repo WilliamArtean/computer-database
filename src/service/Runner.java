@@ -1,9 +1,13 @@
 package service;
 
 import ui.CLI;
+import ui.CLIView;
 
 import java.sql.*;
 import java.text.ParseException;
+
+import controller.CLIController;
+
 import java.io.IOException;
 
 import exceptions.*;
@@ -31,6 +35,10 @@ public class Runner {
 			ComputerService computerService = new ComputerService();
 			computerService.setComputerDAO(computerDAO);
 			computerService.setCompanyService(companyService);
+			
+			CLIController controller = new CLIController();
+			controller.setView(new CLIView());
+			controller.chooseMainMenuAction();
 			
 			cli = new CLI();
 			cli.setComputerService(computerService);
