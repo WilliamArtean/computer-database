@@ -3,7 +3,10 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
+import model.Company;
+import model.Computer;
 import service.CompanyService;
 import service.ComputerService;
 import ui.CLIView;
@@ -67,7 +70,17 @@ public class CLIController {
 	}
 	
 	private void listComputers() {
+		ArrayList<Computer> computerList = computerService.getAllComputers();
+		ArrayList<String> computerNameList = new ArrayList<String>();
 		
+		if (computerList.isEmpty()) {
+			computerNameList.add("No computer in the database");
+		}
+		for (Computer computer : computerList) {
+			computerNameList.add(computer.getName());
+		}
+		
+		view.displayList(computerNameList);
 	}
 	
 	private void listCompanies() {
