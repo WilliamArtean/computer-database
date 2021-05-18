@@ -312,48 +312,35 @@ public class CLI {
 			}
 		}
 		
-		Computer updatedComputer = new Computer();
-		
-		System.out.println("New name (leave blank to make no change)");
-		String updatedName = this.br.readLine().trim();
-		if (!updatedName.isEmpty()) {
-			updatedComputer.setName(updatedName);
+		Optional<String> updatedName = Optional.empty();
+		System.out.println("New name (leave blank to keep previous name)");
+		String updatedNameInput = this.br.readLine().trim();
+		if (!updatedNameInput.isEmpty()) {
+			updatedName = Optional.of(updatedNameInput);
 		}
 		
-		System.out.println("New date of introduction (leave blank to make no change)");
-		String introDateString = this.br.readLine().trim();
-		if (!introDateString.isEmpty()) {
-			LocalDate introDate = LocalDate.parse(introDateString, df);
-			updatedComputer.setIntroductionDate(introDate);
+		
+		Optional<LocalDate> introDate = Optional.empty();
+		System.out.println("New date of introduction (leave blank to set to NULL)");
+		String introDateInput = this.br.readLine().trim();
+		if (!introDateInput.isEmpty()) {
+			introDate = Optional.of(LocalDate.parse(introDateInput, df));
 		}
 		
-		System.out.println("New date of discontinuation (leave blank to make no change)");
-		String discontDateString = this.br.readLine().trim();
-		if (!discontDateString.isEmpty()) {
-			LocalDate discontDate = LocalDate.parse(discontDateString, df);
-			updatedComputer.setDiscontinuationDate(discontDate);
+		Optional<LocalDate> discontDate = Optional.empty();
+		System.out.println("New date of discontinuation (leave blank to set to NULL)");
+		String discontDateInput = this.br.readLine().trim();
+		if (!discontDateInput.isEmpty()) {
+			discontDate = Optional.of(LocalDate.parse(discontDateInput, df));
 		}
 		
-		System.out.println("New company name (leave blank to make no change)");
-		String companyName = this.br.readLine().trim();
-		if (!companyName.isEmpty()) {
-			Optional<Company> company = companyService.getCompany(companyName);
-			if (company.isPresent()) {
-				updatedComputer.setCompany(company.get());
-			}
+		Optional<String> companyName = Optional.empty();
+		System.out.println("New company name (leave blank to set to NULL)");
+		String companyNameInput = this.br.readLine().trim();
+		if (!companyNameInput.isEmpty()) {
+			companyName = Optional.of(companyNameInput);
 		}
-		
-		if (updatedComputer.getName() != null
-				|| updatedComputer.getIntroductionDate() != null
-				|| updatedComputer.getDiscontinuationDate() != null
-				|| updatedComputer.getCompany() != null) {
-			if (computerName != null) {
-				computerService.update(computerName, updatedComputer);
-			}
-			
-		} else {
-			System.out.println("No changes made to computer " + computerName);
-		}
+		computerService.update(computerName, updatedName, introDate, discontDate, companyName);
 	}
 	
 }

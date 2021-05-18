@@ -60,8 +60,35 @@ public class ComputerService {
 		dao.create(computerToCreate);
 	}
 	
-	public void update(String name, Computer computer) {
-		dao.update(name, computer);
+	/**
+	 * Build a Computer object to give to the DAO to update
+	 * @param oldName
+	 * @param newComputerName If null, the new Computer object with have the previous name instead
+	 * @param introduced
+	 * @param discontinued
+	 * @param companyName
+	 */
+	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
+		Computer newComputer = new Computer();
+		if (newComputerName.isPresent()) {
+			newComputer.setName(newComputerName.get());
+		} else {
+			newComputer.setName(oldName);
+		}
+		if (introduced.isPresent()) {
+			newComputer.setIntroductionDate(introduced.get());
+		}
+		if (discontinued.isPresent()) {
+			newComputer.setDiscontinuationDate(discontinued.get());
+		}
+		if (companyName.isPresent()) {
+			Optional<Company> companyToAdd = companyService.getCompany(companyName.get());
+			if (companyToAdd.isPresent()) {
+				newComputer.setCompany(companyToAdd.get());
+			}
+		}
+		
+		dao.update(oldName, newComputer);
 	}
 	
 	public void delete(String name) {

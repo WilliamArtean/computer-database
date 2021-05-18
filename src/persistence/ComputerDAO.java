@@ -149,7 +149,7 @@ public class ComputerDAO {
 			if(updatedComputer.getName() != null) {
 				ps.setString(1, updatedComputer.getName());			
 			} else {
-				ps.setString(1, computerName);
+				ps.setNull(1, Types.VARCHAR);
 			}
 			if (updatedComputer.getIntroductionDate() != null) {
 				ps.setString(2, df.format(updatedComputer.getIntroductionDate()));
