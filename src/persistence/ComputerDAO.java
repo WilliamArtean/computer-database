@@ -25,7 +25,7 @@ public class ComputerDAO {
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
-	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
+	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
 	
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
