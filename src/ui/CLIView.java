@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class CLIView {
 	
@@ -15,11 +16,8 @@ public class CLIView {
 	}
 	
 	public void displayList(ArrayList<String> list) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : list) {
-			sb.append(s);
-		}
-		System.out.println(sb.toString());
+		String listToDisplay = list.stream().collect(Collectors.joining("\n"));
+		System.out.println(listToDisplay);
 	}
 
 }
