@@ -3,9 +3,12 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import exceptions.InconsistentDatesException;
 import model.Company;
 import model.Computer;
 import service.CompanyService;
@@ -19,6 +22,7 @@ public class CLIController {
 	private ComputerService computerService;
 	private CompanyService companyService;
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	
 	public CLIController(CLIView view, ComputerService computerService, CompanyService companyService) {
@@ -103,7 +107,7 @@ public class CLIController {
 	}
 	
 	private void showDetails() throws IOException {
-		System.out.println("Enter computer name: ");
+		System.out.println("Enter computer name:");
 		String computerName = getInput();
 		Optional<Computer> computer = computerService.getComputer(computerName);
 		if (computer.isEmpty()) {
@@ -114,8 +118,42 @@ public class CLIController {
 		
 	}
 	
-	private void createComputer() {
+	private void createComputer() throws IOException {
+		String computerName = "";
+		Optional<LocalDate> introduced = Optional.empty();
+		Optional<LocalDate> discontinued = Optional.empty();
+		Optional<String> companyName = Optional.empty();
 		
+		do {
+			System.out.println("Enter computer name:");
+			computerName = getInput();
+			if ("".equals(computerName)) {
+				System.out.println("You must enter a name for the computer.");
+			}
+		} while ("".equals(computerName));
+		System.out.println("Enter computer introduction date:");
+		String introducedInput = getInput();
+		System.out.println("Enter computer discontinuation date:");
+		String discontinuedInput = getInput();
+		System.out.println("Enter company name:");
+		String companyNameInput = getInput();
+		
+		if (!introducedInput.isEmpty()) {
+			introduced = Optional.of(LocalDate.parse(introducedInput, df));
+		}
+		if (!discontinuedInput.isEmpty()) {
+			discontinued = Optional.of(LocalDate.parse(discontinuedInput, df));
+		}
+		if (!companyNameInput.isEmpty()) {
+			companyName = Optional.of(companyNameInput);
+		}
+		
+		try {
+			computerService.create(computerName, introduced, discontinued, companyName);
+		} catch (InconsistentDatesException e) {
+			System.out.println("The dates are inconsistent.");
+			e.printStackTrace();
+		}
 	}
 	
 	private void updateComputer() {
