@@ -84,7 +84,15 @@ public class PageController {
 	}
 	
 	public void nextPage() {
-		
+		if (currentPageIndex < (numberOfPages - 1)) {
+			currentPageIndex++;
+			clear();
+			list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
+			for (Computer computer : list) {
+				nameList.add(computer.getName());
+			}
+			view.displayPage(nameList);
+		}
 	}
 	
 }
