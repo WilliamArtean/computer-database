@@ -75,7 +75,7 @@ public class PageController {
 		if (currentPageIndex > 0) {
 			currentPageIndex--;
 			clear();
-			list = service.getComputerSelection(itemsPerPage, currentPageIndex);
+			list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
 			for (Computer computer : list) {
 				nameList.add(computer.getName());
 			}
