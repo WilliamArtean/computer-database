@@ -84,7 +84,17 @@ public class CLIController {
 	}
 	
 	private void listCompanies() {
+		ArrayList<Company> companyList = companyService.getAllCompanies();
+		ArrayList<String> companyNameList = new ArrayList<String>();
 		
+		if (companyList.isEmpty()) {
+			companyNameList.add("No company in the database");
+		}
+		for (Company company : companyList) {
+			companyNameList.add(company.getName());
+		}
+		
+		view.displayList(companyNameList);
 	}
 	
 	private void showDetails() {
