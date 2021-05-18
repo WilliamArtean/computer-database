@@ -29,4 +29,20 @@ public class ComputerService {
 	public ArrayList<Computer> getComputerSelection(int numberToGet, int lineOffset) {
 		return dao.getSelection(numberToGet, lineOffset);
 	}
+	
+	public void create(Computer computer) {
+		dao.create(computer);
+	}
+	
+	public void update(String name, Computer computer) {
+		dao.update(name, computer);
+	}
+	
+	public void delete(String name) {
+		dao.delete(name);
+	}
+	
+	public void delete(long id) {
+		dao.delete(id);
+	}
 }
