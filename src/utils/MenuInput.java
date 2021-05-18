@@ -17,4 +17,25 @@ public enum MenuInput {
 		return (number >= LIST_COMPUTERS.getNumber() && number <= EXIT.getNumber());
 	}
 	
+	public static MenuInput fromInteger(int number) {
+		switch(number) {
+		case 1:
+			return LIST_COMPUTERS;
+		case 2:
+			return LIST_COMPANIES;
+		case 3:
+			return SHOW_DETAILS;
+		case 4:
+			return CREATE_COMPUTER;
+		case 5:
+			return UPDATE_COMPUTER;
+		case 6:
+			return DELETE_COMPUTER;
+		case 7:
+			return EXIT;
+		}
+		
+		return null;
+	}
+	
 }
