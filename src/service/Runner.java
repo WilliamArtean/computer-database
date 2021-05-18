@@ -36,6 +36,7 @@ public class Runner {
 			companyService.setCompanyDAO(companyDAO);
 			ComputerService computerService = new ComputerService();
 			computerService.setComputerDAO(computerDAO);
+			computerService.setCompanyService(companyService);
 			
 			cli = new CLI();
 			cli.setComputerService(computerService);

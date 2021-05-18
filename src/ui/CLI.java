@@ -256,32 +256,32 @@ public class CLI {
 	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
-		if (computerName.isEmpty()) throw new IncorrectArgumentException();
-		
-		LocalDate introDate = null;
-		System.out.println("Date of introduction (press Enter to leave blank)");
-		String introDateString = this.br.readLine().trim();
-		if (!introDateString.isEmpty()) introDate = LocalDate.parse(introDateString, df);
-		
-		LocalDate discontDate = null;
-		System.out.println("Date of discontinuation (press Enter to leave blank)");
-		String discontDateString = this.br.readLine().trim();
-		if (!discontDateString.isEmpty()) discontDate = LocalDate.parse(discontDateString, df);
-		
-		System.out.println("Company name (press Enter to leave blank)");
-		String companyName = this.br.readLine().trim();
-		
-		Computer computerToCreate = new Computer(computerName);
-		if (introDate != null) computerToCreate.setIntroductionDate(introDate);
-		if (discontDate != null) computerToCreate.setDiscontinuationDate(discontDate);
-		if (!companyName.isEmpty()) {
-			Optional<Company> company = companyService.getCompany(companyName);
-			if (company.isPresent()) {
-				computerToCreate.setCompany(company.get());
-			}
+		if (computerName.isEmpty()) {
+			throw new IncorrectArgumentException();
 		}
 		
-		computerService.create(computerToCreate);
+		Optional<LocalDate> introDate = Optional.empty();
+		System.out.println("Date of introduction (press Enter to leave blank)");
+		String introDateString = this.br.readLine().trim();
+		if (!introDateString.isEmpty()) {
+			introDate = Optional.of(LocalDate.parse(introDateString, df));
+		}
+		
+		Optional<LocalDate> discontDate = Optional.empty();
+		System.out.println("Date of discontinuation (press Enter to leave blank)");
+		String discontDateString = this.br.readLine().trim();
+		if (!discontDateString.isEmpty()) {
+			discontDate = Optional.of(LocalDate.parse(discontDateString, df));
+		}
+		
+		Optional<String> companyName = Optional.empty();
+		System.out.println("Company name (press Enter to leave blank)");
+		String companyNameInput = this.br.readLine().trim();
+		if (!companyNameInput.isEmpty()) {
+			companyName = Optional.of(companyNameInput);
+		}
+		
+		computerService.create(computerName, introDate, discontDate, companyName);
 		
 	}
 	
