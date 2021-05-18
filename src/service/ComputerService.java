@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import exceptions.InconsistentDatesException;
 import model.Company;
 import model.Computer;
 import persistence.ComputerDAO;
@@ -37,12 +38,11 @@ public class ComputerService {
 		return dao.getSelection(numberToGet, lineOffset);
 	}
 	
-	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
-		/*if (introduced.isPresent() && discontinued.isPresent()) {
-			if (introduced.get().isAfter(discontinued.get())) {
-				throw new InconsistentDatesException();
-			}
-		}*/
+	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
+		if (!areDatesConsistent(introduced, discontinued)) {
+			throw new InconsistentDatesException();
+		}
+		
 		Computer computerToCreate = new Computer(computerName);
 		if (introduced.isPresent()) {
 			computerToCreate.setIntroductionDate(introduced.get());
@@ -67,8 +67,13 @@ public class ComputerService {
 	 * @param introduced
 	 * @param discontinued
 	 * @param companyName
+	 * @throws InconsistentDatesException 
 	 */
-	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
+	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
+		if (!areDatesConsistent(introduced, discontinued)) {
+			throw new InconsistentDatesException();
+		}
+		
 		Computer newComputer = new Computer();
 		if (newComputerName.isPresent()) {
 			newComputer.setName(newComputerName.get());
@@ -97,5 +102,20 @@ public class ComputerService {
 	
 	public void delete(long id) {
 		dao.delete(id);
+	}
+	
+	/**
+	 * Returns true if the discontinued dates is after the introduced date, or if at least one of the dates is null.
+	 * Return false if the discontinued dates is after the introduced date.
+	 * @param introduced
+	 * @param discontinued
+	 * @return true if the discontinued date is after the introduced date, or if at least one of the dates is null.
+	 * false if the discontinued date is after the introduced date.
+	 */
+	public boolean areDatesConsistent(Optional<LocalDate> introduced, Optional<LocalDate> discontinued) {
+		if (introduced.isEmpty() || discontinued.isEmpty()) {
+			return true;
+		}
+		return introduced.get().isBefore(discontinued.get());
 	}
 }

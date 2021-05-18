@@ -55,6 +55,8 @@ public class Runner {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
+		} catch (InconsistentDatesException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				co.close();

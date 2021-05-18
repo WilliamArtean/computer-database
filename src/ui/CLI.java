@@ -60,7 +60,7 @@ public class CLI {
 	 * @throws ParseException
 	 * @throws InconsistentDatesException
 	 */
-	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException {
+	public void processInput() throws IncorrectCommandException, IncorrectArgumentException, IOException, SQLException, ParseException, InconsistentDatesException {
 		String commandFirstWord = "";
 		String args = "";
 		if (this.input.indexOf(' ') != -1) {
@@ -253,7 +253,7 @@ public class CLI {
 		}
 	}
 	
-	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException {
+	private void processCommandCreate() throws IncorrectArgumentException, IOException, ParseException, NumberFormatException, SQLException, InconsistentDatesException {
 		System.out.println("Computer name");
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) {
@@ -285,7 +285,7 @@ public class CLI {
 		
 	}
 	
-	private void processCommandUpdate(String args) throws IncorrectArgumentException, IOException, ParseException, SQLException {
+	private void processCommandUpdate(String args) throws IncorrectArgumentException, IOException, ParseException, SQLException, InconsistentDatesException {
 		if (args.isEmpty())
 			throw new IncorrectArgumentException();
 		
