@@ -1,7 +1,10 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import model.Computer;
 
 public class CLIView {
 	
@@ -20,4 +23,24 @@ public class CLIView {
 		System.out.println(listToDisplay);
 	}
 
+	public void showDetails(Optional<Computer> computer) {
+		if (computer.isEmpty()) {
+			System.out.println("No such computer found");
+		}
+		
+		StringBuilder details = new StringBuilder();
+		details.append("ID: ").append(computer.get().getID());
+		details.append("\n").append("NAME: ").append(computer.get().getName());
+		
+		if (computer.get().getIntroductionDate() != null) {
+			details.append('\n').append("INTRODUCTION DATE: ").append(computer.get().getIntroductionDate());
+		}
+		if (computer.get().getDiscontinuationDate() != null) {
+			details.append('\n').append("DISCONTINUATION DATE: ").append(computer.get().getDiscontinuationDate());
+		}
+		if (computer.get().getCompany() != null) {
+			details.append('\n').append("COMPANY: ").append(computer.get().getCompany().getName());
+		}
+	}
+	
 }
