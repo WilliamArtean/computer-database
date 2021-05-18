@@ -13,7 +13,7 @@ public class PageController {
 
 	private Page view;
 	private ComputerService service;
-	private int currentPage = 0;
+	private int currentPageIndex = 0;
 	private final int numberOfPages;
 	private final int itemsPerPage = 10;
 	private ArrayList<Computer> list = new ArrayList<Computer>();
@@ -23,12 +23,8 @@ public class PageController {
 	public int getNumberOfPages() {
 		return numberOfPages;
 	}
-	public int getCurrentPage() {
-		return currentPage;
-	}
-	
-	private String getInput() throws IOException {
-		return this.br.readLine().substring(0, 1);
+	public int getCurrentPageIndex() {
+		return currentPageIndex;
 	}
 	
 	public PageController(Page view, ComputerService service) {
@@ -37,7 +33,42 @@ public class PageController {
 		this.numberOfPages = ((service.getCount() - 1) / itemsPerPage) + 1;
 	}
 	
+	private String getInput() throws IOException {
+		return this.br.readLine().substring(0, 1);
+	}
+
+	private void clear() {
+		list.clear();
+		nameList.clear();
+	}
+	
 	public void startNavigation() throws IOException {
+		list.clear();
+		nameList.clear();
+		list = service.getComputerSelection(itemsPerPage, 0);
+		for (Computer computer : list) {
+			nameList.add(computer.getName());
+		}
+		view.displayPage(nameList);
+		
+		String userInput = "";
+		do {
+			view.displayPagination(currentPageIndex, numberOfPages);
+			userInput = getInput();
+			switch (userInput) {
+			case "p":
+				previousPage();
+				break;
+			case "n":
+				nextPage();
+				break;
+			case "q":
+				break;
+			default:
+				System.out.println("Wrong input");
+				break;
+			}
+		} while (!"q".equals(userInput));
 	}
 	
 	public void previousPage() {
