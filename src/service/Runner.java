@@ -15,17 +15,11 @@ public class Runner {
 
 	public static void main(String[] args) {
 		
-		Connection co = null;
 		CLI cli;
 		CompanyDAO companyDAO;
 		ComputerDAO computerDAO;
 		
-		try {
-			String url = "jdbc:mysql://localhost:3306/computer-database-db";
-			String user = "admincdb";
-			String pswd = "qwerty1234";
-			co = DriverManager.getConnection(url, user, pswd);
-			
+		try {			
 			companyDAO = new CompanyDAO();
 			computerDAO = new ComputerDAO();
 			DBConnectionManager dbConnectionManager = new DBConnectionManager();
@@ -57,12 +51,6 @@ public class Runner {
 			e.printStackTrace();
 		} catch (InconsistentDatesException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				co.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
