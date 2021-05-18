@@ -11,7 +11,7 @@ public class Page {
 	}
 	
 	public void displayPagination(int pageIndex, int numberOfPages) {
-		StringBuilder pagination = new StringBuilder("\n");
+		StringBuilder pagination = new StringBuilder();
 		pagination.append(pageIndex + 1).append("/").append(numberOfPages);
 		if (pageIndex > 0) {
 			pagination.append("\n").append("Enter 'p' to move to the previous page.");
@@ -20,6 +20,8 @@ public class Page {
 			pagination.append("\n").append("Enter 'n' to move to the next page.");
 		}
 		pagination.append("\n").append("Enter 'q' to quit page navigation.");
+		
+		System.out.println(pagination);
 	}
 	
 }
