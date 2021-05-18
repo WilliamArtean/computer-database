@@ -127,10 +127,10 @@ public class CLIController {
 		do {
 			System.out.println("Enter computer name:");
 			computerName = getInput();
-			if ("".equals(computerName)) {
+			if (computerName.isEmpty()) {
 				System.out.println("You must enter a name for the computer.");
 			}
-		} while ("".equals(computerName));
+		} while (computerName.isEmpty());
 		System.out.println("Enter computer introduction date:");
 		String introducedInput = getInput();
 		System.out.println("Enter computer discontinuation date:");
@@ -164,12 +164,12 @@ public class CLIController {
 		
 		String computerName = "";
 		do {
-			System.out.println("Enter name of the computer to update:");
+			System.out.println("Enter the name of the computer to update:");
 			computerName = getInput();
-			if ("".equals(computerName)) {
+			if (computerName.isEmpty()) {
 				System.out.println("You must enter a name for the computer to update");
 			}
-		} while ("".equals(computerName));
+		} while (computerName.isEmpty());
 		System.out.println("Enter new computer name (press Enter to keep the previous name):");
 		String newComputerNameInput = getInput();
 		System.out.println("Enter computer introduction date:");
