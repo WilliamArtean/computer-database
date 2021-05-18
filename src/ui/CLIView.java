@@ -28,14 +28,15 @@ public class CLIView {
 		details.append("\n").append("NAME: ").append(computer.getName());
 		
 		if (computer.getIntroductionDate() != null) {
-			details.append('\n').append("INTRODUCTION DATE: ").append(computer.getIntroductionDate());
+			details.append('\n').append("INTRODUCED: ").append(computer.getIntroductionDate());
 		}
 		if (computer.getDiscontinuationDate() != null) {
-			details.append('\n').append("DISCONTINUATION DATE: ").append(computer.getDiscontinuationDate());
+			details.append('\n').append("DISCONTINUED: ").append(computer.getDiscontinuationDate());
 		}
 		if (computer.getCompany() != null) {
 			details.append('\n').append("COMPANY: ").append(computer.getCompany().getName());
 		}
+		System.out.println(details.toString());
 	}
 	
 }
