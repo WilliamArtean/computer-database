@@ -36,19 +36,19 @@ public class Runner {
 			computerService.setComputerDAO(computerDAO);
 			computerService.setCompanyService(companyService);
 			
-			CLIController controller = new CLIController(new CLIView());
+			CLIController controller = new CLIController(new CLIView(), computerService, companyService);
 			controller.chooseMainMenuAction();
-			
+			/*
 			cli = new CLI();
 			cli.setComputerService(computerService);
 			cli.setCompanyService(companyService);
 			
 			cli.getInput();
 			cli.processInput();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+			*/
 		} catch (IOException e) {
+			e.printStackTrace();
+		}/* catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IncorrectCommandException e) {
 			e.printStackTrace();
@@ -58,7 +58,7 @@ public class Runner {
 			e.printStackTrace();
 		} catch (InconsistentDatesException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }
