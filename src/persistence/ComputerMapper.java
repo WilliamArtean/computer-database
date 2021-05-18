@@ -19,10 +19,10 @@ public class ComputerMapper {
 		Computer computer = new Computer(rs.getString("computer.name"));
 		computer.setID(rs.getLong("id"));
 		if (rs.getString("introduced") != null) {
-			computer.setIntroductionDate(rs.getDate("introduced"));
+			computer.setIntroductionDate(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(rs.getDate("discontinued"));
+			computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("company_id") != null) {
 			computer.setCompany(new Company(rs.getString("company.name")));
@@ -37,10 +37,10 @@ public class ComputerMapper {
 			Computer computer = new Computer(rs.getString("computer.name"));
 			computer.setID(rs.getLong("id"));
 			if (rs.getString("introduced") != null) {
-				computer.setIntroductionDate(rs.getDate("introduced"));
+				computer.setIntroductionDate(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("discontinued") != null) {
-				computer.setDiscontinuationDate(rs.getDate("discontinued"));
+				computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("company_id") != null) {
 				computer.setCompany(new Company(rs.getString("company.name")));

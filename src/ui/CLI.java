@@ -9,14 +9,14 @@ import service.CompanyService;
 import java.io.*;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 
 public class CLI {
 	
-	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private BufferedReader br;
 	private String input;
 	private ComputerService computerService;
@@ -258,15 +258,15 @@ public class CLI {
 		String computerName = this.br.readLine().trim();
 		if (computerName.isEmpty()) throw new IncorrectArgumentException();
 		
-		Date introDate = null;
+		LocalDate introDate = null;
 		System.out.println("Date of introduction (press Enter to leave blank)");
 		String introDateString = this.br.readLine().trim();
-		if (!introDateString.isEmpty()) introDate = df.parse(introDateString);
+		if (!introDateString.isEmpty()) introDate = LocalDate.parse(introDateString, df);
 		
-		Date discontDate = null;
+		LocalDate discontDate = null;
 		System.out.println("Date of discontinuation (press Enter to leave blank)");
 		String discontDateString = this.br.readLine().trim();
-		if (!discontDateString.isEmpty()) discontDate = df.parse(discontDateString);
+		if (!discontDateString.isEmpty()) discontDate = LocalDate.parse(discontDateString, df);
 		
 		System.out.println("Company name (press Enter to leave blank)");
 		String companyName = this.br.readLine().trim();
@@ -323,14 +323,14 @@ public class CLI {
 		System.out.println("New date of introduction (leave blank to make no change)");
 		String introDateString = this.br.readLine().trim();
 		if (!introDateString.isEmpty()) {
-			Date introDate = df.parse(introDateString);
+			LocalDate introDate = LocalDate.parse(introDateString, df);
 			updatedComputer.setIntroductionDate(introDate);
 		}
 		
 		System.out.println("New date of discontinuation (leave blank to make no change)");
 		String discontDateString = this.br.readLine().trim();
 		if (!discontDateString.isEmpty()) {
-			Date discontDate = df.parse(discontDateString);
+			LocalDate discontDate = LocalDate.parse(discontDateString, df);
 			updatedComputer.setDiscontinuationDate(discontDate);
 		}
 		

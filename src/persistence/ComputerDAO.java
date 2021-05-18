@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import java.sql.Types;
 public class ComputerDAO {
 	
 	private DBConnectionManager dbManager;
-	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");// HH:mm:ss");
 	private ComputerMapper mapper = new ComputerMapper();
 	
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
