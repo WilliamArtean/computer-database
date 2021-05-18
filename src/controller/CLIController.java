@@ -156,8 +156,48 @@ public class CLIController {
 		}
 	}
 	
-	private void updateComputer() {
+	private void updateComputer() throws IOException {
+		Optional<String> newComputerName = Optional.empty();
+		Optional<LocalDate> introduced = Optional.empty();
+		Optional<LocalDate> discontinued = Optional.empty();
+		Optional<String> companyName = Optional.empty();
 		
+		String computerName = "";
+		do {
+			System.out.println("Enter name of the computer to update:");
+			computerName = getInput();
+			if ("".equals(computerName)) {
+				System.out.println("You must enter a name for the computer to update");
+			}
+		} while ("".equals(computerName));
+		System.out.println("Enter new computer name (press Enter to keep the previous name):");
+		String newComputerNameInput = getInput();
+		System.out.println("Enter computer introduction date:");
+		String introducedInput = getInput();
+		System.out.println("Enter computer discontinuation date:");
+		String discontinuedInput = getInput();
+		System.out.println("Enter company name:");
+		String companyNameInput = getInput();
+		
+		if (!newComputerNameInput.isEmpty()) {
+			newComputerName = Optional.of(newComputerNameInput);
+		}
+		if (!introducedInput.isEmpty()) {
+			introduced = Optional.of(LocalDate.parse(introducedInput, df));
+		}
+		if (!discontinuedInput.isEmpty()) {
+			discontinued = Optional.of(LocalDate.parse(discontinuedInput, df));
+		}
+		if (!companyNameInput.isEmpty()) {
+			companyName = Optional.of(companyNameInput);
+		}
+		
+		try {
+			computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
+		} catch (InconsistentDatesException e) {
+			System.out.println("The dates are inconsistent.");
+			e.printStackTrace();
+		}
 	}
 	
 	private void deleteComputer() {
