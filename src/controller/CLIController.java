@@ -14,6 +14,7 @@ import model.Computer;
 import service.CompanyService;
 import service.ComputerService;
 import ui.CLIView;
+import ui.Page;
 import utils.MenuInput;
 
 public class CLIController {
@@ -78,18 +79,9 @@ public class CLIController {
 		}
 	}
 	
-	private void listComputers() {
-		ArrayList<Computer> computerList = computerService.getAllComputers();
-		ArrayList<String> computerNameList = new ArrayList<String>();
-		
-		if (computerList.isEmpty()) {
-			computerNameList.add("No computer in the database");
-		}
-		for (Computer computer : computerList) {
-			computerNameList.add(computer.getName());
-		}
-		
-		view.displayList(computerNameList);
+	private void listComputers() throws IOException {
+		PageController pageController = new PageController(new Page(), computerService);
+		pageController.startNavigation();
 	}
 	
 	private void listCompanies() {
