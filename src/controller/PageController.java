@@ -38,6 +38,13 @@ public class PageController {
 	}
 	
 	public void startNavigation() throws IOException {
+	}
+	
+	public void previousPage() {
+		
+	}
+	
+	public void nextPage() {
 		
 	}
 	
