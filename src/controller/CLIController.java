@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import model.Company;
 import model.Computer;
@@ -47,7 +48,7 @@ public class CLIController {
 		} while (MenuInput.fromInteger(userChoice).compareTo(MenuInput.EXIT) != 0);
 	}
 	
-	private void processMainMenuInput(MenuInput input) {
+	private void processMainMenuInput(MenuInput input) throws IOException {
 		switch (input) {
 		case LIST_COMPUTERS:
 			listComputers();
@@ -101,7 +102,15 @@ public class CLIController {
 		view.displayList(companyNameList);
 	}
 	
-	private void showDetails() {
+	private void showDetails() throws IOException {
+		System.out.println("Enter computer name: ");
+		String computerName = getInput();
+		Optional<Computer> computer = computerService.getComputer(computerName);
+		if (computer.isEmpty()) {
+			System.out.println("No computer found with name '" + computerName + "'");
+		} else {
+			view.showDetails(computer.get());
+		}
 		
 	}
 	
