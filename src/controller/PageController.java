@@ -72,7 +72,15 @@ public class PageController {
 	}
 	
 	public void previousPage() {
-		
+		if (currentPageIndex > 0) {
+			currentPageIndex++;
+			clear();
+			list = service.getComputerSelection(itemsPerPage, currentPageIndex);
+			for (Computer computer : list) {
+				nameList.add(computer.getName());
+			}
+			view.displayPage(nameList);
+		}
 	}
 	
 	public void nextPage() {
