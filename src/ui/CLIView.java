@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.ArrayList;
+
 public class CLIView {
 	
 	public void displayMainMenu() {
@@ -10,6 +12,14 @@ public class CLIView {
 		System.out.println("5 - Update a computer");
 		System.out.println("6 - Delete a computer");
 		System.out.println("7 - Exit");
+	}
+	
+	public void displayList(ArrayList<String> list) {
+		StringBuilder sb = new StringBuilder();
+		for (String s : list) {
+			sb.append(s);
+		}
+		System.out.println(sb.toString());
 	}
 
 }
