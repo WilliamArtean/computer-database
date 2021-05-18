@@ -40,8 +40,11 @@ public class CLIController {
 		do {
 			view.displayMainMenu();
 			userChoice = Integer.parseInt(getInput());
-		} while (!MenuInput.isValid(userChoice));
-		processMainMenuInput(MenuInput.fromInteger(userChoice));
+			if (!MenuInput.isValid(userChoice)) {
+				System.out.println("Invalid command");
+			}
+			processMainMenuInput(MenuInput.fromInteger(userChoice));
+		} while (MenuInput.fromInteger(userChoice).compareTo(MenuInput.EXIT) != 0);
 	}
 	
 	private void processMainMenuInput(MenuInput input) {
@@ -65,6 +68,7 @@ public class CLIController {
 			deleteComputer();
 			break;
 		case EXIT:
+			System.out.println("Exiting application...");
 			break;
 		}
 	}
