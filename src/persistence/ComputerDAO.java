@@ -25,6 +25,7 @@ public class ComputerDAO {
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
+	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
 	
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
@@ -199,6 +200,25 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getCount() {
+		int count = 0;
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetCount);
+			ResultSet rs = ps.executeQuery();
+			
+			rs.next();
+			count = rs.getInt("rowcount");
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 	
 }
