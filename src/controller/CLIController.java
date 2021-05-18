@@ -12,6 +12,12 @@ public class CLIController {
 	private CLIView view;
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+	
+	public CLIController(CLIView view) {
+		this.view = view;
+	}
+	
+	
 	public void setView(CLIView view) {
 		this.view = view;
 	}

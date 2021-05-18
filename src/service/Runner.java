@@ -36,8 +36,7 @@ public class Runner {
 			computerService.setComputerDAO(computerDAO);
 			computerService.setCompanyService(companyService);
 			
-			CLIController controller = new CLIController();
-			controller.setView(new CLIView());
+			CLIController controller = new CLIController(new CLIView());
 			controller.chooseMainMenuAction();
 			
 			cli = new CLI();
