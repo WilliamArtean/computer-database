@@ -5,20 +5,20 @@ import java.util.stream.Collectors;
 
 public class Page {
 	
-	public void displayPage(ArrayList<String> list) {
+	public void displayPage(ArrayList<String> list, int pageIndex, int numberOfPages) {
 		String listToDisplay = list.stream().collect(Collectors.joining("\n"));
 		System.out.println(listToDisplay);
-		/*
+		
 		StringBuilder pagination = new StringBuilder("\n");
-		pagination.append(currentPage).append("/").append(numberOfPages);
-		if (currentPage < numberOfPages) {
-			pagination.append("\n").append("Enter 'n' to move to the next page.");
-		}
-		if (currentPage > 1) {
+		pagination.append(pageIndex + 1).append("/").append(numberOfPages);
+		if (pageIndex > 0) {
 			pagination.append("\n").append("Enter 'p' to move to the previous page.");
 		}
+		if ((pageIndex + 1) < numberOfPages) {
+			pagination.append("\n").append("Enter 'n' to move to the next page.");
+		}
 		pagination.append("\n").append("Enter 'q' to quit page navigation.");
-		*/
+		
 	}
 	
 }
