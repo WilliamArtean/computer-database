@@ -34,7 +34,7 @@ public class PageController {
 	public PageController(Page view, ComputerService service) {
 		this.view = view;
 		this.service = service;
-		this.numberOfPages = service.getCount();
+		this.numberOfPages = ((service.getCount() - 1) / itemsPerPage) + 1;
 	}
 	
 	public void startNavigation() throws IOException {
