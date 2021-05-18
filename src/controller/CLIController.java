@@ -11,12 +11,6 @@ public class CLIController {
 
 	private CLIView view;
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	
-	
-	public CLIController(CLIView view) {
-		this.view = view;
-	}
-	
 
 	public void setView(CLIView view) {
 		this.view = view;
@@ -25,7 +19,6 @@ public class CLIController {
 	private String getInput() throws IOException {
 		return this.br.readLine().trim();
 	}
-	
 	
 	public void chooseMainMenuAction() throws NumberFormatException, IOException {
 		int userChoice = -1;
