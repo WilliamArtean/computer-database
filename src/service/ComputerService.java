@@ -38,6 +38,10 @@ public class ComputerService {
 		return dao.getSelection(numberToGet, lineOffset);
 	}
 	
+	public int getCount() {
+		return dao.getCount();
+	}
+	
 	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
 		if (!areDatesConsistent(introduced, discontinued)) {
 			throw new InconsistentDatesException();
