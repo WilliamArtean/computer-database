@@ -52,13 +52,7 @@ public class PageController {
 	}
 	
 	public void startNavigation() throws IOException {
-		list.clear();
-		nameList.clear();
-		list = service.getComputerSelection(itemsPerPage, 0);
-		for (Computer computer : list) {
-			nameList.add(computer.getName());
-		}
-		view.displayPage(nameList);
+		newPage();
 		
 		String userInput = "";
 		do {
@@ -83,24 +77,14 @@ public class PageController {
 	public void previousPage() {
 		if (currentPageIndex > 0) {
 			currentPageIndex--;
-			clear();
-			list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
-			for (Computer computer : list) {
-				nameList.add(computer.getName());
-			}
-			view.displayPage(nameList);
+			newPage();
 		}
 	}
 	
 	public void nextPage() {
 		if (currentPageIndex < (numberOfPages - 1)) {
 			currentPageIndex++;
-			clear();
-			list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
-			for (Computer computer : list) {
-				nameList.add(computer.getName());
-			}
-			view.displayPage(nameList);
+			newPage();
 		}
 	}
 	
