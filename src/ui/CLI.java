@@ -3,7 +3,7 @@ package ui;
 import exceptions.*;
 import model.Company;
 import model.Computer;
-import persistence.ComputerDAO;
+import service.ComputerService;
 import service.CompanyService;
 
 import java.io.*;
@@ -19,7 +19,7 @@ public class CLI {
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private BufferedReader br;
 	private String input;
-	private ComputerDAO computerDAO;
+	private ComputerService computerService;
 	private CompanyService companyService;
 	private Page page = new Page();
 	
@@ -27,8 +27,8 @@ public class CLI {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public void setComputerDAO(ComputerDAO computerDAO) {
-		this.computerDAO = computerDAO;
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
 	}
 	
 	public void setCompanyService(CompanyService companyService) {
@@ -134,7 +134,7 @@ public class CLI {
 	}
 	
 	private void listComputers(String arg) throws SQLException, IncorrectArgumentException {
-		ArrayList<Computer> computers = computerDAO.getAll();
+		ArrayList<Computer> computers = computerService.getAllComputers();
 		StringBuilder computersList = new StringBuilder();
 		for (Computer comp : computers) {
 			computersList.append(comp.getName()).append('\n');
@@ -188,10 +188,10 @@ public class CLI {
 			if (idString.isBlank())
 				throw new IncorrectArgumentException();
 			computerID = Long.parseLong(idString);
-			computerOpt = computerDAO.getByID(computerID);
+			computerOpt = computerService.getComputer(computerID);
 		} else {
 			computerName = args;
-			computerOpt = computerDAO.getByName(computerName);
+			computerOpt = computerService.getComputer(computerName);
 		}
 		
 		if (computerOpt.isPresent()) {
@@ -235,21 +235,21 @@ public class CLI {
 			
 			computerID = Long.parseLong(idString);
 			
-			if (computerDAO.getByID(computerID) == null) {
+			if (computerService.getComputer(computerID) == null) {
 				System.out.println("No computer with id " + computerID);
 				return;
 			}
 			
-			computerDAO.delete(computerID);
+			computerService.delete(computerID);
 		} else {
 			computerName = args;
 			
-			if (computerDAO.getByName(computerName) == null) {
+			if (computerService.getComputer(computerName) == null) {
 				System.out.println("No computer with name '" + computerName + "'");
 				return;
 			}
 			
-			computerDAO.delete(computerName);
+			computerService.delete(computerName);
 		}
 	}
 	
@@ -281,7 +281,7 @@ public class CLI {
 			}
 		}
 		
-		computerDAO.create(computerToCreate);
+		computerService.create(computerToCreate);
 		
 	}
 	
@@ -299,14 +299,14 @@ public class CLI {
 			
 			computerID = Long.parseLong(idString);
 			
-			if (computerDAO.getByID(computerID) == null) {
+			if (computerService.getComputer(computerID) == null) {
 				System.out.println("No computer with id '" + computerID + "'");
 				return;
 			}
 		} else {
 			computerName = args;
 			
-			if (computerDAO.getByName(computerName) == null) {
+			if (computerService.getComputer(computerName) == null) {
 				System.out.println("No computer with name '" + computerID + "'");
 				return;
 			}
@@ -348,7 +348,7 @@ public class CLI {
 				|| updatedComputer.getDiscontinuationDate() != null
 				|| updatedComputer.getCompany() != null) {
 			if (computerName != null) {
-				computerDAO.update(computerName, updatedComputer);
+				computerService.update(computerName, updatedComputer);
 			}
 			
 		} else {
