@@ -12,7 +12,7 @@ public class PageController {
 	private Page view;
 	private ComputerService service;
 	private int currentPage = 0;
-	private int numberOfPages;
+	private final int numberOfPages;
 	private final int itemsPerPage = 10;
 	private ArrayList<Computer> list = new ArrayList<Computer>();
 		
@@ -26,7 +26,7 @@ public class PageController {
 	public PageController(Page view, ComputerService service) {
 		this.view = view;
 		this.service = service;
-		
+		this.numberOfPages = service.getCount();
 	}
 	
 	public void startNavigation() throws IOException {
