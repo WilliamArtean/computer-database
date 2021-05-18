@@ -26,6 +26,56 @@ public class CLIController {
 			view.displayMainMenu();
 			userChoice = Integer.parseInt(getInput());
 		} while (!MenuInput.isValid(userChoice));
+		processMainMenuInput(MenuInput.fromInteger(userChoice));
+	}
+	
+	private void processMainMenuInput(MenuInput input) {
+		switch (input) {
+		case LIST_COMPUTERS:
+			listComputers();
+			break;
+		case LIST_COMPANIES:
+			listCompanies();
+			break;
+		case SHOW_DETAILS:
+			showDetails();
+			break;
+		case CREATE_COMPUTER:
+			createComputer();
+			break;
+		case UPDATE_COMPUTER:
+			updateComputer();
+			break;
+		case DELETE_COMPUTER:
+			deleteComputer();
+			break;
+		case EXIT:
+			break;
+		}
+	}
+	
+	private void listComputers() {
+		
+	}
+	
+	private void listCompanies() {
+		
+	}
+	
+	private void showDetails() {
+		
+	}
+	
+	private void createComputer() {
+		
+	}
+	
+	private void updateComputer() {
+		
+	}
+	
+	private void deleteComputer() {
+		
 	}
 	
 }
