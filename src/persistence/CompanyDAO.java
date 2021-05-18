@@ -18,6 +18,7 @@ public class CompanyDAO {
 	private final String queryGetByName = "SELECT id, name FROM company WHERE name=?";
 	private final String queryGetAll = "SELECT id, name FROM company";
 	private final String queryGetSelection = "SELECT id, name FROM company ORDER BY id LIMIT ? OFFSET ?";
+	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
 	
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
@@ -94,6 +95,25 @@ public class CompanyDAO {
 			e.printStackTrace();
 		}
 		return companies;
+	}
+	
+	public int getCount() {
+		int count = 0;
+		try {
+			Connection co = this.dbManager.getNewConnection();
+			PreparedStatement ps = co.prepareStatement(queryGetCount);
+			ResultSet rs = ps.executeQuery();
+			
+			rs.next();
+			count = rs.getInt("rowcount");
+			
+			rs.close();
+			ps.close();
+			co.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 	
 }
