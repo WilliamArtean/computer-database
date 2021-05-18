@@ -289,27 +289,11 @@ public class CLI {
 		if (args.isEmpty())
 			throw new IncorrectArgumentException();
 		
-		String computerName = null;
-		long computerID = 0;
+		String computerName = args;
 		
-		if (args.contains("id =") || args.contains("id=")) {
-			String idString = args.substring(args.indexOf('=') + 1).trim();
-			if (idString.isBlank())
-				throw new IncorrectArgumentException();
-			
-			computerID = Long.parseLong(idString);
-			
-			if (computerService.getComputer(computerID) == null) {
-				System.out.println("No computer with id '" + computerID + "'");
-				return;
-			}
-		} else {
-			computerName = args;
-			
-			if (computerService.getComputer(computerName) == null) {
-				System.out.println("No computer with name '" + computerID + "'");
-				return;
-			}
+		if (computerService.getComputer(computerName) == null) {
+			System.out.println("No computer with name '" + computerName + "'");
+			return;
 		}
 		
 		Optional<String> updatedName = Optional.empty();
