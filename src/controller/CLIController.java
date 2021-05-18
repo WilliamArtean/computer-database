@@ -200,8 +200,17 @@ public class CLIController {
 		}
 	}
 	
-	private void deleteComputer() {
+	private void deleteComputer() throws IOException {
+		String computerName = "";
+		do {
+			System.out.println("Enter the name of the computer to delete:");
+			computerName = getInput();
+			if (computerName.isEmpty()) {
+				System.out.println("You must enter a name for the computer to delete");
+			}
+		} while (computerName.isEmpty());
 		
+		computerService.delete(computerName);
 	}
 	
 }
