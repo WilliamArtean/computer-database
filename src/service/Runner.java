@@ -1,16 +1,11 @@
 package service;
 
-import ui.CLI;
 import ui.CLIView;
-
-import java.sql.*;
-import java.text.ParseException;
 
 import controller.CLIController;
 
 import java.io.IOException;
 
-import exceptions.*;
 import persistence.CompanyDAO;
 import persistence.ComputerDAO;
 import persistence.DBConnectionManager;
@@ -19,7 +14,6 @@ public class Runner {
 
 	public static void main(String[] args) {
 		
-		CLI cli;
 		CompanyDAO companyDAO;
 		ComputerDAO computerDAO;
 		
@@ -38,27 +32,10 @@ public class Runner {
 			
 			CLIController controller = new CLIController(new CLIView(), computerService, companyService);
 			controller.chooseMainMenuAction();
-			/*
-			cli = new CLI();
-			cli.setComputerService(computerService);
-			cli.setCompanyService(companyService);
 			
-			cli.getInput();
-			cli.processInput();
-			*/
 		} catch (IOException e) {
 			e.printStackTrace();
-		}/* catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IncorrectCommandException e) {
-			e.printStackTrace();
-		} catch (IncorrectArgumentException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (InconsistentDatesException e) {
-			e.printStackTrace();
-		}*/
+		}
 	}
 
 }
