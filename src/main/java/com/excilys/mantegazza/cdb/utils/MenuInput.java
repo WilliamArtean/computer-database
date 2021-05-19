@@ -6,16 +6,16 @@ public enum MenuInput {
 	private int number;
 	
 	/**
-	 * Private constructor for MenuInput
+	 * Private constructor for MenuInput.
 	 * @param i The number corresponding to the menu command
 	 */
-	private MenuInput(int i) {
+	MenuInput(int i) {
 		this.number = i;
 	}
 	
 	/**
-	 * The integer corresponding to this MenuInput command value
-	 * @return
+	 * Returns the integer corresponding to this MenuInput command value.
+	 * @return integer matching command value
 	 */
 	public int getNumber() {
 		return this.number;
@@ -36,7 +36,7 @@ public enum MenuInput {
 	 * @return A MenuInput enum corresponding to a MenuInput command, or null if it matches none
 	 */
 	public static MenuInput fromInteger(int number) {
-		switch(number) {
+		switch (number) {
 		case 1:
 			return LIST_COMPUTERS;
 		case 2:

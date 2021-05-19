@@ -37,7 +37,7 @@ public class CompanyService {
 	}
 	
 	/**
-	 * Get all the companies from the CompanyDAO
+	 * Get all the companies from the CompanyDAO.
 	 * @return An ArrayList of all the Company objects in the database
 	 */
 	public ArrayList<Company> getAllCompanies() {
