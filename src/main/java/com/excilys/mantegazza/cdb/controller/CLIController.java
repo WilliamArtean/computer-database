@@ -144,7 +144,6 @@ public class CLIController {
 			computerService.create(computerName, introduced, discontinued, companyName);
 		} catch (InconsistentDatesException e) {
 			System.out.println("The dates are inconsistent.");
-			e.printStackTrace();
 		}
 	}
 	
@@ -188,7 +187,6 @@ public class CLIController {
 			computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
 		} catch (InconsistentDatesException e) {
 			System.out.println("The dates are inconsistent.");
-			e.printStackTrace();
 		}
 	}
 	
