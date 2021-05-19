@@ -52,7 +52,7 @@ public class ComputerService {
 	}
 
 	/**
-	 * Get all the computers from the ComputerDAO
+	 * Get all the computers from the ComputerDAO.
 	 * @return An ArrayList of all the Computer objects in the database
 	 */
 	public ArrayList<Computer> getAllComputers() {
@@ -65,8 +65,8 @@ public class ComputerService {
 	 * @param rowOffset The offset from which to start the selection. 0 to start from the first row (included)
 	 * @return An ArrayList of Computer objects in the database, of size numberToReturn at most (less if the end of the database has been reached)
 	 */
-	public ArrayList<Computer> getComputerSelection(int numberToGet, int lineOffset) {
-		return dao.getSelection(numberToGet, lineOffset);
+	public ArrayList<Computer> getComputerSelection(int numberToGet, int rowOffset) {
+		return dao.getSelection(numberToGet, rowOffset);
 	}
 	
 	/**

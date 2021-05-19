@@ -18,7 +18,7 @@ public class ComputerDAO {
 	
 	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private DBConnectionManager dbManager;
-	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");// HH:mm:ss");
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private ComputerMapper mapper = new ComputerMapper();
 	
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
@@ -70,7 +70,7 @@ public class ComputerDAO {
 	
 	/**
 	 * Execute a SQL query to fetch the computer with the required name.
-	 * @param id The name of the computer to return
+	 * @param name The name of the computer to return
 	 * @return An Optional containing a Computer object matching the name, or an empty Optional if the computer could not be found
 	 */
 	public Optional<Computer> getByName(String name) {
@@ -192,7 +192,7 @@ public class ComputerDAO {
 		try {
 			Connection co = this.dbManager.getNewConnection();
 			PreparedStatement ps = co.prepareStatement(queryUpdate);
-			if(updatedComputer.getName() != null) {
+			if (updatedComputer.getName() != null) {
 				ps.setString(1, updatedComputer.getName());			
 			} else {
 				ps.setNull(1, Types.VARCHAR);
@@ -242,7 +242,7 @@ public class ComputerDAO {
 	}
 	/**
 	 * Execute a SQL query to delete a computer from the database.
-	 * @param id The name of the computer to delete
+	 * @param name The name of the computer to delete
 	 */
 	public void delete(String name) {
 		try {

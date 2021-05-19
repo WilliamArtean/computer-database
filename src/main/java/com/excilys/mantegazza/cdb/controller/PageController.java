@@ -38,7 +38,7 @@ public class PageController {
 	}
 	
 	/**
-	 * Creates a PageController to show a list of computers using a view with pagination
+	 * Creates a PageController to show a list of computers using a view with pagination.
 	 * @param view The Page view the PageController will send the data to output.
 	 * @param service The service for Computer objects the PageController will use
 	 */
@@ -58,7 +58,7 @@ public class PageController {
 	}
 
 	/**
-	 * Clear both the list of stored Computer objects and the list of mathing computer names
+	 * Clear both the list of stored Computer objects and the list of mathing computer names.
 	 */
 	private void clear() {
 		list.clear();
