@@ -17,6 +17,7 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+    <suppressions.config.location>suppressions.xml</suppressions.config.location>
   </properties>
 
   <dependencies>
