@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -13,6 +16,7 @@ public class ComputerService {
 	
 	private ComputerDAO dao;
 	private CompanyService companyService;
+	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 
 	public void setCompanyService(CompanyService companyService) {
 		this.companyService = companyService;
@@ -44,6 +48,7 @@ public class ComputerService {
 	
 	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
 		if (!areDatesConsistent(introduced, discontinued)) {
+			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
 			throw new InconsistentDatesException();
 		}
 		
@@ -75,6 +80,8 @@ public class ComputerService {
 	 */
 	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
 		if (!areDatesConsistent(introduced, discontinued)) {
+			String computerName = (newComputerName.isEmpty()) ? oldName : newComputerName.get();
+			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
 			throw new InconsistentDatesException();
 		}
 		
