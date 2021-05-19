@@ -7,14 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.mantegazza.cdb.model.Company;
 
 public class CompanyDAO {
 
-	private Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	private DBConnectionManager dbManager;
 	private CompanyMapper mapper = new CompanyMapper();
 	
@@ -41,7 +37,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 		return company;
 	}
@@ -59,7 +55,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return company;
@@ -77,7 +73,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 		return companies;
 	}
@@ -96,7 +92,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 		return companies;
 	}
@@ -115,7 +111,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 		return count;
 	}
