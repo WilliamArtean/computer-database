@@ -1,15 +1,15 @@
-package persistence;
+package com.excilys.mantegazza.cdb.persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import model.Computer;
-import java.sql.Types;
+import com.excilys.mantegazza.cdb.model.Computer;
 
 public class ComputerDAO {
 	

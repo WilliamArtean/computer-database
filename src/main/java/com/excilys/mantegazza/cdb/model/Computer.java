@@ -1,4 +1,4 @@
-package model;
+package com.excilys.mantegazza.cdb.model;
 
 import java.time.LocalDate;
 

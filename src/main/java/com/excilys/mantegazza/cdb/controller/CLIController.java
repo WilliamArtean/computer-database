@@ -1,4 +1,4 @@
-package controller;
+package com.excilys.mantegazza.cdb.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,14 +8,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import exceptions.InconsistentDatesException;
-import model.Company;
-import model.Computer;
-import service.CompanyService;
-import service.ComputerService;
-import ui.CLIView;
-import ui.Page;
-import utils.MenuInput;
+import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
+import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.service.CompanyService;
+import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.ui.CLIView;
+import com.excilys.mantegazza.cdb.ui.Page;
+import com.excilys.mantegazza.cdb.utils.MenuInput;
 
 public class CLIController {
 

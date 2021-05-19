@@ -1,4 +1,4 @@
-package ui;
+package com.excilys.mantegazza.cdb.ui;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

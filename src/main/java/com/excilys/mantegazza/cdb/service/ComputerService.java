@@ -1,13 +1,13 @@
-package service;
+package com.excilys.mantegazza.cdb.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import exceptions.InconsistentDatesException;
-import model.Company;
-import model.Computer;
-import persistence.ComputerDAO;
+import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
+import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
 public class ComputerService {
 	

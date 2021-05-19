@@ -1,9 +1,9 @@
-package ui;
+package com.excilys.mantegazza.cdb.ui;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import model.Computer;
+import com.excilys.mantegazza.cdb.model.Computer;
 
 public class CLIView {
 	

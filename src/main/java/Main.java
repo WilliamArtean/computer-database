@@ -1,12 +1,12 @@
 import java.io.IOException;
 
-import controller.CLIController;
-import persistence.CompanyDAO;
-import persistence.ComputerDAO;
-import persistence.DBConnectionManager;
-import service.CompanyService;
-import service.ComputerService;
-import ui.CLIView;
+import com.excilys.mantegazza.cdb.controller.CLIController;
+import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
+import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
+import com.excilys.mantegazza.cdb.persistence.DBConnectionManager;
+import com.excilys.mantegazza.cdb.service.CompanyService;
+import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.ui.CLIView;
 
 
 

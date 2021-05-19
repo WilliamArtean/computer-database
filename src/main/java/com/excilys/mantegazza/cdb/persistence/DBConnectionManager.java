@@ -1,4 +1,4 @@
-package persistence;
+package com.excilys.mantegazza.cdb.persistence;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

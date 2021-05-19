@@ -1,11 +1,11 @@
-package persistence;
+package com.excilys.mantegazza.cdb.persistence;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import model.Company;
+import com.excilys.mantegazza.cdb.model.Company;
 
 public class CompanyMapper {
 

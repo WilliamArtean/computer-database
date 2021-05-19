@@ -1,12 +1,12 @@
-package persistence;
+package com.excilys.mantegazza.cdb.persistence;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import model.Company;
-import model.Computer;
+import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.model.Computer;
 
 public class ComputerMapper {
 

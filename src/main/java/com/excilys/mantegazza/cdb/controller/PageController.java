@@ -1,13 +1,13 @@
-package controller;
+package com.excilys.mantegazza.cdb.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import model.Computer;
-import service.ComputerService;
-import ui.Page;
+import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.ui.Page;
 
 public class PageController {
 

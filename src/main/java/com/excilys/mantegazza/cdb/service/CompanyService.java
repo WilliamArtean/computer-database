@@ -1,10 +1,10 @@
-package service;
+package com.excilys.mantegazza.cdb.service;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import model.Company;
-import persistence.CompanyDAO;
+import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
 
 public class CompanyService {
 	
