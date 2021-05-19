@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.Page;
@@ -19,6 +22,7 @@ public class PageController {
 	private ArrayList<Computer> list = new ArrayList<Computer>();
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private Logger logger = LoggerFactory.getLogger(PageController.class);
 	
 	/**
 	 * @return the total number of pages in the view.
@@ -67,6 +71,7 @@ public class PageController {
 	 */
 	private void newPage() {
 		clear();
+		logger.debug("Selecting {} computers from ComputerService", itemsPerPage);
 		list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
 		for (Computer computer : list) {
 			nameList.add(computer.getName());

@@ -27,7 +27,7 @@ public class CLIController {
 	private CompanyService companyService;
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	Logger logger = LoggerFactory.getLogger(CLIController.class);
+	private Logger logger = LoggerFactory.getLogger(CLIController.class);
 
 	/**
 	 * Creates a CLIController that processes user input through CLI.
