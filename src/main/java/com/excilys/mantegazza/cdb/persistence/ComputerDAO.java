@@ -9,14 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.mantegazza.cdb.model.Computer;
 
 public class ComputerDAO {
 	
-	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private DBConnectionManager dbManager;
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");// HH:mm:ss");
 	private ComputerMapper mapper = new ComputerMapper();
@@ -49,7 +45,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return computer;
 	}
@@ -68,7 +64,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return computer;
 	}
@@ -86,7 +82,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return computers;
@@ -106,7 +102,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return computers;
 	}
@@ -136,7 +132,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -177,7 +173,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -190,7 +186,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	public void delete(String name) {
@@ -202,7 +198,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -220,7 +216,7 @@ public class ComputerDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return count;
 	}
