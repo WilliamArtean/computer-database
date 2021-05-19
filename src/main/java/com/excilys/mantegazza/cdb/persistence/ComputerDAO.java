@@ -135,7 +135,7 @@ public class ComputerDAO {
 			ps.executeUpdate();
 			ps.close();
 			co.close();
-			logger.info("Computer added to database: " + computer.toString());
+			logger.debug("Computer added to database: " + computer.toString());
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -177,7 +177,7 @@ public class ComputerDAO {
 			ps.executeUpdate();
 			ps.close();
 			co.close();
-			logger.info("Computer updated in database: " + updatedComputer.toString());
+			logger.debug("Computer updated in database: " + updatedComputer.toString());
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -191,7 +191,7 @@ public class ComputerDAO {
 			ps.executeUpdate();
 			ps.close();
 			co.close();
-			logger.info("Deleted computer in database with id: " + id);
+			logger.debug("Deleted computer in database with id: " + id);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -204,7 +204,7 @@ public class ComputerDAO {
 			ps.executeUpdate();
 			ps.close();
 			co.close();
-			logger.info("Deleted computer in database with name: " + name);
+			logger.debug("Deleted computer in database with name: " + name);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
