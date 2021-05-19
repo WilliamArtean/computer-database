@@ -51,6 +51,11 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
+		if (computer.isPresent()) {
+			logger.debug("Retrieved computer with id " + id + " from database.");			
+		} else {
+			logger.debug("Could not retrieve computer with id " + id + " from database.");
+		}
 		return computer;
 	}
 	
@@ -70,6 +75,11 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
+		if (computer.isPresent()) {
+			logger.debug("Retrieved computer with name " + name + " from database.");			
+		} else {
+			logger.debug("Could not retrieve computer with name " + name + " from database.");
+		}
 		return computer;
 	}
 	
@@ -87,8 +97,8 @@ public class ComputerDAO {
 			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
-		}
-		
+		}		
+		logger.debug("Retrieved all computers from database.");
 		return computers;
 	}
 	
@@ -105,6 +115,7 @@ public class ComputerDAO {
 			rs.close();
 			ps.close();
 			co.close();
+			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}

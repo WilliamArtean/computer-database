@@ -8,6 +8,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -24,6 +27,7 @@ public class CLIController {
 	private CompanyService companyService;
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	Logger logger = LoggerFactory.getLogger(CLIController.class);
 
 	
 	public CLIController(CLIView view, ComputerService computerService, CompanyService companyService) {
@@ -74,7 +78,7 @@ public class CLIController {
 			deleteComputer();
 			break;
 		case EXIT:
-			System.out.println("Exiting application...");
+			logger.trace("Exiting application");
 			break;
 		}
 	}
