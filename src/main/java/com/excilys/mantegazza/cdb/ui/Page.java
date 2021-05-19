@@ -5,11 +5,20 @@ import java.util.stream.Collectors;
 
 public class Page {
 	
+	/**
+	 * Displays a list of names in the CLI.
+	 * @param list An ArrayList of String
+	 */
 	public void displayPage(ArrayList<String> list) {
 		String listToDisplay = list.stream().collect(Collectors.joining("\n"));
 		System.out.println(listToDisplay);
 	}
 	
+	/**
+	 * Displays the current page number, total page and commands for the user to navigate bewteen pages.
+	 * @param pageIndex The current page index. The first page is index 0, the second page is index 1,...
+	 * @param numberOfPages The total number of pages
+	 */
 	public void displayPagination(int pageIndex, int numberOfPages) {
 		StringBuilder pagination = new StringBuilder();
 		pagination.append(pageIndex + 1).append("/").append(numberOfPages);

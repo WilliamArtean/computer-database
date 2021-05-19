@@ -7,6 +7,9 @@ import com.excilys.mantegazza.cdb.model.Computer;
 
 public class CLIView {
 	
+	/**
+	 * Displays the main selection menu in the CLI.
+	 */
 	public void displayMainMenu() {
 		System.out.println("1 - Show list of computers");
 		System.out.println("2 - Show list of companies");
@@ -17,11 +20,19 @@ public class CLIView {
 		System.out.println("7 - Exit");
 	}
 	
+	/**
+	 * Displays a list of names in the CLI.
+	 * @param list An ArrayList of String
+	 */
 	public void displayList(ArrayList<String> list) {
 		String listToDisplay = list.stream().collect(Collectors.joining("\n"));
 		System.out.println(listToDisplay);
 	}
 
+	/**
+	 * Displays the details of a computer in the CLI.
+	 * @param computer The computer of which to show the details
+	 */
 	public void showDetails(Computer computer) {		
 		StringBuilder details = new StringBuilder();
 		details.append("ID: ").append(computer.getID());

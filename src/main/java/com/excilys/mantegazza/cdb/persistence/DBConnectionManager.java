@@ -10,17 +10,11 @@ public class DBConnectionManager {
 	private String user = "admincdb";
 	private String pswd = "qwerty1234";
 	
-	
-	public String getUrl() {
-		return url;
-	}
-	public String getUser() {
-		return user;
-	}
-	public String getPassword() {
-		return pswd;
-	}
-	
+	/**
+	 * Get a new connection to the database. The DBConnectionManager will not close it automatically.
+	 * @return A Connection to the database.
+	 * @throws SQLException
+	 */
 	public Connection getNewConnection() throws SQLException {
 		return DriverManager.getConnection(url, user, pswd);
 	}

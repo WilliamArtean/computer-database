@@ -31,10 +31,19 @@ public class ComputerDAO {
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
 	
+	/**
+	 * Set the DatabageManager that will be used to get a connection to the database.
+	 * @param databaseManager The Database Manager that will creates the connections to the database
+	 */
 	public void setDatabaseManager(DBConnectionManager databaseManager) {
 		this.dbManager = databaseManager;
 	}
 	
+	/**
+	 * Execute a SQL query to fetch the computer with the required id.
+	 * @param id The id of the computer to return
+	 * @return An Optional containing a Computer object matching the id, or an empty Optional if the computer could not be found
+	 */
 	public Optional<Computer> getByID(long id) {
 		Optional<Computer> computer = Optional.empty();
 		try {
@@ -59,6 +68,11 @@ public class ComputerDAO {
 		return computer;
 	}
 	
+	/**
+	 * Execute a SQL query to fetch the computer with the required name.
+	 * @param id The name of the computer to return
+	 * @return An Optional containing a Computer object matching the name, or an empty Optional if the computer could not be found
+	 */
 	public Optional<Computer> getByName(String name) {
 		Optional<Computer> computer = Optional.empty();
 		try {
@@ -83,6 +97,10 @@ public class ComputerDAO {
 		return computer;
 	}
 	
+	/**
+	 * Execute a SQL query to fetch all the computers present in the company database.
+	 * @return An ArrayList of all the Computer objects in the database
+	 */
 	public ArrayList<Computer> getAll() {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try {
@@ -102,6 +120,13 @@ public class ComputerDAO {
 		return computers;
 	}
 	
+	/**
+	 * Execute a SQL query to fetch a selected number of computers from the database.
+	 * The computers are ordered by their id.
+	 * @param numberToReturn The number of computers to fetch from the database
+	 * @param offset The index of row from which to start the selection. 0 to start from the first row (included).
+	 * @return An ArrayList of Computer objects in the database, of size numberToReturn at most (less if the end of the database has been reached)
+	 */
 	public ArrayList<Computer> getSelection(int numberToReturn, int offset) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try {
@@ -122,6 +147,10 @@ public class ComputerDAO {
 		return computers;
 	}
 	
+	/**
+	 * Execute a SQL query to insert a Computer object data into the database.
+	 * @param computer The Computer object to insert into the database
+	 */
 	public void create(Computer computer) {
 		try {
 			Connection co = this.dbManager.getNewConnection();
@@ -194,6 +223,10 @@ public class ComputerDAO {
 		}
 	}
 	
+	/**
+	 * Execute a SQL query to delete a computer from the database.
+	 * @param id The id of the computer to delete
+	 */
 	public void delete(long id) {
 		try {
 			Connection co = this.dbManager.getNewConnection();
@@ -207,6 +240,10 @@ public class ComputerDAO {
 			logger.error(e.getMessage());
 		}
 	}
+	/**
+	 * Execute a SQL query to delete a computer from the database.
+	 * @param id The name of the computer to delete
+	 */
 	public void delete(String name) {
 		try {
 			Connection co = this.dbManager.getNewConnection();
@@ -221,6 +258,10 @@ public class ComputerDAO {
 		}
 	}
 	
+	/**
+	 * Execute a SQL query to fetch the nubmer of Computer objects in the database.
+	 * @return An int corresponding to the nubmer of rows in the computer database
+	 */
 	public int getCount() {
 		int count = 0;
 		try {

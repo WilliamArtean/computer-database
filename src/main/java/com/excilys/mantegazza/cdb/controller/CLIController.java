@@ -29,22 +29,42 @@ public class CLIController {
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	Logger logger = LoggerFactory.getLogger(CLIController.class);
 
-	
+	/**
+	 * Creates a CLIController that processes user input through CLI.
+	 * @param view The view that will display the output in the CLI
+	 * @param computerService The service for Computer objects the CLIController will use
+	 * @param companyService The service for Company objects the CLIController will use
+	 */
 	public CLIController(CLIView view, ComputerService computerService, CompanyService companyService) {
 		this.view = view;
 		this.computerService = computerService;
 		this.companyService = companyService;
 	}
 	
-	
+	/**
+	 * Set the view that will be used by the CLIController.
+	 * @param view The view that will display the output in the CLI
+	 */
 	public void setView(CLIView view) {
 		this.view = view;
 	}
 	
+	/**
+	 * Returns the user input from the CLI.
+	 * @return a String containing what the user wrote in the CLI
+	 * @throws IOException
+	 */
 	private String getInput() throws IOException {
 		return this.br.readLine().trim();
 	}
 	
+	/**
+	 * Displays the main menu. When an action has been processed or the user input does not match any action,
+	 * the menu shows up again, until the user chooses the 'Exit' action.
+	 * If the user act
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
 	public void chooseMainMenuAction() throws NumberFormatException, IOException {
 		int userChoice = -1;
 		do {
@@ -57,6 +77,11 @@ public class CLIController {
 		} while (MenuInput.fromInteger(userChoice).compareTo(MenuInput.EXIT) != 0);
 	}
 	
+	/**
+	 * Checks what action the user chose and call the corresponding method.
+	 * @param input The enum matching the action chosen by the user
+	 * @throws IOException
+	 */
 	private void processMainMenuInput(MenuInput input) throws IOException {
 		switch (input) {
 		case LIST_COMPUTERS:
@@ -83,11 +108,18 @@ public class CLIController {
 		}
 	}
 	
+	/**
+	 * Calls a PageController to show the computers list in a view with pagination.
+	 * @throws IOException
+	 */
 	private void listComputers() throws IOException {
 		PageController pageController = new PageController(new Page(), computerService);
 		pageController.startNavigation();
 	}
 	
+	/**
+	 * Shows the list of companies in the view.
+	 */
 	private void listCompanies() {
 		ArrayList<Company> companyList = companyService.getAllCompanies();
 		ArrayList<String> companyNameList = new ArrayList<String>();
@@ -102,6 +134,10 @@ public class CLIController {
 		view.displayList(companyNameList);
 	}
 	
+	/**
+	 * Asks the user for a computer and show its details.
+	 * @throws IOException
+	 */
 	private void showDetails() throws IOException {
 		System.out.println("Enter computer name:");
 		String computerName = getInput();
@@ -114,6 +150,11 @@ public class CLIController {
 		
 	}
 	
+	/**
+	 * Asks the user to create the data for a computer
+	 * and asks the ComputerService to insert it into the database.
+	 * @throws IOException
+	 */
 	private void createComputer() throws IOException {
 		String computerName = "";
 		Optional<LocalDate> introduced = Optional.empty();
@@ -151,6 +192,11 @@ public class CLIController {
 		}
 	}
 	
+	/**
+	 * Asks the user to update the data for a computer
+	 * and asks the ComputerService to update it into the database.
+	 * @throws IOException
+	 */
 	private void updateComputer() throws IOException {
 		Optional<String> newComputerName = Optional.empty();
 		Optional<LocalDate> introduced = Optional.empty();
@@ -194,6 +240,11 @@ public class CLIController {
 		}
 	}
 	
+	/**
+	 * Asks the user to enter the name of a computer to delete
+	 * and asks the ComputerService to erase it from the database.
+	 * @throws IOException
+	 */
 	private void deleteComputer() throws IOException {
 		String computerName = "";
 		do {

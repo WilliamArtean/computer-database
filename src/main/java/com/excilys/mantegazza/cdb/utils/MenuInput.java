@@ -5,18 +5,36 @@ public enum MenuInput {
 
 	private int number;
 	
+	/**
+	 * Private constructor for MenuInput
+	 * @param i The number corresponding to the menu command
+	 */
 	private MenuInput(int i) {
 		this.number = i;
 	}
 	
+	/**
+	 * The integer corresponding to this MenuInput command value
+	 * @return
+	 */
 	public int getNumber() {
 		return this.number;
 	}
 	
+	/**
+	 * Checks if an number is a valid value in the MenuInput enum.
+	 * @param number The integer to check
+	 * @return true if the number is one of this enum's values, false otherwise
+	 */
 	public static boolean isValid(int number) {
 		return (number >= LIST_COMPUTERS.getNumber() && number <= EXIT.getNumber());
 	}
 	
+	/**
+	 * Creates a MenuInput enum from an integer.
+	 * @param number the number to create the enum from
+	 * @return A MenuInput enum corresponding to a MenuInput command, or null if it matches none
+	 */
 	public static MenuInput fromInteger(int number) {
 		switch(number) {
 		case 1:
