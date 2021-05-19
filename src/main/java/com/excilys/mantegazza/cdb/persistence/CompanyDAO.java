@@ -41,7 +41,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return company;
 	}
@@ -59,7 +59,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		
 		return company;
@@ -77,7 +77,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return companies;
 	}
@@ -96,7 +96,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return companies;
 	}
@@ -115,7 +115,7 @@ public class CompanyDAO {
 			ps.close();
 			co.close();
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return count;
 	}
