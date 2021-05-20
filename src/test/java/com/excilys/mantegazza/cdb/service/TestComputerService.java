@@ -22,6 +22,8 @@ public class TestComputerService {
 
 	@Mock
 	private ComputerDAO dao;
+	@Mock
+	private CompanyService companyService;
 	private ArrayList<Computer> computerDB;
 	
 	@Before
@@ -74,6 +76,12 @@ public class TestComputerService {
 		
 		ArrayList<Computer> computersReturned = service.getComputerSelection(2, 1);
 		assertEquals(computersReturned, computerSelection);
+	}
+	
+	@Test
+	public void testCount() {
+		when(dao.getCount()).thenReturn(computerDB.size());
+		assertEquals(service.getCount(), computerDB.size());
 	}
 	
 }
