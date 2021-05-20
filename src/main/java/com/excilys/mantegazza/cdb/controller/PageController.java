@@ -58,7 +58,7 @@ public class PageController {
 	}
 
 	/**
-	 * Clear both the list of stored Computer objects and the list of mathing computer names.
+	 * Clear both the list of stored Computer objects and the list of matching computer names.
 	 */
 	private void clear() {
 		list.clear();

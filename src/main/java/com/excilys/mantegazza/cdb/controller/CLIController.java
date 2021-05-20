@@ -1,12 +1,11 @@
 package com.excilys.mantegazza.cdb.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,8 @@ public class CLIController {
 	private CLIView view;
 	private ComputerService computerService;
 	private CompanyService companyService;
-	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private PageController pageController;
+	private Scanner scanner;
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private Logger logger = LoggerFactory.getLogger(CLIController.class);
 
@@ -39,6 +39,8 @@ public class CLIController {
 		this.view = view;
 		this.computerService = computerService;
 		this.companyService = companyService;
+		this.pageController = new PageController(new Page(), computerService);
+		this.scanner = new Scanner(System.in);
 	}
 	
 	/**
@@ -48,14 +50,23 @@ public class CLIController {
 	public void setView(CLIView view) {
 		this.view = view;
 	}
+	public void setScanner(Scanner sc) {
+		this.scanner = sc;
+	}
 	
+	public void setPageController(PageController pageController) {
+		this.pageController = pageController;
+	}
+
 	/**
 	 * Returns the user input from the CLI.
 	 * @return a String containing what the user wrote in the CLI
 	 * @throws IOException
 	 */
 	private String getInput() throws IOException {
-		return this.br.readLine().trim();
+		String line = "";
+		line = scanner.nextLine();			
+		return line;
 	}
 	
 	/**
@@ -65,16 +76,32 @@ public class CLIController {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public void chooseMainMenuAction() throws NumberFormatException, IOException {
-		int userChoice = -1;
+	public void chooseMainMenuAction() throws IOException {
+		MenuInput userChoice;
 		do {
 			view.displayMainMenu();
-			userChoice = Integer.parseInt(getInput());
-			if (!MenuInput.isValid(userChoice)) {
-				System.out.println("Invalid command");
-			}
-			processMainMenuInput(MenuInput.fromInteger(userChoice));
-		} while (MenuInput.fromInteger(userChoice).compareTo(MenuInput.EXIT) != 0);
+			userChoice = getUserOption();
+			processMainMenuInput(userChoice);
+		} while (!userChoice.equals(MenuInput.EXIT));
+	}
+	
+	/**
+	 * Returns the option chosen by the user.
+	 * @return A MenuInput enum matching the number typed by the user
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
+	private MenuInput getUserOption() throws IOException {
+		MenuInput userChoice;
+		try {
+			String userInputString = getInput();
+			int userInputInt = Integer.parseInt(userInputString);
+			userChoice = MenuInput.fromInteger(userInputInt);
+		} catch (NumberFormatException e) {
+			logger.error("Unparsable user input");
+			userChoice = MenuInput.fromInteger(0);
+		}
+		return userChoice;
 	}
 	
 	/**
@@ -105,6 +132,9 @@ public class CLIController {
 		case EXIT:
 			logger.trace("Exiting application");
 			break;
+		case INVALID_COMMAND:
+			logger.info("Invalid user command input");
+			System.out.println("Invalid command");
 		}
 	}
 	
@@ -113,8 +143,7 @@ public class CLIController {
 	 * @throws IOException
 	 */
 	private void listComputers() throws IOException {
-		PageController pageController = new PageController(new Page(), computerService);
-		pageController.startNavigation();
+		this.pageController.startNavigation();
 	}
 	
 	/**
