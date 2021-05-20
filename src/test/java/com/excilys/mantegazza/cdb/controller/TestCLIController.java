@@ -1,5 +1,6 @@
 package com.excilys.mantegazza.cdb.controller;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +14,7 @@ import java.util.Scanner;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,9 +26,19 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
+import com.excilys.mantegazza.cdb.utils.MenuInput;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestCLIController {
+	
+	private static final String INVALID_COMMAND = ((Integer) MenuInput.INVALID_COMMAND.getNumber()).toString();
+	private static final String LIST_COMPUTERS = ((Integer) MenuInput.LIST_COMPUTERS.getNumber()).toString();
+	private static final String LIST_COMPANIES = ((Integer) MenuInput.LIST_COMPANIES.getNumber()).toString();
+	private static final String SHOW_DETAILS = ((Integer) MenuInput.SHOW_DETAILS.getNumber()).toString();
+	private static final String CREATE_COMPUTER = ((Integer) MenuInput.CREATE_COMPUTER.getNumber()).toString();
+	private static final String UPDATE_COMPUTER = ((Integer) MenuInput.UPDATE_COMPUTER.getNumber()).toString();
+	private static final String DELETE_COMPUTER = ((Integer) MenuInput.DELETE_COMPUTER.getNumber()).toString();
+	private static final String EXIT = ((Integer) MenuInput.EXIT.getNumber()).toString();
 	
 	private static CLIController controller;
 	@Mock
@@ -75,8 +87,8 @@ public class TestCLIController {
 		namesList.add(computerDB.get(1).getName());
 		
 		//Simulating user choosing option 'list computers'
-		StringBuilder listComputerInput = new StringBuilder("1").append(System.lineSeparator());
-		listComputerInput.append("7").append(System.lineSeparator());
+		StringBuilder listComputerInput = new StringBuilder(LIST_COMPUTERS).append(System.lineSeparator());
+		listComputerInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(listComputerInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -95,8 +107,8 @@ public class TestCLIController {
 		namesList.add(companyDB.get(1).getName());
 		
 		//Simulating user choosing option 'list companies'
-		StringBuilder listCompaniesInput = new StringBuilder("2").append(System.lineSeparator());
-		listCompaniesInput.append("7").append(System.lineSeparator());
+		StringBuilder listCompaniesInput = new StringBuilder(LIST_COMPANIES).append(System.lineSeparator());
+		listCompaniesInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(listCompaniesInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -110,9 +122,9 @@ public class TestCLIController {
 		when(computerService.getComputer(computerDB.get(1).getName())).thenReturn(Optional.of(computerDB.get(1)));
 		
 		//Simulating user choosing option 'show details', computer name, and exit
-		StringBuilder showDetailsInput = new StringBuilder("3").append(System.lineSeparator());
+		StringBuilder showDetailsInput = new StringBuilder(SHOW_DETAILS).append(System.lineSeparator());
 		showDetailsInput.append(computerDB.get(1).getName()).append(System.lineSeparator());
-		showDetailsInput.append("7").append(System.lineSeparator());
+		showDetailsInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(showDetailsInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -127,9 +139,9 @@ public class TestCLIController {
 		when(computerService.getComputer(wrongComputerName)).thenReturn(Optional.empty());
 		
 		//Simulating user choosing option 'show details', computer name, and exit
-		StringBuilder showDetailsInput = new StringBuilder("3").append(System.lineSeparator());
+		StringBuilder showDetailsInput = new StringBuilder(SHOW_DETAILS).append(System.lineSeparator());
 		showDetailsInput.append(wrongComputerName).append(System.lineSeparator());
-		showDetailsInput.append("7").append(System.lineSeparator());
+		showDetailsInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(showDetailsInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -147,12 +159,12 @@ public class TestCLIController {
 		LocalDate discontinued = LocalDate.parse(discontinuedString, df);
 		String company = "Company 1";
 		
-		StringBuilder createComputerInput = new StringBuilder("4").append(System.lineSeparator());
+		StringBuilder createComputerInput = new StringBuilder(CREATE_COMPUTER).append(System.lineSeparator());
 		createComputerInput.append(name).append(System.lineSeparator());
 		createComputerInput.append(introducedString).append(System.lineSeparator());
 		createComputerInput.append(discontinuedString).append(System.lineSeparator());
 		createComputerInput.append(company).append(System.lineSeparator());
-		createComputerInput.append("7").append(System.lineSeparator());
+		createComputerInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -165,13 +177,37 @@ public class TestCLIController {
 	public void testCreateEmptyComputer() throws IOException, InconsistentDatesException {
 		String name = "Computer empty";
 		
-		StringBuilder createComputerInput = new StringBuilder("4").append(System.lineSeparator());
-		createComputerInput.append(System.lineSeparator());
+		StringBuilder createComputerInput = new StringBuilder(CREATE_COMPUTER).append(System.lineSeparator());
 		createComputerInput.append(name).append(System.lineSeparator());
 		createComputerInput.append(System.lineSeparator());
 		createComputerInput.append(System.lineSeparator());
 		createComputerInput.append(System.lineSeparator());
-		createComputerInput.append("7").append(System.lineSeparator());
+		createComputerInput.append(EXIT).append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		
+		verify(computerService).create(name, Optional.empty(), Optional.empty(), Optional.empty());
+	}
+	
+	@Ignore
+	@Test
+	public void testCreateWithWrongFields() throws IOException {
+		String name = "Lost computer";
+		String wrongDate = "2000-13-31";
+		String otherWrongDate = "hello there";
+		
+		StringBuilder createComputerInput = new StringBuilder(CREATE_COMPUTER).append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(name).append(System.lineSeparator());
+		createComputerInput.append(wrongDate).append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(otherWrongDate).append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
@@ -179,7 +215,7 @@ public class TestCLIController {
 		controller.chooseMainMenuAction();
 		
 		verify(view).noNameEnteredForComputer();
-		verify(computerService).create(name, Optional.empty(), Optional.empty(), Optional.empty());
+		verify(view, times(2)).invalidDateEntered();
 	}
 
 }
