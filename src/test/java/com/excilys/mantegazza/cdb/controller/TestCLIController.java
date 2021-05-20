@@ -41,7 +41,7 @@ public class TestCLIController {
 	private static final String DELETE_COMPUTER = ((Integer) MenuInput.DELETE_COMPUTER.getNumber()).toString();
 	private static final String EXIT = ((Integer) MenuInput.EXIT.getNumber()).toString();
 	
-	private static CLIController controller;
+	private CLIController controller;
 	@Mock
 	private static CLIView view;
 	@Mock
