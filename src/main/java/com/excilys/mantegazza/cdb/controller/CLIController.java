@@ -158,7 +158,7 @@ public class CLIController {
 			break;
 		case INVALID_COMMAND:
 			logger.info("Invalid user command input");
-			System.out.println("Invalid command");
+			view.invalidCommand();
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class CLIController {
 		try {
 			computerService.create(computerName, introduced, discontinued, companyName);
 		} catch (InconsistentDatesException e) {
-			System.out.println("The dates are inconsistent.");
+			view.inconsistentDates();
 		}
 	}
 	
@@ -282,7 +282,7 @@ public class CLIController {
 		try {
 			computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
 		} catch (InconsistentDatesException e) {
-			System.out.println("The dates are inconsistent.");
+			view.inconsistentDates();
 		}
 	}
 	

@@ -62,4 +62,12 @@ public class CLIView {
 		System.out.println("Please enter a valid date at format 'yyyy-MM-dd'.");
 	}
 	
+	public void inconsistentDates() {
+		System.out.println("The dates are inconsistent.");
+	}
+	
+	public void invalidCommand() {
+		System.out.println("Invalid command");
+	}
+	
 }
