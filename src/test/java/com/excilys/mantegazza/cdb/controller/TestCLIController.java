@@ -1,5 +1,6 @@
 package com.excilys.mantegazza.cdb.controller;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,10 +15,10 @@ import java.util.Scanner;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
@@ -80,6 +81,20 @@ public class TestCLIController {
 		
 	}
 
+	@Test
+	public void testInvalidMenuCommands() throws IOException {
+		StringBuilder wrongCommandInput = new StringBuilder(INVALID_COMMAND).append(System.lineSeparator());
+		wrongCommandInput.append("1654325").append(System.lineSeparator());
+		wrongCommandInput.append("list companies").append(System.lineSeparator());
+		wrongCommandInput.append(EXIT).append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(wrongCommandInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		verify(view, times(3)).invalidCommand();
+	}
+	
 	@Test
 	public void testChoiceListComputers() throws IOException {
 		ArrayList<String> namesList = new ArrayList<String>();
@@ -192,30 +207,37 @@ public class TestCLIController {
 		verify(computerService).create(name, Optional.empty(), Optional.empty(), Optional.empty());
 	}
 	
-	@Ignore
 	@Test
-	public void testCreateWithWrongFields() throws IOException {
+	public void testCreateWithWrongFields() throws IOException, InconsistentDatesException {
 		String name = "Lost computer";
-		String wrongDate = "2000-13-31";
-		String otherWrongDate = "hello there";
+		String wrongDateFormat = "2000-13-31";
+		String otherWrongDateFormat = "hello there";
+		String wrongIntroducedInput = "2020-01-01";
+		String wrongDiscontinuedInput = "2015-05-12";
+		LocalDate wrongIntroduced = LocalDate.parse(wrongIntroducedInput, df);
+		LocalDate wrongDiscontinued = LocalDate.parse(wrongDiscontinuedInput, df);
 		
 		StringBuilder createComputerInput = new StringBuilder(CREATE_COMPUTER).append(System.lineSeparator());
 		createComputerInput.append(System.lineSeparator());
 		createComputerInput.append(name).append(System.lineSeparator());
-		createComputerInput.append(wrongDate).append(System.lineSeparator());
-		createComputerInput.append(System.lineSeparator());
-		createComputerInput.append(otherWrongDate).append(System.lineSeparator());
-		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(wrongDateFormat).append(System.lineSeparator());
+		createComputerInput.append(wrongIntroducedInput).append(System.lineSeparator());
+		createComputerInput.append(otherWrongDateFormat).append(System.lineSeparator());
+		createComputerInput.append(wrongDiscontinuedInput).append(System.lineSeparator());
 		createComputerInput.append(System.lineSeparator());
 		createComputerInput.append(EXIT).append(System.lineSeparator());
 		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
+		
+		doThrow(new InconsistentDatesException())
+			.when(computerService).create(name, Optional.of(wrongIntroduced), Optional.of(wrongDiscontinued), Optional.empty());
 		
 		controller.setScanner(scanner);
 		controller.chooseMainMenuAction();
 		
 		verify(view).noNameEnteredForComputer();
 		verify(view, times(2)).invalidDateEntered();
+		verify(view).inconsistentDates();
 	}
 
 }
