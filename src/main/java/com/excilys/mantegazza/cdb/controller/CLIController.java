@@ -3,6 +3,7 @@ package com.excilys.mantegazza.cdb.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
@@ -68,11 +69,36 @@ public class CLIController {
 	}
 	
 	/**
+	 * Asks the user to input a date with format "yyyy-MM-dd".
+	 * @return An optional containing a date, or empty if the user typed an empty line
+	 * @throws IOException 
+	 */
+	private Optional<LocalDate> inputDate() throws IOException {
+		Optional<LocalDate> date = Optional.empty();
+		boolean dateValid = false;
+		
+		while (!dateValid) {
+			String inputDate = getInput();
+			try {
+				if (!inputDate.isBlank()) {
+					LocalDate parsedDate = LocalDate.parse(inputDate, df);
+					date = Optional.of(parsedDate);
+				}
+				dateValid = true;
+			} catch (DateTimeParseException e) {
+				view.invalidDateEntered();
+			}
+		}
+		
+		return date;
+	}
+	
+	/**
 	 * Displays the main menu. When an action has been processed or the user input does not match any action,
 	 * the menu shows up again, until the user chooses the 'Exit' action.
 	 * If the user act
 	 * @throws NumberFormatException
-	 * @throws IOException
+	 * @throws IOExceptionion - if the text cannot be parsed
 	 */
 	public void chooseMainMenuAction() throws IOException {
 		MenuInput userChoice;
@@ -183,9 +209,6 @@ public class CLIController {
 	 */
 	private void createComputer() throws IOException {
 		String computerName = "";
-		Optional<LocalDate> introduced = Optional.empty();
-		Optional<LocalDate> discontinued = Optional.empty();
-		Optional<String> companyName = Optional.empty();
 		
 		do {
 			System.out.println("Enter computer name:");
@@ -194,19 +217,16 @@ public class CLIController {
 				view.noNameEnteredForComputer();
 			}
 		} while (computerName.isEmpty());
+		
 		System.out.println("Enter computer introduction date:");
-		String introducedInput = getInput();
+		Optional<LocalDate> introduced = inputDate();
+		
 		System.out.println("Enter computer discontinuation date:");
-		String discontinuedInput = getInput();
+		Optional<LocalDate> discontinued = inputDate();
+		
+		Optional<String> companyName = Optional.empty();
 		System.out.println("Enter company name:");
 		String companyNameInput = getInput();
-		
-		if (!introducedInput.isEmpty()) {
-			introduced = Optional.of(LocalDate.parse(introducedInput, df));
-		}
-		if (!discontinuedInput.isEmpty()) {
-			discontinued = Optional.of(LocalDate.parse(discontinuedInput, df));
-		}
 		if (!companyNameInput.isEmpty()) {
 			companyName = Optional.of(companyNameInput);
 		}
