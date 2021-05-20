@@ -58,4 +58,8 @@ public class CLIView {
 		System.out.println("You must enter a name for the computer.");
 	}
 	
+	public void invalidDateEntered() {
+		System.out.println("Please enter a valid date at format 'yyyy-MM-dd'.");
+	}
+	
 }
