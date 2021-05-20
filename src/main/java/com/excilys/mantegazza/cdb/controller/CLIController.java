@@ -174,7 +174,6 @@ public class CLIController {
 		} else {
 			view.showDetails(computer.get());
 		}
-		
 	}
 	
 	/**
@@ -192,7 +191,7 @@ public class CLIController {
 			System.out.println("Enter computer name:");
 			computerName = getInput();
 			if (computerName.isEmpty()) {
-				System.out.println("You must enter a name for the computer.");
+				view.noNameEnteredForComputer();
 			}
 		} while (computerName.isEmpty());
 		System.out.println("Enter computer introduction date:");
@@ -235,7 +234,7 @@ public class CLIController {
 			System.out.println("Enter the name of the computer to update:");
 			computerName = getInput();
 			if (computerName.isEmpty()) {
-				System.out.println("You must enter a name for the computer to update");
+				view.noNameEnteredForComputer();
 			}
 		} while (computerName.isEmpty());
 		System.out.println("Enter new computer name (press Enter to keep the previous name):");
@@ -278,7 +277,7 @@ public class CLIController {
 			System.out.println("Enter the name of the computer to delete:");
 			computerName = getInput();
 			if (computerName.isEmpty()) {
-				System.out.println("You must enter a name for the computer to delete");
+				view.noNameEnteredForComputer();
 			}
 		} while (computerName.isEmpty());
 		

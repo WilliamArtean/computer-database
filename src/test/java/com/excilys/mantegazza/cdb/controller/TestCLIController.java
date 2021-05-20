@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
@@ -37,12 +39,13 @@ public class TestCLIController {
 	private PageController pageController;
 	private ArrayList<Company> companyDB;
 	private ArrayList<Computer> computerDB;
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	@Before
 	public void setUpController() {
 		companyDB = new ArrayList<Company>();
-		Company company1 = new Company(1, "Souris");
-		Company company2 = new Company(2, "Poisson");
+		Company company1 = new Company(1, "Company 1");
+		Company company2 = new Company(2, "Company 2");
 		companyDB.add(company1);
 		companyDB.add(company2);
 		
@@ -133,6 +136,50 @@ public class TestCLIController {
 		controller.setScanner(scanner);
 		controller.chooseMainMenuAction();
 		verify(view).noComputerWithName(wrongComputerName);
+	}
+	
+	@Test
+	public void testCreateComputer() throws IOException, InconsistentDatesException {
+		String name = "Computer 3";
+		String introducedString = "2001-01-02";
+		LocalDate introduced = LocalDate.parse(introducedString, df);
+		String discontinuedString = "2011-03-18";
+		LocalDate discontinued = LocalDate.parse(discontinuedString, df);
+		String company = "Company 1";
+		
+		StringBuilder createComputerInput = new StringBuilder("4").append(System.lineSeparator());
+		createComputerInput.append(name).append(System.lineSeparator());
+		createComputerInput.append(introducedString).append(System.lineSeparator());
+		createComputerInput.append(discontinuedString).append(System.lineSeparator());
+		createComputerInput.append(company).append(System.lineSeparator());
+		createComputerInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		verify(computerService).create(name, Optional.of(introduced), Optional.of(discontinued), Optional.of(company));
+	}
+	
+	@Test
+	public void testCreateEmptyComputer() throws IOException, InconsistentDatesException {
+		String name = "Computer empty";
+		
+		StringBuilder createComputerInput = new StringBuilder("4").append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(name).append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append(System.lineSeparator());
+		createComputerInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(createComputerInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		
+		verify(view).noNameEnteredForComputer();
+		verify(computerService).create(name, Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 }

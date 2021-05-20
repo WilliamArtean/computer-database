@@ -54,4 +54,8 @@ public class CLIView {
 		System.out.println("No computer found with name '" + computerName + "'");
 	}
 	
+	public void noNameEnteredForComputer() {
+		System.out.println("You must enter a name for the computer.");
+	}
+	
 }
