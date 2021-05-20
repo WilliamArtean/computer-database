@@ -29,6 +29,8 @@ public class TestCompanyService {
 		companyDB = new ArrayList<Company>();
 		companyDB.add(new Company(1, "Company 1"));
 		companyDB.add(new Company(2, "Company 2"));
+		companyDB.add(new Company(3, "Company 3"));
+		companyDB.add(new Company(4, "Company 4"));
 		
 		
 		service = new CompanyService();
@@ -60,6 +62,18 @@ public class TestCompanyService {
 		when(dao.getAll()).thenReturn(companyDB);
 		ArrayList<Company> companiesReturned = service.getAllCompanies();
 		assertEquals(companiesReturned, companyDB);
+	}
+	
+	@Test
+	public void testGetSelection() {
+		ArrayList<Company> companySelection = new ArrayList<Company>();
+		companySelection.add(companyDB.get(1));
+		companySelection.add(companyDB.get(2));
+		
+		when(dao.getSelection(2, 1)).thenReturn(companySelection);
+		
+		ArrayList<Company> companiesReturned = service.getCompanySelection(2, 1);
+		assertEquals(companiesReturned, companySelection);
 	}
 	
 }
