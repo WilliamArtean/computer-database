@@ -1,7 +1,7 @@
 package com.excilys.mantegazza.cdb.utils;
 
 public enum MenuInput {
-	LIST_COMPUTERS(1), LIST_COMPANIES(2), SHOW_DETAILS(3), CREATE_COMPUTER(4), UPDATE_COMPUTER(5), DELETE_COMPUTER(6), EXIT(7);
+	INVALID_COMMAND(0), LIST_COMPUTERS(1), LIST_COMPANIES(2), SHOW_DETAILS(3), CREATE_COMPUTER(4), UPDATE_COMPUTER(5), DELETE_COMPUTER(6), EXIT(7);
 
 	private int number;
 	
@@ -27,7 +27,7 @@ public enum MenuInput {
 	 * @return true if the number is one of this enum's values, false otherwise
 	 */
 	public static boolean isValid(int number) {
-		return (number >= LIST_COMPUTERS.getNumber() && number <= EXIT.getNumber());
+		return (number >= INVALID_COMMAND.getNumber() && number <= EXIT.getNumber());
 	}
 	
 	/**
@@ -51,9 +51,9 @@ public enum MenuInput {
 			return DELETE_COMPUTER;
 		case 7:
 			return EXIT;
+		default:
+			return INVALID_COMMAND;
 		}
-		
-		return null;
 	}
 	
 }
