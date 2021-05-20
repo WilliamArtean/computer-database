@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.junit.After;
@@ -46,9 +47,9 @@ public class TestCLIController {
 		companyDB.add(company2);
 		
 		computerDB = new ArrayList<Computer>();
-		Computer computer1 = new Computer("Goudgouz");
+		Computer computer1 = new Computer("Computer 1");
 		computer1.setID(1);
-		Computer computer2 = new Computer("Goudgouz Pro");
+		Computer computer2 = new Computer("Computer 1");
 		computer2.setID(2);
 		computer2.setIntroductionDate(LocalDate.of(2000, 05, 20));
 		computer2.setDiscontinuationDate(LocalDate.of(2020, 12, 31));
@@ -71,9 +72,9 @@ public class TestCLIController {
 		namesList.add(computerDB.get(1).getName());
 		
 		//Simulating user choosing option 'list computers'
-		String listComputerInput = "1" + System.lineSeparator();
-		listComputerInput += "7" + System.lineSeparator();
-		ByteArrayInputStream inStream = new ByteArrayInputStream(listComputerInput.getBytes());
+		StringBuilder listComputerInput = new StringBuilder("1").append(System.lineSeparator());
+		listComputerInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(listComputerInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
 		controller.setScanner(scanner);
@@ -91,14 +92,47 @@ public class TestCLIController {
 		namesList.add(companyDB.get(1).getName());
 		
 		//Simulating user choosing option 'list companies'
-		String listCompaniesInput = "2" + System.lineSeparator();
-		listCompaniesInput += "7" + System.lineSeparator();
-		ByteArrayInputStream inStream = new ByteArrayInputStream(listCompaniesInput.getBytes());
+		StringBuilder listCompaniesInput = new StringBuilder("2").append(System.lineSeparator());
+		listCompaniesInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(listCompaniesInput.toString().getBytes());
 		Scanner scanner = new Scanner(inStream);
 		
 		controller.setScanner(scanner);
 		controller.chooseMainMenuAction();
 		verify(view).displayList(namesList);
+	}
+	
+	@Test
+	public void testShowComputerDetails() throws IOException {
+		when(computerService.getComputer(computerDB.get(1).getName())).thenReturn(Optional.of(computerDB.get(1)));
+		
+		//Simulating user choosing option 'show details', computer name, and exit
+		StringBuilder showDetailsInput = new StringBuilder("3").append(System.lineSeparator());
+		showDetailsInput.append(computerDB.get(1).getName()).append(System.lineSeparator());
+		showDetailsInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(showDetailsInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		verify(view).showDetails(computerDB.get(1));
+	}
+	
+	@Test
+	public void testShowNotPresentComputerDetails() throws IOException {
+		String wrongComputerName = "Non-existing computer";
+		when(computerService.getComputer(wrongComputerName)).thenReturn(Optional.empty());
+		
+		//Simulating user choosing option 'show details', computer name, and exit
+		StringBuilder showDetailsInput = new StringBuilder("3").append(System.lineSeparator());
+		showDetailsInput.append(wrongComputerName).append(System.lineSeparator());
+		showDetailsInput.append("7").append(System.lineSeparator());
+		ByteArrayInputStream inStream = new ByteArrayInputStream(showDetailsInput.toString().getBytes());
+		Scanner scanner = new Scanner(inStream);
+		
+		controller.setScanner(scanner);
+		controller.chooseMainMenuAction();
+		verify(view).noComputerWithName(wrongComputerName);
 	}
 
 }

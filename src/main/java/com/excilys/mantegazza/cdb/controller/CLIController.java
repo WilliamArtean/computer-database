@@ -64,9 +64,7 @@ public class CLIController {
 	 * @throws IOException
 	 */
 	private String getInput() throws IOException {
-		String line = "";
-		line = scanner.nextLine();			
-		return line;
+		return scanner.nextLine();
 	}
 	
 	/**
@@ -172,7 +170,7 @@ public class CLIController {
 		String computerName = getInput();
 		Optional<Computer> computer = computerService.getComputer(computerName);
 		if (computer.isEmpty()) {
-			System.out.println("No computer found with name '" + computerName + "'");
+			view.noComputerWithName(computerName);
 		} else {
 			view.showDetails(computer.get());
 		}

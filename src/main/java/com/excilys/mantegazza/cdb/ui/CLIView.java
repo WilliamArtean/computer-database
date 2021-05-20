@@ -50,4 +50,8 @@ public class CLIView {
 		System.out.println(details.toString());
 	}
 	
+	public void noComputerWithName(String computerName) {
+		System.out.println("No computer found with name '" + computerName + "'");
+	}
+	
 }
