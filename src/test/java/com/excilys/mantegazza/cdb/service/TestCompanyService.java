@@ -27,10 +27,10 @@ public class TestCompanyService {
 	@Before
 	public void setUpService() {
 		companyDB = new ArrayList<Company>();
-		companyDB.add(new Company(1, "Company 1"));
-		companyDB.add(new Company(2, "Company 2"));
-		companyDB.add(new Company(3, "Company 3"));
-		companyDB.add(new Company(4, "Company 4"));
+		companyDB.add(new Company.CompanyBuilder("Company 1").withID(1).build());
+		companyDB.add(new Company.CompanyBuilder("Company 2").withID(2).build());
+		companyDB.add(new Company.CompanyBuilder("Company 3").withID(3).build());
+		companyDB.add(new Company.CompanyBuilder("Company 4").withID(4).build());
 		
 		
 		service = new CompanyService();

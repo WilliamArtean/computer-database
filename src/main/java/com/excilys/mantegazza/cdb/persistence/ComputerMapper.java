@@ -31,7 +31,7 @@ public class ComputerMapper {
 			computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("company_id") != null) {
-			computer.setCompany(new Company(rs.getString("company.name")));
+			computer.setCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
 		}
 		
 		return Optional.of(computer);
@@ -55,7 +55,7 @@ public class ComputerMapper {
 				computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("company_id") != null) {
-				computer.setCompany(new Company(rs.getString("company.name")));
+				computer.setCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
 			}
 			computers.add(computer);
 		}

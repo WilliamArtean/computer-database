@@ -96,7 +96,7 @@ public class TestComputerService {
 		computerToCreate.setName(name);
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
-		Company company = new Company(1, "Company 1");
+		Company company = new Company.CompanyBuilder("Company 1").build();
 		
 		computerToCreate.setIntroductionDate(introduced);
 		computerToCreate.setDiscontinuationDate(discontinued);
@@ -127,7 +127,7 @@ public class TestComputerService {
 		String newName = "New computer";
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
-		Company company = new Company(1, "Company 1");
+		Company company = new Company.CompanyBuilder("Company 1").build();
 		
 		updatedComputer.setName(newName);
 		updatedComputer.setIntroductionDate(introduced);
@@ -193,7 +193,7 @@ public class TestComputerService {
 		Computer computerWithoutCompany = new Computer();
 		String name = "computer 1";
 		computerWithoutCompany.setName(name);
-		Company ghostCompany = new Company(3, "Non-existing company");
+		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
 		
@@ -206,7 +206,7 @@ public class TestComputerService {
 		String oldName = "computer 1";
 		Computer computerWithoutCompany = new Computer();
 		computerWithoutCompany.setName(oldName);
-		Company ghostCompany = new Company(3, "Non-existing company");
+		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
 		

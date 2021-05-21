@@ -14,14 +14,14 @@ public class CompanyMapper {
 			return Optional.empty();
 		}
 		rs.next();
-		Company company = new Company(rs.getLong("id"), rs.getString("name"));
+		Company company = new Company.CompanyBuilder(rs.getString("name")).withID(rs.getLong("id")).build();
 		return Optional.of(company);
 	}
 	
 	public ArrayList<Company> mapToCompanyArray(ResultSet rs) throws SQLException {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		while (rs.next()) {
-			companies.add(new Company(rs.getLong("id"), rs.getString("name")));
+			companies.add(new Company.CompanyBuilder(rs.getString("name")).withID(rs.getLong("id")).build());
 		}
 		return companies;
 	}

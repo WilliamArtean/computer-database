@@ -2,16 +2,14 @@ package com.excilys.mantegazza.cdb.model;
 
 public class Company {
 	
-	private long id;
+	//Required parameters
 	private String name;
+	//Optional parameters
+	private long id;
 	
-	public Company(long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-	
-	public Company(String name) {
-		this.name = name;
+	private Company(CompanyBuilder builder) {
+		this.name = builder.name;
+		this.id = builder.id;
 	}
 	
 	public long getID() {
@@ -65,6 +63,26 @@ public class Company {
 		return true;
 	}
 	
-	
+	public static class CompanyBuilder {
+		
+		//Required parameters
+		private String name;
+		//Optional parameters
+		private long id;
+		
+		public CompanyBuilder(String name) {
+			this.name = name;
+		}
+		
+		public CompanyBuilder withID(long id) {
+			this.id = id;
+			return this;
+		}
+		
+		public Company build() {
+			return new Company(this);
+		}
+		
+	}
 	
 }

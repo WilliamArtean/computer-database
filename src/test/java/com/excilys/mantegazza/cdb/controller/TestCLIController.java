@@ -57,8 +57,8 @@ public class TestCLIController {
 	@Before
 	public void setUpController() {
 		companyDB = new ArrayList<Company>();
-		Company company1 = new Company(1, "Company 1");
-		Company company2 = new Company(2, "Company 2");
+		Company company1 = new Company.CompanyBuilder("Company 1").withID(1).build();
+		Company company2 = new Company.CompanyBuilder("Company 2").withID(2).build();
 		companyDB.add(company1);
 		companyDB.add(company2);
 		
