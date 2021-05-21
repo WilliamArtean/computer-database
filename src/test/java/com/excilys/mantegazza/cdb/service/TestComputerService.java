@@ -214,4 +214,18 @@ public class TestComputerService {
 		verify(dao).update(oldName, computerWithoutCompany);
 	}
 	
+	@Test
+	public void deleteComputerByName() {
+		String name = computerDB.get(0).getName();
+		service.delete(name);
+		verify(dao).delete(name);
+	}
+	
+	@Test
+	public void deleteComputerByID() {
+		long id = 1;
+		service.delete(id);
+		verify(dao).delete(id);
+	}
+	
 }
