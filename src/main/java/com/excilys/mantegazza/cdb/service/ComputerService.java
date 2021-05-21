@@ -119,8 +119,13 @@ public class ComputerService {
 	 * @throws InconsistentDatesException 
 	 */
 	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
+		String computerName;
+		if (newComputerName.isPresent()) {
+			computerName = newComputerName.get();
+		} else {
+			computerName = oldName;
+		}
 		if (!areDatesConsistent(introduced, discontinued)) {
-			String computerName = (newComputerName.isEmpty()) ? oldName : newComputerName.get();
 			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
 			throw new InconsistentDatesException();
 		}

@@ -150,4 +150,42 @@ public class TestComputerService {
 		verify(dao).update(oldName, updatedComputer);
 	}
 	
+	@Test
+	public void testCreateWithSingleDate() throws InconsistentDatesException {
+		Computer computerWithIntroduced = new Computer();
+		Computer computerWithDiscontinued = new Computer();
+		String name = "computer 1";
+		LocalDate introduced = LocalDate.of(2000, 10, 31);
+		LocalDate discontinued = LocalDate.of(2020, 8, 9);
+		
+		computerWithIntroduced.setName(name);
+		computerWithIntroduced.setIntroductionDate(introduced);
+		computerWithDiscontinued.setName(name);
+		computerWithDiscontinued.setDiscontinuationDate(discontinued);
+		
+		service.create(name, Optional.of(introduced), Optional.empty(), Optional.empty());
+		verify(dao).create(computerWithIntroduced);
+		
+		service.create(name, Optional.empty(), Optional.of(discontinued), Optional.empty());
+		verify(dao).create(computerWithDiscontinued);
+	}
+	
+	@Test (expected = InconsistentDatesException.class)
+	public void createWithInconsistentDates() throws InconsistentDatesException {
+		String name = "New computer";
+		LocalDate introduced = LocalDate.of(2020, 8, 9);
+		LocalDate discontinued = LocalDate.of(2000, 10, 31);
+		
+		service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty());
+	}
+	
+	@Test (expected = InconsistentDatesException.class)
+	public void updateWithInconsistentDates() throws InconsistentDatesException {
+		String oldName = "Old computer";
+		LocalDate introduced = LocalDate.of(2020, 8, 9);
+		LocalDate discontinued = LocalDate.of(2000, 10, 31);
+		
+		service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty());
+	}
+	
 }
