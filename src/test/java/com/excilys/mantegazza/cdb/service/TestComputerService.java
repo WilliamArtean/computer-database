@@ -120,4 +120,34 @@ public class TestComputerService {
 		verify(dao).create(emptyComputer);
 	}
 	
+	@Test
+	public void testUpdateComputer() throws InconsistentDatesException {
+		String oldName = "Old computer";
+		Computer updatedComputer = new Computer();
+		String newName = "New computer";
+		LocalDate introduced = LocalDate.of(2000, 10, 31);
+		LocalDate discontinued = LocalDate.of(2020, 8, 9);
+		Company company = new Company(1, "Company 1");
+		
+		updatedComputer.setName(newName);
+		updatedComputer.setIntroductionDate(introduced);
+		updatedComputer.setDiscontinuationDate(discontinued);
+		updatedComputer.setCompany(company);
+		
+		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
+		
+		service.update(oldName, Optional.of(newName), Optional.of(introduced), Optional.of(discontinued), Optional.of(company.getName()));
+		verify(dao).update(oldName, updatedComputer);
+	}
+	
+	@Test
+	public void testUpdateEmptyComputer() throws InconsistentDatesException {
+		String oldName = "Old computer";
+		Computer updatedComputer = new Computer();
+		updatedComputer.setName(oldName);
+		
+		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		verify(dao).update(oldName, updatedComputer);
+	}
+	
 }
