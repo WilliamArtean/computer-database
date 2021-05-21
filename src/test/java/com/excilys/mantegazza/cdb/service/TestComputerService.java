@@ -1,8 +1,10 @@
 package com.excilys.mantegazza.cdb.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -12,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
+import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
@@ -23,7 +27,7 @@ public class TestComputerService {
 	@Mock
 	private ComputerDAO dao;
 	@Mock
-	private CompanyService companyService;
+	private CompanyService companyService = new CompanyService();
 	private ArrayList<Computer> computerDB;
 	
 	@Before
@@ -37,6 +41,7 @@ public class TestComputerService {
 		
 		service = new ComputerService();
 		service.setComputerDAO(dao);
+		service.setCompanyService(companyService);
 	}
 	
 	@Test
@@ -82,6 +87,28 @@ public class TestComputerService {
 	public void testCount() {
 		when(dao.getCount()).thenReturn(computerDB.size());
 		assertEquals(service.getCount(), computerDB.size());
+	}
+	
+	@Test
+	public void testCreateComputer() throws InconsistentDatesException {
+		Computer computerToCreate = new Computer();
+		String name = "computer 1";
+		computerToCreate.setName(name);
+		LocalDate introduced = LocalDate.of(2000, 10, 31);
+		LocalDate discontinued = LocalDate.of(2020, 8, 9);
+		Company company = new Company(1, "Company 1");
+		
+		
+		computerToCreate.setIntroductionDate(introduced);
+		computerToCreate.setDiscontinuationDate(discontinued);
+		computerToCreate.setCompany(company);
+
+		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
+		service.create(computerToCreate.getName(),
+				Optional.of(computerToCreate.getIntroductionDate()),
+				Optional.of(computerToCreate.getDiscontinuationDate()),
+				Optional.of(computerToCreate.getCompany().getName()));
+		verify(dao).create(computerToCreate);
 	}
 	
 }
