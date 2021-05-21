@@ -98,17 +98,26 @@ public class TestComputerService {
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
 		Company company = new Company(1, "Company 1");
 		
-		
 		computerToCreate.setIntroductionDate(introduced);
 		computerToCreate.setDiscontinuationDate(discontinued);
 		computerToCreate.setCompany(company);
 
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
-		service.create(computerToCreate.getName(),
-				Optional.of(computerToCreate.getIntroductionDate()),
-				Optional.of(computerToCreate.getDiscontinuationDate()),
-				Optional.of(computerToCreate.getCompany().getName()));
+		service.create(name,
+				Optional.of(introduced),
+				Optional.of(discontinued),
+				Optional.of(company.getName()));
 		verify(dao).create(computerToCreate);
+	}
+	
+	@Test
+	public void testCreateEmptyComputer() throws InconsistentDatesException {
+		Computer emptyComputer = new Computer();
+		String name = "Empty computer";
+		emptyComputer.setName(name);
+		
+		service.create(name, Optional.empty(), Optional.empty(), Optional.empty());
+		verify(dao).create(emptyComputer);
 	}
 	
 }
