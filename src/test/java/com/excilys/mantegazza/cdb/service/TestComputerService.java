@@ -188,4 +188,30 @@ public class TestComputerService {
 		service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty());
 	}
 	
+	@Test
+	public void createWithNonExistingCompany() throws InconsistentDatesException {
+		Computer computerWithoutCompany = new Computer();
+		String name = "computer 1";
+		computerWithoutCompany.setName(name);
+		Company ghostCompany = new Company(3, "Non-existing company");
+		
+		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
+		
+		service.create(name, Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
+		verify(dao).create(computerWithoutCompany);
+	}
+	
+	@Test
+	public void updateWithNonExistingCompany() throws InconsistentDatesException {
+		String oldName = "computer 1";
+		Computer computerWithoutCompany = new Computer();
+		computerWithoutCompany.setName(oldName);
+		Company ghostCompany = new Company(3, "Non-existing company");
+		
+		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
+		
+		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
+		verify(dao).update(oldName, computerWithoutCompany);
+	}
+	
 }
