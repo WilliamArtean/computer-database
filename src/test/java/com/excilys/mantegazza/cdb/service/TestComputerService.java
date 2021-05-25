@@ -11,7 +11,9 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
@@ -19,15 +21,21 @@ import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
+import validator.DatesConsistencyValidator;
+
 @RunWith(MockitoJUnitRunner.class)
 public class TestComputerService {
 
-	private ComputerService service;
 
 	@Mock
 	private ComputerDAO dao;
 	@Mock
-	private CompanyService companyService = new CompanyService();
+	private CompanyService companyService;
+	@Mock
+	private DatesConsistencyValidator datesValidator;
+	@InjectMocks
+	private ComputerService service;
+
 	private ArrayList<Computer> computerDB;
 	
 	@Before
@@ -40,8 +48,10 @@ public class TestComputerService {
 		
 		
 		service = new ComputerService();
-		service.setComputerDAO(dao);
-		service.setCompanyService(companyService);
+	}
+	@Before
+	public void initMocks() {
+		MockitoAnnotations.openMocks(this);
 	}
 	
 	@Test
