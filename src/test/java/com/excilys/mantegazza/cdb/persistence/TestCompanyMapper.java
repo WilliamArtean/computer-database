@@ -137,4 +137,12 @@ public class TestCompanyMapper {
 		psDelete.close();
 	}
 	
+	@Test
+	public void mapEmptyArray() throws SQLException {
+		PreparedStatement psGet = co.prepareStatement(getLastCompanies);
+		ResultSet rs = psGet.executeQuery();
+		ArrayList<Company> mappedCompanies = companyMapperSUT.mapToCompanyArray(rs);
+		assertTrue(mappedCompanies.isEmpty());
+	}
+	
 }
