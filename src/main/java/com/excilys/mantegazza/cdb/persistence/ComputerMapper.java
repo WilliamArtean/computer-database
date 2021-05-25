@@ -32,7 +32,7 @@ public class ComputerMapper {
 			builder.withDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("company_id") != null) {
-			builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
+			builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).withID(rs.getLong("company_id")).build());
 		}
 		
 		Computer computer = builder.build();
@@ -57,7 +57,7 @@ public class ComputerMapper {
 				builder.withDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("company_id") != null) {
-				builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
+				builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).withID(rs.getLong("company_id")).build());
 			}
 			Computer computer = builder.build();
 			computers.add(computer);

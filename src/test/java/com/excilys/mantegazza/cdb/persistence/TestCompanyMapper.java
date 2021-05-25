@@ -92,7 +92,6 @@ public class TestCompanyMapper {
 		sourceCompanies.add(company3);
 		sourceCompanies.add(company4);
 		
-		//Inserts the test companies into the in-memory database
 		PreparedStatement psInsert = co.prepareStatement(insertTestCompany);
 		psInsert.setLong(1, company1.getID());
 		psInsert.setString(2, company1.getName());
