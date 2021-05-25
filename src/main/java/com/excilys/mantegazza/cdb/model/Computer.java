@@ -4,18 +4,18 @@ import java.time.LocalDate;
 
 public class Computer {
 	
-	private long id;
 	private String name;
+	private long id;
 	private LocalDate introductionDate;
 	private LocalDate discontinuationDate;
 	private Company company;
 	
-	public Computer() {
-		
-	}
-	
-	public Computer(String name) {
-		this.name = name;
+	private Computer(ComputerBuilder builder) {
+		this.name = builder.name;
+		this.id = builder.id;
+		this.introductionDate = builder.introduced;
+		this.discontinuationDate = builder.discontinued;
+		this.company = builder.company;
 	}
 
 	public long getID() {
@@ -133,6 +133,49 @@ public class Computer {
 	}
 
 
-	
+	public static class ComputerBuilder {
+		
+		private String name;
+		private long id;
+		private LocalDate introduced;
+		private LocalDate discontinued;
+		private Company company;
+		
+		public ComputerBuilder() { }
+		
+		public ComputerBuilder(String name) {
+			this.name = name;
+		}
+		
+		public ComputerBuilder withName(String name) {
+			this.name = name;
+			return this;
+		}
+		
+		public ComputerBuilder withID(long id) {
+			this.id = id;
+			return this;
+		}
+		
+		public ComputerBuilder withIntroduced(LocalDate introduced) {
+			this.introduced = introduced;
+			return this;
+		}
+		
+		public ComputerBuilder withDiscontinued(LocalDate discontinued) {
+			this.discontinued = discontinued;
+			return this;
+		}
+		
+		public ComputerBuilder withCompany(Company company) {
+			this.company = company;
+			return this;
+		}
+		
+		public Computer build() {
+			return new Computer(this);
+		}
+		
+	}
 	
 }

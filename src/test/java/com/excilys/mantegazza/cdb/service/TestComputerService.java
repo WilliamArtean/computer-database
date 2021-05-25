@@ -33,10 +33,10 @@ public class TestComputerService {
 	@Before
 	public void setUpService() {
 		computerDB = new ArrayList<Computer>();
-		computerDB.add(new Computer("Computer 1"));
-		computerDB.add(new Computer("Computer 2"));
-		computerDB.add(new Computer("Computer 3"));
-		computerDB.add(new Computer("Computer 4"));
+		computerDB.add(new Computer.ComputerBuilder("Computer 1").build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 2").build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 3").build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 4").build());
 		
 		
 		service = new ComputerService();
@@ -91,9 +91,8 @@ public class TestComputerService {
 	
 	@Test
 	public void testCreateComputer() throws InconsistentDatesException {
-		Computer computerToCreate = new Computer();
 		String name = "computer 1";
-		computerToCreate.setName(name);
+		Computer computerToCreate = new Computer.ComputerBuilder().withName(name).build();
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
 		Company company = new Company.CompanyBuilder("Company 1").build();
@@ -112,9 +111,8 @@ public class TestComputerService {
 	
 	@Test
 	public void testCreateEmptyComputer() throws InconsistentDatesException {
-		Computer emptyComputer = new Computer();
 		String name = "Empty computer";
-		emptyComputer.setName(name);
+		Computer emptyComputer = new Computer.ComputerBuilder().withName(name).build();
 		
 		service.create(name, Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).create(emptyComputer);
@@ -123,16 +121,17 @@ public class TestComputerService {
 	@Test
 	public void testUpdateComputer() throws InconsistentDatesException {
 		String oldName = "Old computer";
-		Computer updatedComputer = new Computer();
 		String newName = "New computer";
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
 		Company company = new Company.CompanyBuilder("Company 1").build();
 		
-		updatedComputer.setName(newName);
-		updatedComputer.setIntroductionDate(introduced);
-		updatedComputer.setDiscontinuationDate(discontinued);
-		updatedComputer.setCompany(company);
+		Computer updatedComputer = new Computer.ComputerBuilder()
+				.withName(newName)
+				.withIntroduced(introduced)
+				.withDiscontinued(discontinued)
+				.withCompany(company)
+				.build();
 		
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
 		
@@ -143,8 +142,7 @@ public class TestComputerService {
 	@Test
 	public void testUpdateEmptyComputer() throws InconsistentDatesException {
 		String oldName = "Old computer";
-		Computer updatedComputer = new Computer();
-		updatedComputer.setName(oldName);
+		Computer updatedComputer = new Computer.ComputerBuilder().withName(oldName).build();
 		
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).update(oldName, updatedComputer);
@@ -152,16 +150,12 @@ public class TestComputerService {
 	
 	@Test
 	public void testCreateWithSingleDate() throws InconsistentDatesException {
-		Computer computerWithIntroduced = new Computer();
-		Computer computerWithDiscontinued = new Computer();
 		String name = "computer 1";
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
 		
-		computerWithIntroduced.setName(name);
-		computerWithIntroduced.setIntroductionDate(introduced);
-		computerWithDiscontinued.setName(name);
-		computerWithDiscontinued.setDiscontinuationDate(discontinued);
+		Computer computerWithIntroduced = new Computer.ComputerBuilder().withName(name).withIntroduced(introduced).build();
+		Computer computerWithDiscontinued = new Computer.ComputerBuilder().withName(name).withDiscontinued(discontinued).build();
 		
 		service.create(name, Optional.of(introduced), Optional.empty(), Optional.empty());
 		verify(dao).create(computerWithIntroduced);
@@ -190,9 +184,8 @@ public class TestComputerService {
 	
 	@Test
 	public void createWithNonExistingCompany() throws InconsistentDatesException {
-		Computer computerWithoutCompany = new Computer();
 		String name = "computer 1";
-		computerWithoutCompany.setName(name);
+		Computer computerWithoutCompany = new Computer.ComputerBuilder().withName(name).build();
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
@@ -204,8 +197,7 @@ public class TestComputerService {
 	@Test
 	public void updateWithNonExistingCompany() throws InconsistentDatesException {
 		String oldName = "computer 1";
-		Computer computerWithoutCompany = new Computer();
-		computerWithoutCompany.setName(oldName);
+		Computer computerWithoutCompany = new Computer.ComputerBuilder().withName(oldName).build();
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());

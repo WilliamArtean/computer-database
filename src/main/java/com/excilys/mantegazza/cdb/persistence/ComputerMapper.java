@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 
 public class ComputerMapper {
 
@@ -22,18 +23,19 @@ public class ComputerMapper {
 		}
 		rs.next();
 		
-		Computer computer = new Computer(rs.getString("computer.name"));
-		computer.setID(rs.getLong("id"));
+		ComputerBuilder builder = new Computer.ComputerBuilder(rs.getString("computer.name"))
+				.withID(rs.getLong("id"));
 		if (rs.getString("introduced") != null) {
-			computer.setIntroductionDate(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
+			builder.withIntroduced(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("discontinued") != null) {
-			computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
+			builder.withDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 		}
 		if (rs.getString("company_id") != null) {
-			computer.setCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
+			builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
 		}
 		
+		Computer computer = builder.build();
 		return Optional.of(computer);
 	}
 	
@@ -46,17 +48,18 @@ public class ComputerMapper {
 	public ArrayList<Computer> mapToComputerArray(ResultSet rs) throws SQLException {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		while (rs.next()) {			
-			Computer computer = new Computer(rs.getString("computer.name"));
-			computer.setID(rs.getLong("id"));
+			ComputerBuilder builder = new Computer.ComputerBuilder(rs.getString("computer.name"))
+					.withID(rs.getLong("id"));
 			if (rs.getString("introduced") != null) {
-				computer.setIntroductionDate(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
+				builder.withIntroduced(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("discontinued") != null) {
-				computer.setDiscontinuationDate(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
+				builder.withDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 			}
 			if (rs.getString("company_id") != null) {
-				computer.setCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
+				builder.withCompany(new Company.CompanyBuilder(rs.getString("company.name")).build());
 			}
+			Computer computer = builder.build();
 			computers.add(computer);
 		}
 		return computers;

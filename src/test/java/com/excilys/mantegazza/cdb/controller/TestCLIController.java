@@ -63,10 +63,8 @@ public class TestCLIController {
 		companyDB.add(company2);
 		
 		computerDB = new ArrayList<Computer>();
-		Computer computer1 = new Computer("Computer 1");
-		computer1.setID(1);
-		Computer computer2 = new Computer("Computer 1");
-		computer2.setID(2);
+		Computer computer1 = new Computer.ComputerBuilder("Computer 1").withID(1).build();
+		Computer computer2 = new Computer.ComputerBuilder("Computer 2").withID(2).build();
 		computer2.setIntroductionDate(LocalDate.of(2000, 05, 20));
 		computer2.setDiscontinuationDate(LocalDate.of(2020, 12, 31));
 		computer2.setCompany(company2);

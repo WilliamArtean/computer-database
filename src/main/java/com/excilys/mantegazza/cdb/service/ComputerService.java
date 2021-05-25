@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
 public class ComputerService {
@@ -91,19 +92,20 @@ public class ComputerService {
 			throw new InconsistentDatesException();
 		}
 		
-		Computer computerToCreate = new Computer(computerName);
+		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
 		if (introduced.isPresent()) {
-			computerToCreate.setIntroductionDate(introduced.get());
+			builder.withIntroduced(introduced.get());
 		}
 		if (discontinued.isPresent()) {
-			computerToCreate.setDiscontinuationDate(discontinued.get());
+			builder.withDiscontinued(discontinued.get());
 		}
 		if (companyName.isPresent()) {
 			Optional<Company> companyToAdd = companyService.getCompany(companyName.get());
 			if (companyToAdd.isPresent()) {
-				computerToCreate.setCompany(companyToAdd.get());
+				builder.withCompany(companyToAdd.get());
 			}
 		}
+		Computer computerToCreate = builder.build();
 		
 		dao.create(computerToCreate);
 	}
@@ -130,24 +132,20 @@ public class ComputerService {
 			throw new InconsistentDatesException();
 		}
 		
-		Computer newComputer = new Computer();
-		if (newComputerName.isPresent()) {
-			newComputer.setName(newComputerName.get());
-		} else {
-			newComputer.setName(oldName);
-		}
+		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
 		if (introduced.isPresent()) {
-			newComputer.setIntroductionDate(introduced.get());
+			builder.withIntroduced(introduced.get());
 		}
 		if (discontinued.isPresent()) {
-			newComputer.setDiscontinuationDate(discontinued.get());
+			builder.withDiscontinued(discontinued.get());
 		}
 		if (companyName.isPresent()) {
 			Optional<Company> companyToAdd = companyService.getCompany(companyName.get());
 			if (companyToAdd.isPresent()) {
-				newComputer.setCompany(companyToAdd.get());
+				builder.withCompany(companyToAdd.get());
 			}
 		}
+		Computer newComputer = builder.build();
 		
 		dao.update(oldName, newComputer);
 	}
