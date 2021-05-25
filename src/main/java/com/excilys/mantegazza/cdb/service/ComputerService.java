@@ -13,12 +13,15 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
+import validator.DatesConsistencyValidator;
+
 public class ComputerService {
 	
 	private ComputerDAO dao;
 	private CompanyService companyService;
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-
+	private DatesConsistencyValidator dateValidator = new DatesConsistencyValidator();
+	
 	/**
 	 * Sets the company service from which this service can get the Company objects it needs.
 	 * @param companyService The CompanyService this service will use
@@ -29,10 +32,10 @@ public class ComputerService {
 
 	/**
 	 * Set a ComputerDAO from which to get the computers from the database.
-	 * @param computerDAO The ComputerDAO to use with this ComputerService
+	 * @param dao The ComputerDAO to use with this ComputerService
 	 */
-	public void setComputerDAO(ComputerDAO computerDAO) {
-		this.dao = computerDAO;
+	public void setComputerDAO(ComputerDAO dao) {
+		this.dao = dao;
 	}
 	
 	/**
