@@ -20,7 +20,7 @@ public class ComputerService {
 	private ComputerDAO dao;
 	private CompanyService companyService;
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-	private DatesConsistencyValidator dateValidator = new DatesConsistencyValidator();
+	private DatesConsistencyValidator datesValidator = new DatesConsistencyValidator();
 	
 	/**
 	 * Sets the company service from which this service can get the Company objects it needs.
@@ -90,7 +90,7 @@ public class ComputerService {
 	 * @throws InconsistentDatesException
 	 */
 	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
-		if (!areDatesConsistent(introduced, discontinued)) {
+		if (!datesValidator.areDatesConsistent(introduced, discontinued)) {
 			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
 			throw new InconsistentDatesException();
 		}
@@ -130,7 +130,7 @@ public class ComputerService {
 		} else {
 			computerName = oldName;
 		}
-		if (!areDatesConsistent(introduced, discontinued)) {
+		if (!datesValidator.areDatesConsistent(introduced, discontinued)) {
 			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
 			throw new InconsistentDatesException();
 		}
@@ -166,19 +166,5 @@ public class ComputerService {
 	 */
 	public void delete(long id) {
 		dao.delete(id);
-	}
-	
-	/**
-	 * Checks if the introduced date is before the discontinued date.
-	 * @param introduced An Optional containing the introduced date
-	 * @param discontinued An Optional containing the discontinued date
-	 * @return true if the discontinued date is after the introduced date, or if at least one of the dates is null.
-	 * false if the discontinued date is after the introduced date.
-	 */
-	public boolean areDatesConsistent(Optional<LocalDate> introduced, Optional<LocalDate> discontinued) {
-		if (introduced.isEmpty() || discontinued.isEmpty()) {
-			return true;
-		}
-		return introduced.get().isBefore(discontinued.get());
 	}
 }

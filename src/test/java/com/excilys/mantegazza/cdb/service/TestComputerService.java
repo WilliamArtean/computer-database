@@ -26,7 +26,6 @@ import validator.DatesConsistencyValidator;
 @RunWith(MockitoJUnitRunner.class)
 public class TestComputerService {
 
-
 	@Mock
 	private ComputerDAO dao;
 	@Mock
@@ -45,7 +44,6 @@ public class TestComputerService {
 		computerDB.add(new Computer.ComputerBuilder("Computer 2").build());
 		computerDB.add(new Computer.ComputerBuilder("Computer 3").build());
 		computerDB.add(new Computer.ComputerBuilder("Computer 4").build());
-		
 		
 		service = new ComputerService();
 	}
@@ -112,6 +110,7 @@ public class TestComputerService {
 		computerToCreate.setCompany(company);
 
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
+		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(true);
 		service.create(name,
 				Optional.of(introduced),
 				Optional.of(discontinued),
@@ -124,6 +123,7 @@ public class TestComputerService {
 		String name = "Empty computer";
 		Computer emptyComputer = new Computer.ComputerBuilder().withName(name).build();
 		
+		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		service.create(name, Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).create(emptyComputer);
 	}
@@ -144,6 +144,7 @@ public class TestComputerService {
 				.build();
 		
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
+		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(true);
 		
 		service.update(oldName, Optional.of(newName), Optional.of(introduced), Optional.of(discontinued), Optional.of(company.getName()));
 		verify(dao).update(oldName, updatedComputer);
@@ -154,6 +155,7 @@ public class TestComputerService {
 		String oldName = "Old computer";
 		Computer updatedComputer = new Computer.ComputerBuilder().withName(oldName).build();
 		
+		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).update(oldName, updatedComputer);
 	}
@@ -166,6 +168,9 @@ public class TestComputerService {
 		
 		Computer computerWithIntroduced = new Computer.ComputerBuilder().withName(name).withIntroduced(introduced).build();
 		Computer computerWithDiscontinued = new Computer.ComputerBuilder().withName(name).withDiscontinued(discontinued).build();
+		
+		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.empty())).thenReturn(true);
+		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.of(discontinued))).thenReturn(true);
 		
 		service.create(name, Optional.of(introduced), Optional.empty(), Optional.empty());
 		verify(dao).create(computerWithIntroduced);
@@ -180,6 +185,7 @@ public class TestComputerService {
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
 		LocalDate discontinued = LocalDate.of(2000, 10, 31);
 		
+		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
 		service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty());
 	}
 	
@@ -189,6 +195,7 @@ public class TestComputerService {
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
 		LocalDate discontinued = LocalDate.of(2000, 10, 31);
 		
+		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
 		service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty());
 	}
 	
@@ -199,6 +206,7 @@ public class TestComputerService {
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
+		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		
 		service.create(name, Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
 		verify(dao).create(computerWithoutCompany);
@@ -211,6 +219,7 @@ public class TestComputerService {
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
+		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
 		verify(dao).update(oldName, computerWithoutCompany);
