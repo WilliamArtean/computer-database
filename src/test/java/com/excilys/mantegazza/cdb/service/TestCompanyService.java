@@ -1,21 +1,21 @@
 package com.excilys.mantegazza.cdb.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TestCompanyService {
 	
 	private CompanyService service;
@@ -24,7 +24,7 @@ public class TestCompanyService {
 	private CompanyDAO dao;
 	private ArrayList<Company> companyDB;
 	
-	@Before
+	@BeforeEach
 	public void setUpService() {
 		companyDB = new ArrayList<Company>();
 		companyDB.add(new Company.CompanyBuilder("Company 1").withID(1).build());

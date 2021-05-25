@@ -13,13 +13,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
@@ -29,7 +27,7 @@ import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
 import com.excilys.mantegazza.cdb.utils.MenuInput;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TestCLIController {
 	
 	private static final String INVALID_COMMAND = ((Integer) MenuInput.INVALID_COMMAND.getNumber()).toString();
@@ -54,7 +52,7 @@ public class TestCLIController {
 	private ArrayList<Computer> computerDB;
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	@Before
+	@BeforeEach
 	public void setUpController() {
 		companyDB = new ArrayList<Company>();
 		Company company1 = new Company.CompanyBuilder("Company 1").withID(1).build();
@@ -72,11 +70,6 @@ public class TestCLIController {
 		computerDB.add(computer2);
 		
 		controller = new CLIController(view, computerService, companyService);
-	}
-	
-	@After
-	public void quitController() {
-		
 	}
 
 	@Test

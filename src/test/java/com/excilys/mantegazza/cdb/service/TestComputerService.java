@@ -1,6 +1,7 @@
 package com.excilys.mantegazza.cdb.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -8,13 +9,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
@@ -23,7 +24,7 @@ import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
 import validator.DatesConsistencyValidator;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TestComputerService {
 
 	@Mock
@@ -37,7 +38,7 @@ public class TestComputerService {
 
 	private ArrayList<Computer> computerDB;
 	
-	@Before
+	@BeforeEach
 	public void setUpService() {
 		computerDB = new ArrayList<Computer>();
 		computerDB.add(new Computer.ComputerBuilder("Computer 1").build());
@@ -46,9 +47,6 @@ public class TestComputerService {
 		computerDB.add(new Computer.ComputerBuilder("Computer 4").build());
 		
 		service = new ComputerService();
-	}
-	@Before
-	public void initMocks() {
 		MockitoAnnotations.openMocks(this);
 	}
 	
@@ -179,24 +177,24 @@ public class TestComputerService {
 		verify(dao).create(computerWithDiscontinued);
 	}
 	
-	@Test (expected = InconsistentDatesException.class)
 	public void createWithInconsistentDates() throws InconsistentDatesException {
 		String name = "New computer";
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
 		LocalDate discontinued = LocalDate.of(2000, 10, 31);
 		
 		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
-		service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty());
+		assertThrows(InconsistentDatesException.class,
+				() -> service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty()));
 	}
 	
-	@Test (expected = InconsistentDatesException.class)
 	public void updateWithInconsistentDates() throws InconsistentDatesException {
 		String oldName = "Old computer";
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
 		LocalDate discontinued = LocalDate.of(2000, 10, 31);
 		
 		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
-		service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty());
+		assertThrows(InconsistentDatesException.class,
+				() -> service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty()));
 	}
 	
 	@Test
