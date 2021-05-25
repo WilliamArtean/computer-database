@@ -64,4 +64,18 @@ public class TestCompanyMapper {
 		psDelete.close();
 	}
 	
+	@Test
+	public void mapVoidCompany() throws SQLException {
+		Company sourceCompany = new Company.CompanyBuilder("Test Company").withID(1000).build();
+		
+		PreparedStatement psGet = co.prepareStatement(queryGetByName);				
+		psGet.setString(1, sourceCompany.getName());
+		ResultSet rs = psGet.executeQuery();
+		Optional<Company> mappedCompany = companyMapperSUT.mapToCompany(rs);
+		rs.close();
+		psGet.close();
+		
+		assertTrue(mappedCompany.isEmpty());
+	}
+	
 }
