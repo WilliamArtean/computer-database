@@ -39,16 +39,13 @@ public class CompanyDAO {
 	 */
 	public Optional<Company> getByID(long id) {
 		Optional<Company> company = Optional.empty();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetByID);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetByID);
+			) {
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			company = mapper.mapToCompany(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -62,16 +59,13 @@ public class CompanyDAO {
 	 */
 	public Optional<Company> getByName(String name) {
 		Optional<Company> company = Optional.empty();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetByName);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetByName);
+			) {
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			company = mapper.mapToCompany(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -85,15 +79,12 @@ public class CompanyDAO {
 	 */
 	public ArrayList<Company> getAll() {
 		ArrayList<Company> companies = new ArrayList<Company>();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetAll);
-			ResultSet rs = ps.executeQuery();
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetAll);
+				ResultSet rs = ps.executeQuery();
+			) {
 			companies = mapper.mapToCompanyArray(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -109,17 +100,14 @@ public class CompanyDAO {
 	 */
 	public ArrayList<Company> getSelection(int numberToReturn, int offset) {
 		ArrayList<Company> companies = new ArrayList<Company>();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetSelection);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetSelection);
+			) {
 			ps.setInt(1, numberToReturn);
 			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
 			companies = mapper.mapToCompanyArray(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -139,10 +127,6 @@ public class CompanyDAO {
 			
 			rs.next();
 			count = rs.getInt("rowcount");
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
