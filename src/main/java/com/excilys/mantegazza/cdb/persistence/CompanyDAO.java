@@ -40,7 +40,7 @@ public class CompanyDAO {
 	public Optional<Company> getByID(long id) {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = dbManager.getNewConnection();
 				PreparedStatement ps = co.prepareStatement(queryGetByID);
 			) {
 			ps.setLong(1, id);
