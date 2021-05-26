@@ -238,4 +238,48 @@ public class TestComputerDAO {
 		computerDAOSUT.update(updatedComputer.get().getName(), oldComputer.get());
 	}
 	
+	@Test
+	public void testComputerDeletionByID() throws SQLException {
+		Company nintendo = new Company.CompanyBuilder("Nintendo").withID(24).build();
+		Computer snes = new Computer.ComputerBuilder("Super Nintendo Entertainment System")
+				.withID(154)
+				.withIntroduced(LocalDate.of(1991, 8, 1))
+				.withDiscontinued(LocalDate.of(1999, 1, 1))
+				.withCompany(nintendo)
+				.build();
+		
+		computerDAOSUT.delete(snes.getID());
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByID);
+		ps.setLong(1, snes.getID());
+		ResultSet rs = ps.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> deletedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(deletedComputer.isEmpty());
+	}
+	
+	@Test
+	public void testComputerDeletionByName() throws SQLException {
+		Company nintendo = new Company.CompanyBuilder("Nintendo").withID(24).build();
+		Computer snes = new Computer.ComputerBuilder("Super Nintendo Entertainment System")
+				.withID(154)
+				.withIntroduced(LocalDate.of(1991, 8, 1))
+				.withDiscontinued(LocalDate.of(1999, 1, 1))
+				.withCompany(nintendo)
+				.build();
+		
+		computerDAOSUT.delete(snes.getName());
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByName);
+		ps.setString(1, snes.getName());
+		ResultSet rs = ps.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> deletedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(deletedComputer.isEmpty());
+	}
+	
 }
