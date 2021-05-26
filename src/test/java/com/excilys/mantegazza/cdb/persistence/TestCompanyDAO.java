@@ -40,12 +40,37 @@ public class TestCompanyDAO {
 	}
 	
 	@Test
-	public void getCompanyByID() throws SQLException {
+	public void getCompanyByID() {
 		Company sourceCompany = new Company.CompanyBuilder("Nintendo").withID(24).build();
 		
 		Optional<Company> fetchedCompany = companyDAOSUT.getByID(sourceCompany.getID());
 		assertTrue(fetchedCompany.isPresent());
 		assertEquals(sourceCompany, fetchedCompany.get());
+	}
+	
+	@Test
+	public void getNonExistingCompanyByID() {
+		Company sourceCompany = new Company.CompanyBuilder("Ghost Company").withID(9999).build();
+		
+		Optional<Company> fetchedCompany = companyDAOSUT.getByID(sourceCompany.getID());
+		assertTrue(fetchedCompany.isEmpty());
+	}
+	
+	@Test
+	public void getCompanyByName() {
+		Company sourceCompany = new Company.CompanyBuilder("Nintendo").withID(24).build();
+		
+		Optional<Company> fetchedCompany = companyDAOSUT.getByName(sourceCompany.getName());
+		assertTrue(fetchedCompany.isPresent());
+		assertEquals(sourceCompany, fetchedCompany.get());
+	}
+	
+	@Test
+	public void getNonExistingCompanyByName() {
+		Company sourceCompany = new Company.CompanyBuilder("Ghost Company").withID(9999).build();
+		
+		Optional<Company> fetchedCompany = companyDAOSUT.getByName(sourceCompany.getName());
+		assertTrue(fetchedCompany.isEmpty());
 	}
 	
 }
