@@ -46,17 +46,14 @@ public class ComputerDAO {
 	 */
 	public Optional<Computer> getByID(long id) {
 		Optional<Computer> computer = Optional.empty();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetByID);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetByID);
+			) {
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			
 			computer = mapper.mapToComputer(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -75,17 +72,14 @@ public class ComputerDAO {
 	 */
 	public Optional<Computer> getByName(String name) {
 		Optional<Computer> computer = Optional.empty();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetByName);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetByName);
+			) {
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			
 			computer = mapper.mapToComputer(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -103,16 +97,12 @@ public class ComputerDAO {
 	 */
 	public ArrayList<Computer> getAll() {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetAll);
-			ResultSet rs = ps.executeQuery();
-			
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetAll);
+				ResultSet rs = ps.executeQuery();
+			) {
 			computers = mapper.mapToComputerArray(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}		
@@ -129,17 +119,14 @@ public class ComputerDAO {
 	 */
 	public ArrayList<Computer> getSelection(int numberToReturn, int offset) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetSelection);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetSelection);
+			) {
 			ps.setInt(1, numberToReturn);
 			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
 			computers = mapper.mapToComputerArray(rs);
-			
-			rs.close();
-			ps.close();
-			co.close();
 			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -152,9 +139,10 @@ public class ComputerDAO {
 	 * @param computer The Computer object to insert into the database
 	 */
 	public void create(Computer computer) {
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryCreate);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryCreate);
+			) {
 			ps.setString(1, computer.getName());
 			if (computer.getIntroductionDate() != null) {
 				ps.setString(2, df.format(computer.getIntroductionDate()));
@@ -173,8 +161,6 @@ public class ComputerDAO {
 			}
 			
 			ps.executeUpdate();
-			ps.close();
-			co.close();
 			logger.debug("Computer added to database: " + computer.toString());
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -189,9 +175,10 @@ public class ComputerDAO {
 	 * @throws SQLException
 	 */
 	public void update(String computerName, Computer updatedComputer) {
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryUpdate);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryUpdate);
+			) {
 			if (updatedComputer.getName() != null) {
 				ps.setString(1, updatedComputer.getName());			
 			} else {
@@ -215,8 +202,6 @@ public class ComputerDAO {
 			ps.setString(5, computerName);
 			
 			ps.executeUpdate();
-			ps.close();
-			co.close();
 			logger.debug("Computer updated in database: " + updatedComputer.toString());
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -228,13 +213,12 @@ public class ComputerDAO {
 	 * @param id The id of the computer to delete
 	 */
 	public void delete(long id) {
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryDeleteByID);
+			) {
 			ps.setLong(1, id);
 			ps.executeUpdate();
-			ps.close();
-			co.close();
 			logger.debug("Deleted computer in database with id: " + id);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -245,13 +229,12 @@ public class ComputerDAO {
 	 * @param name The name of the computer to delete
 	 */
 	public void delete(String name) {
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryDeleteByName);
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryDeleteByName);
+			) {
 			ps.setString(1, name);
 			ps.executeUpdate();
-			ps.close();
-			co.close();
 			logger.debug("Deleted computer in database with name: " + name);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -259,22 +242,18 @@ public class ComputerDAO {
 	}
 	
 	/**
-	 * Execute a SQL query to fetch the nubmer of Computer objects in the database.
-	 * @return An int corresponding to the nubmer of rows in the computer database
+	 * Execute a SQL query to fetch the number of Computer objects in the database.
+	 * @return An int corresponding to the number of rows in the computer database
 	 */
 	public int getCount() {
 		int count = 0;
-		try {
-			Connection co = this.dbManager.getNewConnection();
-			PreparedStatement ps = co.prepareStatement(queryGetCount);
-			ResultSet rs = ps.executeQuery();
-			
+		try (
+				Connection co = this.dbManager.getNewConnection();
+				PreparedStatement ps = co.prepareStatement(queryGetCount);
+				ResultSet rs = ps.executeQuery();
+			) {
 			rs.next();
 			count = rs.getInt("rowcount");
-			
-			rs.close();
-			ps.close();
-			co.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
