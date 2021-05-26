@@ -88,7 +88,38 @@ public class TestComputerMapper {
 	}
 	
 	@Test
-	public void mapVoidComputer() throws SQLException {
+	public void mapComputerWithNullFields() throws SQLException {
+		Computer sourceComputer = new Computer.ComputerBuilder("Test computer")
+				.withID(2000)
+				.build();
+		
+		PreparedStatement psInsert = co.prepareStatement(insertTestComputer);
+		psInsert.setLong(1, sourceComputer.getID());
+		psInsert.setString(2, sourceComputer.getName());
+		psInsert.setNull(3, Types.TIMESTAMP);
+		psInsert.setNull(4, Types.TIMESTAMP);
+		psInsert.setNull(5, Types.BIGINT);
+		psInsert.executeUpdate();
+		psInsert.close();
+		
+		PreparedStatement psGet = co.prepareStatement(queryGetByName);				
+		psGet.setString(1, sourceComputer.getName());
+		ResultSet rs = psGet.executeQuery();
+		Optional<Computer> mappedComputer = computerMapperSUT.mapToComputer(rs);
+		rs.close();
+		psGet.close();
+		
+		assertTrue(mappedComputer.isPresent());
+		assertEquals(sourceComputer, mappedComputer.get());
+		
+		PreparedStatement psDelete = co.prepareStatement(deleteTestComputer);
+		psDelete.setString(1, sourceComputer.getName());
+		psDelete.executeUpdate();
+		psDelete.close();
+	}
+	
+	@Test
+	public void mapNonExistingComputer() throws SQLException {
 		Computer sourceComputer = new Computer.ComputerBuilder("Test computer").build();
 		
 		PreparedStatement psGet = co.prepareStatement(queryGetByName);				
