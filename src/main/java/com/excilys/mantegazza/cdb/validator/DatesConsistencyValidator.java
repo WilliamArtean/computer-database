@@ -1,4 +1,4 @@
-package validator;
+package com.excilys.mantegazza.cdb.validator;
 
 import java.time.LocalDate;
 import java.util.Optional;

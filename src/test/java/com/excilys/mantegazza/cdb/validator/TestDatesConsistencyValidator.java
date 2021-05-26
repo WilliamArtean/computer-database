@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import validator.DatesConsistencyValidator;
+import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 public class TestDatesConsistencyValidator {
 

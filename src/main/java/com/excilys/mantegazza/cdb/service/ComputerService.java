@@ -12,8 +12,7 @@ import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
-
-import validator.DatesConsistencyValidator;
+import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 public class ComputerService {
 	

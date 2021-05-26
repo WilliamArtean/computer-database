@@ -21,8 +21,7 @@ import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
-
-import validator.DatesConsistencyValidator;
+import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class TestComputerService {
