@@ -24,6 +24,7 @@ public class TestComputerDAO {
 	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
 	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
+	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
 	
 	private ComputerDAO computerDAOSUT = new ComputerDAO();
 	private DBConnectionManager connectionManager = new DBConnectionManager();
@@ -123,6 +124,28 @@ public class TestComputerDAO {
 		rs.close();
 		
 		assertEquals(count, computerDAOSUT.getCount());
+	}
+	
+	@Test
+	public void testComputerInsertion() throws SQLException {
+		Company nintendo = new Company.CompanyBuilder("Nintendo").withID(24).build();
+		Computer newComputer = new Computer.ComputerBuilder("NewComputer")
+				.withIntroduced(LocalDate.of(2021, 8, 1))
+				.withDiscontinued(LocalDate.of(2030, 4, 16))
+				.withCompany(nintendo)
+				.build();
+		computerDAOSUT.create(newComputer);
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByName);
+		ps.setString(1, newComputer.getName());
+		ResultSet rs = ps.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> addedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(addedComputer.isPresent());
+		newComputer.setID(addedComputer.get().getID());
+		assertEquals(newComputer, addedComputer.get());
 		
 	}
 	
