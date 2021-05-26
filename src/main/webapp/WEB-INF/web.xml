@@ -8,7 +8,7 @@
 	
 	<servlet>
 		<servlet-name>ListComputers</servlet-name>
-		<servlet-class>com.excilys.mantegazza.cdb.web.ListComputers</servlet-class>
+		<servlet-class>com.excilys.mantegazza.cdb.controller.ListComputers</servlet-class>
 	</servlet>  
 
 	<servlet-mapping>
