@@ -25,6 +25,8 @@ public class TestComputerDAO {
 	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
+	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
+	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	
 	private ComputerDAO computerDAOSUT = new ComputerDAO();
 	private DBConnectionManager connectionManager = new DBConnectionManager();
@@ -147,6 +149,93 @@ public class TestComputerDAO {
 		newComputer.setID(addedComputer.get().getID());
 		assertEquals(newComputer, addedComputer.get());
 		
+		PreparedStatement psDelete = co.prepareStatement(queryDeleteByID);
+		psDelete.setLong(1, newComputer.getID());
+		psDelete.executeUpdate();
+	}
+	
+	@Test
+	public void testComputerWithEmptyFieldsInsertion() throws SQLException {
+		Computer newComputer = new Computer.ComputerBuilder("NewComputer")
+				.build();
+		computerDAOSUT.create(newComputer);
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByName);
+		ps.setString(1, newComputer.getName());
+		ResultSet rs = ps.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> addedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(addedComputer.isPresent());
+		newComputer.setID(addedComputer.get().getID());
+		assertEquals(newComputer, addedComputer.get());
+		
+		PreparedStatement psDelete = co.prepareStatement(queryDeleteByID);
+		psDelete.setLong(1, newComputer.getID());
+		psDelete.executeUpdate();
+	}
+	
+	@Test
+	public void testComputerUpdate() throws SQLException {
+		PreparedStatement psGetOldComputer = co.prepareStatement(queryGetByName);
+		psGetOldComputer.setString(1, "Super Nintendo Entertainment System");
+		ResultSet rsOld = psGetOldComputer.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> oldComputer = mapper.mapToComputer(rsOld);
+		assertTrue(oldComputer.isPresent());
+		psGetOldComputer.close();
+		
+		Company ti = new Company.CompanyBuilder("Texas Instruments").withID(40).build();
+		Computer newComputer = new Computer.ComputerBuilder("Super Nintendo Entertainment System Updated")
+				.withID(oldComputer.get().getID())
+				.withIntroduced(LocalDate.of(2021, 8, 1))
+				.withDiscontinued(LocalDate.of(2029, 1, 1))
+				.withCompany(ti)
+				.build();
+		
+		computerDAOSUT.update(oldComputer.get().getName(), newComputer);
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByName);
+		ps.setString(1, newComputer.getName());
+		ResultSet rs = ps.executeQuery();
+		
+		Optional<Computer> updatedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(updatedComputer.isPresent());
+		assertEquals(newComputer, updatedComputer.get());
+		
+		computerDAOSUT.update(updatedComputer.get().getName(), oldComputer.get());
+	}
+	
+	@Test
+	public void testComputerUpdateWithEmptyFields() throws SQLException {
+		PreparedStatement psGetOldComputer = co.prepareStatement(queryGetByName);
+		psGetOldComputer.setString(1, "PalmPilot");
+		ResultSet rsOld = psGetOldComputer.executeQuery();
+		
+		ComputerMapper mapper = new ComputerMapper();
+		Optional<Computer> oldComputer = mapper.mapToComputer(rsOld);
+		assertTrue(oldComputer.isPresent());
+		psGetOldComputer.close();
+		
+		Computer newComputer = new Computer.ComputerBuilder()
+				.withID(oldComputer.get().getID())
+				.build();
+		
+		computerDAOSUT.update(oldComputer.get().getName(), newComputer);
+		
+		PreparedStatement ps = co.prepareStatement(queryGetByID);
+		ps.setLong(1, oldComputer.get().getID());
+		ResultSet rs = ps.executeQuery();
+		
+		Optional<Computer> updatedComputer = mapper.mapToComputer(rs);
+		
+		assertTrue(updatedComputer.isPresent());
+		assertEquals(newComputer, updatedComputer.get());
+		
+		computerDAOSUT.update(updatedComputer.get().getName(), oldComputer.get());
 	}
 	
 }
