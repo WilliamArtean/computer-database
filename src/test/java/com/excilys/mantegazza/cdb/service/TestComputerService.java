@@ -177,6 +177,7 @@ public class TestComputerService {
 		verify(dao).create(computerWithDiscontinued);
 	}
 	
+	@Test
 	public void createWithInconsistentDates() throws InconsistentDatesException {
 		String name = "New computer";
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
@@ -187,6 +188,7 @@ public class TestComputerService {
 				() -> service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty()));
 	}
 	
+	@Test
 	public void updateWithInconsistentDates() throws InconsistentDatesException {
 		String oldName = "Old computer";
 		LocalDate introduced = LocalDate.of(2020, 8, 9);
