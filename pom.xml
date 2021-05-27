@@ -6,6 +6,7 @@
 
   <groupId>com.excilys.mantegazza.cdb</groupId>
   <artifactId>computer-database</artifactId>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
 
   <name>computer-database</name>
@@ -14,8 +15,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>15</maven.compiler.source>
+    <maven.compiler.target>15</maven.compiler.target>
     <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
     <suppressions.config.location>suppressions.xml</suppressions.config.location>
   </properties>
@@ -80,6 +81,16 @@
 		<groupId>org.seleniumhq.selenium</groupId>
 		<artifactId>selenium-java</artifactId>
 		<version>3.141.59</version>
+	</dependency>
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <version>3.1.0</version>
+    </dependency>
+    <dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>jstl</artifactId>
+	    <version>1.2</version>
 	</dependency>
   </dependencies>
 
