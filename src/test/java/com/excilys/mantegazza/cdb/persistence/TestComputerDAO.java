@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 
 public class TestComputerDAO {
 

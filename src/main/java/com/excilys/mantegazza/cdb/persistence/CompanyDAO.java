@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.persistence.mappers.CompanyMapper;
 
 public class CompanyDAO {
 

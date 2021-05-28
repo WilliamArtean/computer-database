@@ -1,4 +1,4 @@
-package com.excilys.mantegazza.cdb.persistence;
+package com.excilys.mantegazza.cdb.persistence.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.persistence.mappers.CompanyMapper;
 
 @ExtendWith(MockitoExtension.class)
 public class TestCompanyMapper {

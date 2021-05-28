@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 
 public class ComputerDAO {
 	
