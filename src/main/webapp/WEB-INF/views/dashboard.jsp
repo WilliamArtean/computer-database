@@ -119,13 +119,13 @@
               			
               			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() > (sessionScope.webPageController.getNumberOfPages() - 3) }">
               				<c:forEach var="p" begin="${ sessionScope.webPageController.getNumberOfPages() - 6 }" end="${ sessionScope.webPageController.getNumberOfPages() - 1 }">
-		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              			<li><a href="#"><c:out value="${ p + 1 }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			
               			<c:otherwise>
               				<c:forEach var="p" begin="${ sessionScope.webPageController.getCurrentPageIndex() - 2 }" end="${ sessionScope.webPageController.getCurrentPageIndex() + 2 }">
-		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              			<li><a href="#"><c:out value="${ p + 1 }"></c:out></a></li>
 		              		</c:forEach>
               			</c:otherwise>
               		</c:choose>

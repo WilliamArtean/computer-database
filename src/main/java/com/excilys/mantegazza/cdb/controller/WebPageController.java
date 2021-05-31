@@ -59,14 +59,23 @@ public class WebPageController {
 		return dtoList;
 	}
 	
-	public ArrayList<ComputerDTO> setToPage(int pageIndex) {
-		if (pageIndex >= 0 && pageIndex < numberOfPages) {
-			this.currentPageIndex = pageIndex;
+	/**
+	 * Set the page controller to load the specified page number.
+	 * @param pageNumber Number of the page to load, the first page being 1.
+	 * @return An array of computer dto in the page
+	 */
+	public ArrayList<ComputerDTO> setToPage(int pageNumber) {
+		if (pageNumber >= 0 && pageNumber <= numberOfPages) {
+			this.currentPageIndex = pageNumber - 1;
 			refreshPage();
 		}
 		return dtoList;
 	}
-		
+	
+	public ArrayList<ComputerDTO> getCurrentPage() {
+		return dtoList;
+	}
+	
 	
 	public int getCurrentPageIndex() {
 		return currentPageIndex;
