@@ -102,30 +102,34 @@
     <footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-              </li>
-              <c:choose>
+            	
+            	<c:if test="${ sessionScope.webPageController.getCurrentPageIndex() > 0 }">
+	              	<li>
+	                	<a href="?page=${ sessionScope.webPageController.getCurrentPageIndex() }" aria-label="Previous">
+	                    	<span aria-hidden="true">&laquo;</span>
+	                	</a>
+	              	</li>
+            	</c:if>
+            	
+              	<c:choose>
               	<c:when test="${ sessionScope.webPageController.getNumberOfPages() >= 5 }">
               	
               		<c:choose>
               			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() < 2 }">
               				<c:forEach var="p" begin="1" end="5">
-		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			
               			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() > (sessionScope.webPageController.getNumberOfPages() - 3) }">
               				<c:forEach var="p" begin="${ sessionScope.webPageController.getNumberOfPages() - 6 }" end="${ sessionScope.webPageController.getNumberOfPages() - 1 }">
-		              			<li><a href="#"><c:out value="${ p + 1 }"></c:out></a></li>
+		              			<li><a href="?page=${ p + 1 }"><c:out value="${ p + 1 }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			
               			<c:otherwise>
               				<c:forEach var="p" begin="${ sessionScope.webPageController.getCurrentPageIndex() - 2 }" end="${ sessionScope.webPageController.getCurrentPageIndex() + 2 }">
-		              			<li><a href="#"><c:out value="${ p + 1 }"></c:out></a></li>
+		              			<li><a href="?page=${ p + 1 }"><c:out value="${ p + 1 }"></c:out></a></li>
 		              		</c:forEach>
               			</c:otherwise>
               		</c:choose>
@@ -134,15 +138,18 @@
               	
               	<c:otherwise>
               		<c:forEach var="p" begin="1" end="${ sessionScope.webPageController.getNumberOfPages() }">
-              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+              			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
               		</c:forEach>
               	</c:otherwise>
-              </c:choose>
-              <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+              	</c:choose>
+              	
+              	<c:if test="${ sessionScope.webPageController.getCurrentPageIndex() < (sessionScope.webPageController.getNumberOfPages() - 1) }">
+	              	<li>
+		                <a href="?page=${ sessionScope.webPageController.getCurrentPageIndex() + 2 }" aria-label="Next">
+		                    <span aria-hidden="true">&raquo;</span>
+		                </a>
+	            	</li>
+              	</c:if>
         	</ul>
         </div>
 

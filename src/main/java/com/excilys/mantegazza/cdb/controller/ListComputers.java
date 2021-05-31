@@ -21,16 +21,28 @@ public class ListComputers extends HttpServlet {
 	public static final String COMPUTER_LIST = "computerList";
 	
 	public static final String PAGE_CONTROLLER = "webPageController";
+	public static final String PARAM_PAGE_NUMBER = "page";
 	public static final String PARAM_LIMIT = "limit";
-	public static final String PARAM_OFFSET = "offset";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		WebPageController pageController = new WebPageController();
-		session.setAttribute(PAGE_CONTROLLER, pageController);
+		WebPageController pageController = (WebPageController) session.getAttribute(PAGE_CONTROLLER);
+		if (pageController == null) {
+			pageController = new WebPageController();
+			session.setAttribute(PAGE_CONTROLLER, pageController);
+		}
 		
-		ArrayList<ComputerDTO> computerArray = pageController.getFirstPage();
+		int pageNumber = 1;
+		if (req.getParameterMap().containsKey(PARAM_PAGE_NUMBER)) {
+			int pageNumberParam = Integer.parseInt(req.getParameter(PARAM_PAGE_NUMBER));
+			if (pageNumberParam >= 1 && pageNumberParam <= pageController.getNumberOfPages()) {
+				pageNumber = pageNumberParam;
+			}
+		}
+		pageController.setToPage(pageNumber);
+		
+		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
 		req.setAttribute(COMPUTER_LIST, computerArray);
 		
 		this.getServletContext().getRequestDispatcher(COMPUTER_VIEW).forward(req, resp);
