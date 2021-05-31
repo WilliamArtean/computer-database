@@ -58,6 +58,14 @@ public class WebPageController {
 		}
 		return dtoList;
 	}
+	
+	public ArrayList<ComputerDTO> setToPage(int pageIndex) {
+		if (pageIndex >= 0 && pageIndex < numberOfPages) {
+			this.currentPageIndex = pageIndex;
+			refreshPage();
+		}
+		return dtoList;
+	}
 		
 	
 	public int getCurrentPageIndex() {
