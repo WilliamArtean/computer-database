@@ -1,13 +1,11 @@
 package com.excilys.mantegazza.cdb.dto;
 
-import java.time.LocalDate;
-
 public class ComputerDTO {
 
-	private String name;
+	private String name = "";
 	private long id;
-	private LocalDate introductionDate;
-	private LocalDate discontinuationDate;
+	private String introductionDate = "";
+	private String discontinuationDate = "";
 	private long companyId;
 	
 	public ComputerDTO() {
@@ -30,19 +28,19 @@ public class ComputerDTO {
 		this.id = id;
 	}
 
-	public LocalDate getIntroductionDate() {
+	public String getIntroductionDate() {
 		return introductionDate;
 	}
 
-	public void setIntroductionDate(LocalDate introductionDate) {
+	public void setIntroductionDate(String introductionDate) {
 		this.introductionDate = introductionDate;
 	}
 
-	public LocalDate getDiscontinuationDate() {
+	public String getDiscontinuationDate() {
 		return discontinuationDate;
 	}
 
-	public void setDiscontinuationDate(LocalDate discontinuationDate) {
+	public void setDiscontinuationDate(String discontinuationDate) {
 		this.discontinuationDate = discontinuationDate;
 	}
 

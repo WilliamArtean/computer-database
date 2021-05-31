@@ -2,7 +2,7 @@ package com.excilys.mantegazza.cdb.dto;
 
 public class CompanyDTO {
 
-	private String name;
+	private String name = "";
 	private long id;
 	
 	public CompanyDTO() {
