@@ -49,8 +49,8 @@ public class ComputerDAO {
 		Optional<Computer> computer = Optional.empty();
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetByID);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetByID);
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			
@@ -75,8 +75,8 @@ public class ComputerDAO {
 		Optional<Computer> computer = Optional.empty();
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetByName);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetByName);
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			
@@ -100,9 +100,9 @@ public class ComputerDAO {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetAll);
-				ResultSet rs = ps.executeQuery();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetAll);
+			ResultSet rs = ps.executeQuery();
 			computers = mapper.mapToComputerArray(rs);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -122,8 +122,8 @@ public class ComputerDAO {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			ps.setInt(1, numberToReturn);
 			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
@@ -142,8 +142,8 @@ public class ComputerDAO {
 	public void create(Computer computer) {
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryCreate);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryCreate);
 			ps.setString(1, computer.getName());
 			if (computer.getIntroductionDate() != null) {
 				ps.setString(2, df.format(computer.getIntroductionDate()));
@@ -178,8 +178,8 @@ public class ComputerDAO {
 	public void update(String computerName, Computer updatedComputer) {
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryUpdate);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryUpdate);
 			if (updatedComputer.getName() != null) {
 				ps.setString(1, updatedComputer.getName());			
 			} else {
@@ -216,8 +216,8 @@ public class ComputerDAO {
 	public void delete(long id) {
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryDeleteByID);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
 			ps.setLong(1, id);
 			ps.executeUpdate();
 			logger.debug("Deleted computer in database with id: " + id);
@@ -232,8 +232,8 @@ public class ComputerDAO {
 	public void delete(String name) {
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryDeleteByName);
 			) {
+			PreparedStatement ps = co.prepareStatement(queryDeleteByName);
 			ps.setString(1, name);
 			ps.executeUpdate();
 			logger.debug("Deleted computer in database with name: " + name);
@@ -250,9 +250,9 @@ public class ComputerDAO {
 		int count = 0;
 		try (
 				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetCount);
-				ResultSet rs = ps.executeQuery();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetCount);
+			ResultSet rs = ps.executeQuery();
 			rs.next();
 			count = rs.getInt("rowcount");
 		} catch (SQLException e) {
