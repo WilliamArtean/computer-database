@@ -79,6 +79,7 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
+                
                 	<c:forEach var="computer" items="${ requestScope.computerList }">
 	                	<tr>
 	                        <td class="editMode">
@@ -90,9 +91,9 @@
 	                        <td><c:out value="${computer.getIntroduced() }"/></td>
 	                        <td><c:out value="${computer.getDiscontinued() }"/></td>
 	                        <td><c:out value="${computer.getCompanyName() }"/></td>
-	
 	                    </tr>
 	                </c:forEach>
+	                
                 </tbody>
             </table>
         </div>
@@ -106,17 +107,44 @@
                       <span aria-hidden="true">&laquo;</span>
                   </a>
               </li>
-              <li><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
+              <c:choose>
+              	<c:when test="${ sessionScope.webPageController.getNumberOfPages() >= 5 }">
+              	
+              		<c:choose>
+              			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() < 2 }">
+              				<c:forEach var="p" begin="1" end="5">
+		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              		</c:forEach>
+              			</c:when>
+              			
+              			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() > (sessionScope.webPageController.getNumberOfPages() - 3) }">
+              				<c:forEach var="p" begin="${ sessionScope.webPageController.getNumberOfPages() - 6 }" end="${ sessionScope.webPageController.getNumberOfPages() - 1 }">
+		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              		</c:forEach>
+              			</c:when>
+              			
+              			<c:otherwise>
+              				<c:forEach var="p" begin="${ sessionScope.webPageController.getCurrentPageIndex() - 2 }" end="${ sessionScope.webPageController.getCurrentPageIndex() + 2 }">
+		              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+		              		</c:forEach>
+              			</c:otherwise>
+              		</c:choose>
+              	
+              	</c:when>
+              	
+              	<c:otherwise>
+              		<c:forEach var="p" begin="1" end="${ sessionScope.webPageController.getNumberOfPages() }">
+              			<li><a href="#"><c:out value="${ p }"></c:out></a></li>
+              		</c:forEach>
+              	</c:otherwise>
+              </c:choose>
               <li>
                 <a href="#" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
-        </ul>
+        	</ul>
+        </div>
 
         <div class="btn-group btn-group-sm pull-right" role="group" >
             <button type="button" class="btn btn-default">10</button>

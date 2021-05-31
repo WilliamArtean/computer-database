@@ -23,6 +23,7 @@ public class WebPageController {
 		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
 	}
 	
+	
 	private void refreshPage() {
 		clear();
 		int rowOffset = itemsPerPage * currentPageIndex;
@@ -35,10 +36,7 @@ public class WebPageController {
 		dtoList.clear();
 	}
 	
-	public int getCount() {
-		return count;
-	}
-	
+
 	public ArrayList<ComputerDTO> getFirstPage() {
 		this.currentPageIndex = 0;
 		refreshPage();
@@ -61,4 +59,25 @@ public class WebPageController {
 		return dtoList;
 	}
 		
+	
+	public int getCurrentPageIndex() {
+		return currentPageIndex;
+	}
+
+	public int getCount() {
+		return count;
+	}
+	
+	public int getItemsPerPage() {
+		return itemsPerPage;
+	}
+	
+	public void setItemsPerPage(int itemsPerPage) {
+		this.itemsPerPage = itemsPerPage;
+	}
+	
+	public int getNumberOfPages() {
+		return numberOfPages;
+	}
+	
 }
