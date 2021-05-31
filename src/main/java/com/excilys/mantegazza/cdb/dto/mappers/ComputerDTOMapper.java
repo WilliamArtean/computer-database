@@ -31,7 +31,8 @@ public class ComputerDTOMapper {
 			computerDTO.setDiscontinued(computer.getDiscontinuationDate().toString());
 		}
 		if (computer.getCompany() != null) {
-			computerDTO.setCompanyName(computer.getCompany().getName());
+			CompanyDTOMapper companyDTOMapper = new CompanyDTOMapper();
+			computerDTO.setCompany(companyDTOMapper.companyToDTO(computer.getCompany()));
 		}
 		
 		return computerDTO;
@@ -59,8 +60,8 @@ public class ComputerDTOMapper {
 			computerbuilder = computerbuilder.withDiscontinued(LocalDate.parse(computerDTO.getDiscontinued(), df));
 		}
 		
-		if (!computerDTO.getCompanyName().isEmpty()) {
-			Optional<Company> company = companyService.getCompany(computerDTO.getCompanyName());
+		if (computerDTO.getCompany() != null) {
+			Optional<Company> company = companyService.getCompany(computerDTO.getCompany().getName());
 			if (company.isPresent()) {
 				computerbuilder = computerbuilder.withCompany(company.get());
 			}
