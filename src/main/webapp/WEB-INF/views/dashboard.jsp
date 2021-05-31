@@ -151,12 +151,11 @@
 	            	</li>
               	</c:if>
         	</ul>
-        </div>
 
         <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
+            <a href="?itemsPerPage=10" type="button" class="btn btn-default">10</a>
+            <a href="?itemsPerPage=50" type="button" class="btn btn-default">50</a>
+            <a href="?itemsPerPage=100" type="button" class="btn btn-default">100</a>
         </div>
 
     </footer>

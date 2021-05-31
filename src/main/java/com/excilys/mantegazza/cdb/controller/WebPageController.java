@@ -90,7 +90,9 @@ public class WebPageController {
 	}
 	
 	public void setItemsPerPage(int itemsPerPage) {
+		this.currentPageIndex = 0;
 		this.itemsPerPage = itemsPerPage;
+		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
 	}
 	
 	public int getNumberOfPages() {

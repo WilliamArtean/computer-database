@@ -22,7 +22,7 @@ public class ListComputers extends HttpServlet {
 	
 	public static final String PAGE_CONTROLLER = "webPageController";
 	public static final String PARAM_PAGE_NUMBER = "page";
-	public static final String PARAM_LIMIT = "limit";
+	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,6 +31,10 @@ public class ListComputers extends HttpServlet {
 		if (pageController == null) {
 			pageController = new WebPageController();
 			session.setAttribute(PAGE_CONTROLLER, pageController);
+		}
+		
+		if (req.getParameterMap().containsKey(PARAM_ITEMS_PER_PAGE)) {
+			pageController.setItemsPerPage(Integer.parseInt(req.getParameter(PARAM_ITEMS_PER_PAGE)));
 		}
 		
 		int pageNumber = 1;
