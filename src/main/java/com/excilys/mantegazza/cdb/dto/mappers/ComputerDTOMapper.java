@@ -25,13 +25,13 @@ public class ComputerDTOMapper {
 		computerDTO.setId(computer.getID());
 		
 		if (computer.getIntroductionDate() != null) {
-			computerDTO.setIntroductionDate(computer.getIntroductionDate().toString());
+			computerDTO.setIntroduced(computer.getIntroductionDate().toString());
 		}
 		if (computer.getDiscontinuationDate() != null) {
-			computerDTO.setDiscontinuationDate(computer.getDiscontinuationDate().toString());
+			computerDTO.setDiscontinued(computer.getDiscontinuationDate().toString());
 		}
 		if (computer.getCompany() != null) {
-			computerDTO.setCompanyId(computer.getCompany().getID());
+			computerDTO.setCompanyName(computer.getCompany().getName());
 		}
 		
 		return computerDTO;
@@ -52,16 +52,18 @@ public class ComputerDTOMapper {
 		}
 		computerbuilder = computerbuilder.withID(computerDTO.getId());
 		
-		if (!computerDTO.getIntroductionDate().isEmpty()) {
-			computerbuilder = computerbuilder.withIntroduced(LocalDate.parse(computerDTO.getIntroductionDate(), df));
+		if (!computerDTO.getIntroduced().isEmpty()) {
+			computerbuilder = computerbuilder.withIntroduced(LocalDate.parse(computerDTO.getIntroduced(), df));
 		}
-		if (!computerDTO.getDiscontinuationDate().isEmpty()) {
-			computerbuilder = computerbuilder.withDiscontinued(LocalDate.parse(computerDTO.getDiscontinuationDate(), df));
+		if (!computerDTO.getDiscontinued().isEmpty()) {
+			computerbuilder = computerbuilder.withDiscontinued(LocalDate.parse(computerDTO.getDiscontinued(), df));
 		}
 		
-		Optional<Company> company = companyService.getCompany(computerDTO.getCompanyId());
-		if (company.isPresent()) {
-			computerbuilder = computerbuilder.withCompany(company.get());
+		if (!computerDTO.getCompanyName().isEmpty()) {
+			Optional<Company> company = companyService.getCompany(computerDTO.getCompanyName());
+			if (company.isPresent()) {
+				computerbuilder = computerbuilder.withCompany(company.get());
+			}
 		}
 		
 		return computerbuilder.build();
