@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -15,6 +16,29 @@ public class ComputerDTOMapper {
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private CompanyService companyService = new CompanyService();
+	
+	public ComputerDTO createComputerDTO(String name, String id, String introduced, String discontinued, CompanyDTO company) {
+		ComputerDTO computerDTO = new ComputerDTO();
+		if (!name.isBlank()) {
+			computerDTO.setName(name);
+		}
+		if (!id.isBlank()) {
+			computerDTO.setId(Long.parseLong(id));
+		}
+		
+		if (!introduced.isBlank()) {
+			computerDTO.setIntroduced(introduced);
+		}
+		if (!discontinued.isBlank()) {
+			computerDTO.setDiscontinued(discontinued);
+		}
+		
+		if (company != null) {
+			computerDTO.setCompany(company);
+		}
+		
+		return computerDTO;
+	}
 
 	public ComputerDTO computerToDTO(Computer computer) {
 		ComputerDTO computerDTO = new ComputerDTO();

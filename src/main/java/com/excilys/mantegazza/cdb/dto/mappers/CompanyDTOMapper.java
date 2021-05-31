@@ -7,6 +7,19 @@ import com.excilys.mantegazza.cdb.model.Company;
 
 public class CompanyDTOMapper {
 	
+	public CompanyDTO createCompanyDTO(String id, String name) {
+		CompanyDTO companyDTO = new CompanyDTO();
+		
+		if (!id.isBlank()) {
+			companyDTO.setId(Long.parseLong(id));
+		}
+		if (!name.isBlank()) {
+			companyDTO.setName(name);
+		}
+		
+		return companyDTO;
+	}
+	
 	public CompanyDTO companyToDTO(Company company) {
 		CompanyDTO companyDTO = new CompanyDTO();
 		if (company.getName() != null) {
