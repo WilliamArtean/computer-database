@@ -29,7 +29,7 @@ public class TestComputerMapper {
 	private final String deleteLastComputers = "DELETE FROM computer WHERE id>=2000";
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private DBConnectionManager connectionManager = new DBConnectionManager();
+	private DBConnectionManager connectionManager = DBConnectionManager.getInstance();;
 	private Connection co;
 	private ComputerMapper computerMapperSUT = new ComputerMapper();
 	

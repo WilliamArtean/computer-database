@@ -23,12 +23,11 @@ public class TestCompanyDAO {
 	private final String queryGetSelection = "SELECT id, name FROM company ORDER BY id LIMIT ? OFFSET ?";
 	
 	private CompanyDAO companyDAOSUT = new CompanyDAO();
-	private DBConnectionManager connectionManager = new DBConnectionManager();
+	private DBConnectionManager connectionManager = DBConnectionManager.getInstance();
 	private Connection co;
 	
 	@BeforeEach
 	public void initializeConnection() throws SQLException {
-		companyDAOSUT.setDatabaseManager(connectionManager);
 		co = connectionManager.getNewConnection();
 	}
 	

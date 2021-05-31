@@ -16,7 +16,7 @@ import com.excilys.mantegazza.cdb.persistence.mappers.CompanyMapper;
 public class CompanyDAO {
 
 	private Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	private DBConnectionManager dbManager;
+	private DBConnectionManager dbManager = DBConnectionManager.getInstance();
 	private CompanyMapper mapper = new CompanyMapper();
 	
 	private final String queryGetByID = "SELECT id, name FROM company WHERE id=?";
@@ -24,14 +24,6 @@ public class CompanyDAO {
 	private final String queryGetAll = "SELECT id, name FROM company";
 	private final String queryGetSelection = "SELECT id, name FROM company ORDER BY id LIMIT ? OFFSET ?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
-	
-	/**
-	 * Set the DatabageManager that will be used to get a connection to the database.
-	 * @param databaseManager The Database Manager that will creates the connections to the database
-	 */
-	public void setDatabaseManager(DBConnectionManager databaseManager) {
-		this.dbManager = databaseManager;
-	}
 	
 	/**
 	 * Execute a SQL query to fetch the company with the required id.

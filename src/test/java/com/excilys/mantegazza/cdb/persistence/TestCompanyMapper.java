@@ -27,7 +27,7 @@ public class TestCompanyMapper {
 	private final String insertTestCompany = "INSERT INTO company (id, name) VALUES (?,?)";
 	private final String deleteTestCompany = "DELETE FROM company WHERE name=?";
 	
-	private DBConnectionManager connectionManager = new DBConnectionManager();
+	private DBConnectionManager connectionManager = DBConnectionManager.getInstance();;
 	private CompanyMapper companyMapperSUT = new CompanyMapper();
 	private Connection co;
 	

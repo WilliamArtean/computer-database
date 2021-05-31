@@ -8,7 +8,7 @@ import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
 
 public class CompanyService {
 	
-	private CompanyDAO companyDAO;
+	private CompanyDAO companyDAO = new CompanyDAO();
 	
 	/**
 	 * Set a CompanyDAO from which to get the companies from the database.

@@ -18,7 +18,7 @@ import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 public class ComputerDAO {
 	
 	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	private DBConnectionManager dbManager;
+	private DBConnectionManager dbManager = DBConnectionManager.getInstance();
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private ComputerMapper mapper = new ComputerMapper();
 	
@@ -31,14 +31,6 @@ public class ComputerDAO {
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
-	
-	/**
-	 * Set the DatabageManager that will be used to get a connection to the database.
-	 * @param databaseManager The Database Manager that will creates the connections to the database
-	 */
-	public void setDatabaseManager(DBConnectionManager databaseManager) {
-		this.dbManager = databaseManager;
-	}
 	
 	/**
 	 * Execute a SQL query to fetch the computer with the required id.

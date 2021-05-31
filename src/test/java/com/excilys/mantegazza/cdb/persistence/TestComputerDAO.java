@@ -30,12 +30,11 @@ public class TestComputerDAO {
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	
 	private ComputerDAO computerDAOSUT = new ComputerDAO();
-	private DBConnectionManager connectionManager = new DBConnectionManager();
+	private DBConnectionManager connectionManager = DBConnectionManager.getInstance();;
 	private Connection co;
 	
 	@BeforeEach
 	public void initializeConnection() throws SQLException {
-		computerDAOSUT.setDatabaseManager(connectionManager);
 		co = connectionManager.getNewConnection();
 	}
 	

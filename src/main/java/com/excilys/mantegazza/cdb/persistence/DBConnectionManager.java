@@ -15,9 +15,10 @@ public class DBConnectionManager {
 	private String url;
 	private String user;
 	private String password;
+	private String driverClass;
 	private Logger logger = LoggerFactory.getLogger(DBConnectionManager.class);
 	
-	public DBConnectionManager() {
+	private DBConnectionManager() {
 		try {
 			InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties");
 			Properties properties = new Properties();
@@ -26,9 +27,21 @@ public class DBConnectionManager {
 			url = properties.getProperty("url");
 			user = properties.getProperty("user");
 			password = properties.getProperty("password");
+			driverClass = properties.getProperty("driver");
+			Class.forName(driverClass);
 		} catch (IOException e) {
 			logger.error("Unable to load database properties file");
+		} catch (ClassNotFoundException e) {
+			logger.error("Unable to load Driver class");
 		}
+	}
+	
+	private static class SingletonHolder {
+		private static final DBConnectionManager DBMANAGER_INSTANCE = new DBConnectionManager();
+	}
+	
+	public static DBConnectionManager getInstance() {
+		return SingletonHolder.DBMANAGER_INSTANCE;
 	}
 	
 	/**

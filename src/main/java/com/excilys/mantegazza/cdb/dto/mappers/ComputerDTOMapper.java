@@ -14,12 +14,7 @@ import com.excilys.mantegazza.cdb.service.CompanyService;
 public class ComputerDTOMapper {
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private CompanyService companyService;
-	
-	public ComputerDTOMapper(CompanyService companyService) {
-		super();
-		this.companyService = companyService;
-	}
+	private CompanyService companyService = new CompanyService();
 
 	public ComputerDTO computerToDTO(Computer computer) {
 		ComputerDTO computerDTO = new ComputerDTO();

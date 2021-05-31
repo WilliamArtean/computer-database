@@ -16,8 +16,8 @@ import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 public class ComputerService {
 	
-	private ComputerDAO dao;
-	private CompanyService companyService;
+	private ComputerDAO dao = new ComputerDAO();
+	private CompanyService companyService = new CompanyService();
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	private DatesConsistencyValidator datesValidator = new DatesConsistencyValidator();
 	
