@@ -232,7 +232,9 @@ public class CLIController {
 		}
 		
 		try {
-			computerService.create(computerName, introduced, discontinued, companyName);
+			CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
+			Computer computerToCreate = computerMapper.cliInputToComputer(computerName, introduced, discontinued, companyName);
+			computerService.create(computerToCreate);
 		} catch (InconsistentDatesException e) {
 			view.inconsistentDates();
 		}

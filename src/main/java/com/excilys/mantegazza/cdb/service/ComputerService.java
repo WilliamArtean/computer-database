@@ -81,34 +81,12 @@ public class ComputerService {
 	}
 	
 	/**
-	 * Creates a Computer object and inserts it into the database.
-	 * @param computerName The name of the computer to create (required)
-	 * @param introduced An Optional containing the introduced date
-	 * @param discontinued An Optional containing the discontinued date
-	 * @param companyName An Optional containing the name of the company
+	 * Inserts a Computer into the database.
+	 * @param computerToCreate the Computer to insert
 	 * @throws InconsistentDatesException
 	 */
-	public void create(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
-		if (!datesValidator.areDatesConsistent(introduced, discontinued)) {
-			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
-			throw new InconsistentDatesException();
-		}
-		
-		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
-		if (introduced.isPresent()) {
-			builder.withIntroduced(introduced.get());
-		}
-		if (discontinued.isPresent()) {
-			builder.withDiscontinued(discontinued.get());
-		}
-		if (companyName.isPresent()) {
-			Optional<Company> companyToAdd = companyService.getCompany(companyName.get());
-			if (companyToAdd.isPresent()) {
-				builder.withCompany(companyToAdd.get());
-			}
-		}
-		Computer computerToCreate = builder.build();
-		
+	public void create(Computer computerToCreate) throws InconsistentDatesException {
+		//TODO Validation?
 		dao.create(computerToCreate);
 	}
 	

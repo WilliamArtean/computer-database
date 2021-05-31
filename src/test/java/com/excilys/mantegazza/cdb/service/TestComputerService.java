@@ -1,7 +1,6 @@
 package com.excilys.mantegazza.cdb.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,37 +94,6 @@ public class TestComputerService {
 	}
 	
 	@Test
-	public void testCreateComputer() throws InconsistentDatesException {
-		String name = "computer 1";
-		Computer computerToCreate = new Computer.ComputerBuilder().withName(name).build();
-		LocalDate introduced = LocalDate.of(2000, 10, 31);
-		LocalDate discontinued = LocalDate.of(2020, 8, 9);
-		Company company = new Company.CompanyBuilder("Company 1").build();
-		
-		computerToCreate.setIntroductionDate(introduced);
-		computerToCreate.setDiscontinuationDate(discontinued);
-		computerToCreate.setCompany(company);
-
-		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
-		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(true);
-		service.create(name,
-				Optional.of(introduced),
-				Optional.of(discontinued),
-				Optional.of(company.getName()));
-		verify(dao).create(computerToCreate);
-	}
-	
-	@Test
-	public void testCreateEmptyComputer() throws InconsistentDatesException {
-		String name = "Empty computer";
-		Computer emptyComputer = new Computer.ComputerBuilder().withName(name).build();
-		
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
-		service.create(name, Optional.empty(), Optional.empty(), Optional.empty());
-		verify(dao).create(emptyComputer);
-	}
-	
-	@Test
 	public void testUpdateComputer() throws InconsistentDatesException {
 		String oldName = "Old computer";
 		String newName = "New computer";
@@ -155,60 +123,6 @@ public class TestComputerService {
 		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).update(oldName, updatedComputer);
-	}
-	
-	@Test
-	public void testCreateWithSingleDate() throws InconsistentDatesException {
-		String name = "computer 1";
-		LocalDate introduced = LocalDate.of(2000, 10, 31);
-		LocalDate discontinued = LocalDate.of(2020, 8, 9);
-		
-		Computer computerWithIntroduced = new Computer.ComputerBuilder().withName(name).withIntroduced(introduced).build();
-		Computer computerWithDiscontinued = new Computer.ComputerBuilder().withName(name).withDiscontinued(discontinued).build();
-		
-		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.empty())).thenReturn(true);
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.of(discontinued))).thenReturn(true);
-		
-		service.create(name, Optional.of(introduced), Optional.empty(), Optional.empty());
-		verify(dao).create(computerWithIntroduced);
-		
-		service.create(name, Optional.empty(), Optional.of(discontinued), Optional.empty());
-		verify(dao).create(computerWithDiscontinued);
-	}
-	
-	@Test
-	public void createWithInconsistentDates() throws InconsistentDatesException {
-		String name = "New computer";
-		LocalDate introduced = LocalDate.of(2020, 8, 9);
-		LocalDate discontinued = LocalDate.of(2000, 10, 31);
-		
-		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
-		assertThrows(InconsistentDatesException.class,
-				() -> service.create(name, Optional.of(introduced), Optional.of(discontinued), Optional.empty()));
-	}
-	
-	@Test
-	public void updateWithInconsistentDates() throws InconsistentDatesException {
-		String oldName = "Old computer";
-		LocalDate introduced = LocalDate.of(2020, 8, 9);
-		LocalDate discontinued = LocalDate.of(2000, 10, 31);
-		
-		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(false);
-		assertThrows(InconsistentDatesException.class,
-				() -> service.update(oldName, Optional.empty(), Optional.of(introduced), Optional.of(discontinued), Optional.empty()));
-	}
-	
-	@Test
-	public void createWithNonExistingCompany() throws InconsistentDatesException {
-		String name = "computer 1";
-		Computer computerWithoutCompany = new Computer.ComputerBuilder().withName(name).build();
-		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
-		
-		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
-		
-		service.create(name, Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
-		verify(dao).create(computerWithoutCompany);
 	}
 	
 	@Test

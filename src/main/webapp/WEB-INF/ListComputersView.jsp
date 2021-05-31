@@ -9,8 +9,17 @@
     </head>
 
     <body>
-        <p>List of computers generated through JSP.</p>
-        <c:out value="userComputer" /> <br/>
+        <h3>List of computers generated through JSP:</h3>
+        <ul>
+	        <c:forEach var="computer" items="${ requestScope.computers }" >
+	        	<li>
+		        	Computer:
+		        	<c:out value="${ computer.name }"></c:out>
+		        	ID:
+		        	<c:out value="${ computer.id }"></c:out>
+		        </li>
+	        </c:forEach>
+		</ul>
         Computer created by user: <br/>
         Name: ${ userComputer.name } <br/>
         ID: ${ userComputer.id } <br/>
