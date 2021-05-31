@@ -15,10 +15,12 @@ import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 @WebServlet(urlPatterns  = "/computers")
 public class ListComputers extends HttpServlet {
 	
-	public static final String COMPUTER_VIEW = "/WEB-INF/views/dashboard.jsp";
-	public static final String COMPUTER_LIST = "ComputerDTOList";
+	private static final long serialVersionUID = 1L;
 	
-	public static final String PAGE_CONTROLLER = "WebPageController";
+	public static final String COMPUTER_VIEW = "/WEB-INF/views/dashboard.jsp";
+	public static final String COMPUTER_LIST = "computerList";
+	
+	public static final String PAGE_CONTROLLER = "webPageController";
 	public static final String PARAM_LIMIT = "limit";
 	public static final String PARAM_OFFSET = "offset";
 
@@ -28,8 +30,8 @@ public class ListComputers extends HttpServlet {
 		WebPageController pageController = new WebPageController();
 		session.setAttribute(PAGE_CONTROLLER, pageController);
 		
-		ArrayList<ComputerDTO> computerDTOArray = pageController.getFirstPage();
-		session.setAttribute(COMPUTER_LIST, computerDTOArray);
+		ArrayList<ComputerDTO> computerArray = pageController.getFirstPage();
+		req.setAttribute(COMPUTER_LIST, computerArray);
 		
 		this.getServletContext().getRequestDispatcher(COMPUTER_VIEW).forward(req, resp);
 	}
