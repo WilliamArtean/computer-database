@@ -17,20 +17,20 @@ public class ListComputers extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final String COMPUTER_VIEW = "/WEB-INF/views/dashboard.jsp";
+	public static final String VIEW_COMPUTER = "/WEB-INF/views/dashboard.jsp";
 	public static final String COMPUTER_LIST = "computerList";
 	
-	public static final String PAGE_CONTROLLER = "webPageController";
+	public static final String ATT_PAGE_CONTROLLER = "webPageController";
 	public static final String PARAM_PAGE_NUMBER = "page";
 	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		WebPageController pageController = (WebPageController) session.getAttribute(PAGE_CONTROLLER);
+		WebPageController pageController = (WebPageController) session.getAttribute(ATT_PAGE_CONTROLLER);
 		if (pageController == null) {
 			pageController = new WebPageController();
-			session.setAttribute(PAGE_CONTROLLER, pageController);
+			session.setAttribute(ATT_PAGE_CONTROLLER, pageController);
 		}
 		
 		if (req.getParameterMap().containsKey(PARAM_ITEMS_PER_PAGE)) {
@@ -49,7 +49,7 @@ public class ListComputers extends HttpServlet {
 		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
 		req.setAttribute(COMPUTER_LIST, computerArray);
 		
-		this.getServletContext().getRequestDispatcher(COMPUTER_VIEW).forward(req, resp);
+		this.getServletContext().getRequestDispatcher(VIEW_COMPUTER).forward(req, resp);
 	}
 	
 }
