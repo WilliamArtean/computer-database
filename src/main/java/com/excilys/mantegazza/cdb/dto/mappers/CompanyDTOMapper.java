@@ -1,5 +1,7 @@
 package com.excilys.mantegazza.cdb.dto.mappers;
 
+import java.util.ArrayList;
+
 import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.model.Company;
 
@@ -12,6 +14,14 @@ public class CompanyDTOMapper {
 		}
 		companyDTO.setId(company.getID());
 		return companyDTO;
+	}
+	
+	public ArrayList<CompanyDTO> companiesToDTOArray(ArrayList<Company> companies) {
+		ArrayList<CompanyDTO> companyDTOArray = new ArrayList<CompanyDTO>();
+		for (Company company : companies) {
+			companyDTOArray.add(companyToDTO(company));
+		}
+		return companyDTOArray;
 	}
 	
 	public Company dtoToCompany(CompanyDTO companyDTO) {

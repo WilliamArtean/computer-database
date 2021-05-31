@@ -2,6 +2,7 @@ package com.excilys.mantegazza.cdb.dto.mappers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
@@ -39,6 +40,14 @@ public class ComputerDTOMapper {
 		}
 		
 		return computerDTO;
+	}
+	
+	public ArrayList<ComputerDTO> computersToDTOArray(ArrayList<Computer> computers) {
+		ArrayList<ComputerDTO> computerDTOArray = new ArrayList<ComputerDTO>();
+		for (Computer computer : computers) {
+			computerDTOArray.add(computerToDTO(computer));
+		}
+		return computerDTOArray;
 	}
 	
 	public Computer dtoToComputer(ComputerDTO computerDTO) {
