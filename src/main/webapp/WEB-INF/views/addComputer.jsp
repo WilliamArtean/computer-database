@@ -24,27 +24,45 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
+                    
+                    <c:if test="${ not empty errors }">
+                   		<div class="has-error">
+	                    	<c:forEach var="error" items="${ errors }">
+	                    		<span><c:out value="${ error.value }"></c:out></span><br/>
+	                    	</c:forEach>
+                   		</div>
+                    </c:if>
+                    
                     <form action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" value="" placeholder="Computer name">
+                                <input type="text" class="form-control" id="computerName" name="computerName" value="${ param.computerName }" placeholder="Computer name">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" value="" placeholder="Introduced date">
+                                <input type="date" class="form-control" id="introduced" name="introduced" value="${ param.introduced }" placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="" placeholder="Discontinued date">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="${ param.discontinued }" placeholder="Discontinued date">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
+                                    
                                     <c:forEach var="company" items="${ requestScope.companies }" >
-                                    	<option value="${ company.getId() }"><c:out value="${ company.getName() }"></c:out></option>
+                                    	<c:choose>
+                                    	<c:when test="${ param.companyId == company.getId() }">
+	                                    	<option value="${ company.getId() }" selected="true"><c:out value="${ company.getName() }"></c:out></option>
+                                    	</c:when>
+                                    	<c:otherwise>
+                                    		<option value="${ company.getId() }"><c:out value="${ company.getName() }"></c:out></option>
+                                    	</c:otherwise>
+                                    	</c:choose>
                                     </c:forEach>
+                                    
                                 </select>
                             </div>
                         </fieldset>

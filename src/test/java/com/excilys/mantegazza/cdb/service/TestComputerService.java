@@ -20,7 +20,6 @@ import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
-import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class TestComputerService {
@@ -29,8 +28,6 @@ public class TestComputerService {
 	private ComputerDAO dao;
 	@Mock
 	private CompanyService companyService;
-	@Mock
-	private DatesConsistencyValidator datesValidator;
 	@InjectMocks
 	private ComputerService service;
 
@@ -109,7 +106,6 @@ public class TestComputerService {
 				.build();
 		
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
-		when(datesValidator.areDatesConsistent(Optional.of(introduced), Optional.of(discontinued))).thenReturn(true);
 		
 		service.update(oldName, Optional.of(newName), Optional.of(introduced), Optional.of(discontinued), Optional.of(company.getName()));
 		verify(dao).update(oldName, updatedComputer);
@@ -120,7 +116,6 @@ public class TestComputerService {
 		String oldName = "Old computer";
 		Computer updatedComputer = new Computer.ComputerBuilder().withName(oldName).build();
 		
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		verify(dao).update(oldName, updatedComputer);
 	}
@@ -132,7 +127,6 @@ public class TestComputerService {
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		
 		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
 		verify(dao).update(oldName, computerWithoutCompany);

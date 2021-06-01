@@ -16,15 +16,12 @@ import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
-import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 @ExtendWith(MockitoExtension.class)
 class CLIComputerMapperTest {
 	
 	@Mock
 	private CompanyService companyService;
-	@Mock
-	private DatesConsistencyValidator datesValidator;
 	@InjectMocks
 	CLIComputerMapper mapperSUT = new CLIComputerMapper(companyService);
 
@@ -38,8 +35,6 @@ class CLIComputerMapperTest {
 				.withCompany(testCompany)
 				.build();
 		
-		when(datesValidator.areDatesConsistent(Optional.of(testComputer.getIntroductionDate()), Optional.of(testComputer.getDiscontinuationDate())))
-			.thenReturn(true);
 		when(companyService.getCompany(testComputer.getCompany().getName()))
 			.thenReturn(Optional.of(testCompany));
 		
@@ -58,9 +53,6 @@ class CLIComputerMapperTest {
 				.withName("Test Computer Empties")
 				.build();
 		
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty()))
-		.thenReturn(true);
-		
 		Computer mappedComputer = mapperSUT.cliInputToComputer(
 				testComputer.getName(),
 				Optional.empty(),
@@ -75,7 +67,6 @@ class CLIComputerMapperTest {
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
-		when(datesValidator.areDatesConsistent(Optional.empty(), Optional.empty())).thenReturn(true);
 		
 		Computer mappedComputer = mapperSUT.cliInputToComputer(computerWithoutCompany.getName(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
 		assertEquals(computerWithoutCompany, mappedComputer);

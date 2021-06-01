@@ -16,7 +16,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="addComputer"> Application - Computer Database </a>
+            <a class="navbar-brand" href="computers"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -152,12 +152,12 @@
               	</c:if>
         	</ul>
 
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <a href="?itemsPerPage=10" type="button" class="btn btn-default">10</a>
-            <a href="?itemsPerPage=50" type="button" class="btn btn-default">50</a>
-            <a href="?itemsPerPage=100" type="button" class="btn btn-default">100</a>
-        </div>
-
+	        <div class="btn-group btn-group-sm pull-right" role="group" >
+	            <a href="?itemsPerPage=10" type="button" class="btn btn-default">10</a>
+	            <a href="?itemsPerPage=50" type="button" class="btn btn-default">50</a>
+	            <a href="?itemsPerPage=100" type="button" class="btn btn-default">100</a>
+	        </div>
+		</div>
     </footer>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>

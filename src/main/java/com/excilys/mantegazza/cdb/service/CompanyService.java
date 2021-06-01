@@ -17,7 +17,7 @@ public class CompanyService {
 	public void setCompanyDAO(CompanyDAO companyDAO) {
 		this.companyDAO = companyDAO;
 	}
-
+	
 	/**
 	 * Get a company from the CompanyDAO.
 	 * @param name The name of the company to fetch

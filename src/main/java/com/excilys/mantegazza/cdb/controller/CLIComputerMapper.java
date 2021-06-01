@@ -12,12 +12,10 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
-import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 public class CLIComputerMapper {
 	
 	private CompanyService companyService;
-	private DatesConsistencyValidator datesValidator = new DatesConsistencyValidator();
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
 	public CLIComputerMapper(CompanyService companyService) {
@@ -25,11 +23,6 @@ public class CLIComputerMapper {
 	}
 	
 	public Computer cliInputToComputer(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
-		if (!datesValidator.areDatesConsistent(introduced, discontinued)) {
-			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
-			throw new InconsistentDatesException();
-		}
-		
 		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
 		if (introduced.isPresent()) {
 			builder.withIntroduced(introduced.get());

@@ -281,11 +281,7 @@ public class CLIController {
 			companyName = Optional.of(companyNameInput);
 		}
 		
-		try {
-			computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
-		} catch (InconsistentDatesException e) {
-			view.inconsistentDates();
-		}
+		computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
 	}
 	
 	/**

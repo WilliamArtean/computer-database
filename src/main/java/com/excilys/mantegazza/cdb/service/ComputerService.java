@@ -7,19 +7,16 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
-import com.excilys.mantegazza.cdb.validator.DatesConsistencyValidator;
 
 public class ComputerService {
 	
 	private ComputerDAO dao = new ComputerDAO();
 	private CompanyService companyService = new CompanyService();
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
-	private DatesConsistencyValidator datesValidator = new DatesConsistencyValidator();
 	
 	/**
 	 * Sets the company service from which this service can get the Company objects it needs.
@@ -85,7 +82,7 @@ public class ComputerService {
 	 * @param computerToCreate the Computer to insert
 	 * @throws InconsistentDatesException
 	 */
-	public void create(Computer computerToCreate) throws InconsistentDatesException {
+	public void create(Computer computerToCreate) {
 		//TODO Validation?
 		dao.create(computerToCreate);
 	}
@@ -100,16 +97,12 @@ public class ComputerService {
 	 * @param companyName An Optional containing the new name of the company
 	 * @throws InconsistentDatesException 
 	 */
-	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
+	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
 		String computerName;
 		if (newComputerName.isPresent()) {
 			computerName = newComputerName.get();
 		} else {
 			computerName = oldName;
-		}
-		if (!datesValidator.areDatesConsistent(introduced, discontinued)) {
-			logger.error("Dates in computer {} are inconsistent. Introduced: {}, discontinued: {}", computerName, introduced, discontinued);
-			throw new InconsistentDatesException();
 		}
 		
 		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
