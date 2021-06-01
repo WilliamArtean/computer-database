@@ -18,7 +18,6 @@ import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 public class ComputerDAO {
 	
 	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	private DBConnectionManager dbManager = DBConnectionManager.getInstance();
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private ComputerMapper mapper = new ComputerMapper();
 	
@@ -40,7 +39,7 @@ public class ComputerDAO {
 	public Optional<Computer> getByID(long id) {
 		Optional<Computer> computer = Optional.empty();
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByID);
 			ps.setLong(1, id);
@@ -66,7 +65,7 @@ public class ComputerDAO {
 	public Optional<Computer> getByName(String name) {
 		Optional<Computer> computer = Optional.empty();
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByName);
 			ps.setString(1, name);
@@ -91,7 +90,7 @@ public class ComputerDAO {
 	public ArrayList<Computer> getAll() {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetAll);
 			ResultSet rs = ps.executeQuery();
@@ -113,7 +112,7 @@ public class ComputerDAO {
 	public ArrayList<Computer> getSelection(int numberToReturn, int offset) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			ps.setInt(1, numberToReturn);
@@ -133,7 +132,7 @@ public class ComputerDAO {
 	 */
 	public void create(Computer computer) {
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryCreate);
 			ps.setString(1, computer.getName());
@@ -169,7 +168,7 @@ public class ComputerDAO {
 	 */
 	public void update(String computerName, Computer updatedComputer) {
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryUpdate);
 			if (updatedComputer.getName() != null) {
@@ -207,7 +206,7 @@ public class ComputerDAO {
 	 */
 	public void delete(long id) {
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
 			ps.setLong(1, id);
@@ -223,7 +222,7 @@ public class ComputerDAO {
 	 */
 	public void delete(String name) {
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryDeleteByName);
 			ps.setString(1, name);
@@ -241,7 +240,7 @@ public class ComputerDAO {
 	public int getCount() {
 		int count = 0;
 		try (
-				Connection co = this.dbManager.getNewConnection();
+				Connection co = DataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetCount);
 			ResultSet rs = ps.executeQuery();

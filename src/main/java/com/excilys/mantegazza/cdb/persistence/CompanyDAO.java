@@ -16,7 +16,6 @@ import com.excilys.mantegazza.cdb.persistence.mappers.CompanyMapper;
 public class CompanyDAO {
 
 	private Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	private DBConnectionManager dbManager = DBConnectionManager.getInstance();
 	private CompanyMapper mapper = new CompanyMapper();
 	
 	private final String queryGetByID = "SELECT id, name FROM company WHERE id=?";
@@ -33,9 +32,9 @@ public class CompanyDAO {
 	public Optional<Company> getByID(long id) {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection co = dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetByID);
+				Connection co = DataSource.getConnection();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetByID);
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			company = mapper.mapToCompany(rs);
@@ -53,9 +52,9 @@ public class CompanyDAO {
 	public Optional<Company> getByName(String name) {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetByName);
+				Connection co = DataSource.getConnection();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetByName);
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			company = mapper.mapToCompany(rs);
@@ -73,10 +72,10 @@ public class CompanyDAO {
 	public ArrayList<Company> getAll() {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		try (
-				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetAll);
-				ResultSet rs = ps.executeQuery();
+				Connection co = DataSource.getConnection();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetAll);
+			ResultSet rs = ps.executeQuery();
 			companies = mapper.mapToCompanyArray(rs);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -94,9 +93,9 @@ public class CompanyDAO {
 	public ArrayList<Company> getSelection(int numberToReturn, int offset) {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		try (
-				Connection co = this.dbManager.getNewConnection();
-				PreparedStatement ps = co.prepareStatement(queryGetSelection);
+				Connection co = DataSource.getConnection();
 			) {
+			PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			ps.setInt(1, numberToReturn);
 			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
@@ -113,8 +112,9 @@ public class CompanyDAO {
 	 */
 	public int getCount() {
 		int count = 0;
-		try {
-			Connection co = this.dbManager.getNewConnection();
+		try (
+				Connection co = DataSource.getConnection();
+			) {
 			PreparedStatement ps = co.prepareStatement(queryGetCount);
 			ResultSet rs = ps.executeQuery();
 			
