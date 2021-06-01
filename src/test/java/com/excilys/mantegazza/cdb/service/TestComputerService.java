@@ -107,7 +107,7 @@ public class TestComputerService {
 		
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
 		
-		service.update(oldName, Optional.of(newName), Optional.of(introduced), Optional.of(discontinued), Optional.of(company.getName()));
+		service.update(oldName, updatedComputer);
 		verify(dao).update(oldName, updatedComputer);
 	}
 	
@@ -116,7 +116,7 @@ public class TestComputerService {
 		String oldName = "Old computer";
 		Computer updatedComputer = new Computer.ComputerBuilder().withName(oldName).build();
 		
-		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		service.update(oldName, updatedComputer);
 		verify(dao).update(oldName, updatedComputer);
 	}
 	
@@ -128,7 +128,7 @@ public class TestComputerService {
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
 		
-		service.update(oldName, Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
+		service.update(oldName, computerWithoutCompany);
 		verify(dao).update(oldName, computerWithoutCompany);
 	}
 	

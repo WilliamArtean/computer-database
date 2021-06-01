@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
@@ -231,13 +232,9 @@ public class CLIController {
 			companyName = Optional.of(companyNameInput);
 		}
 		
-		try {
-			CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
-			Computer computerToCreate = computerMapper.cliInputToComputer(computerName, introduced, discontinued, companyName);
-			computerService.create(computerToCreate);
-		} catch (InconsistentDatesException e) {
-			view.inconsistentDates();
-		}
+		CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
+		Computer computerToCreate = computerMapper.cliInputToComputer(Optional.of(computerName), introduced, discontinued, companyName);
+		computerService.create(computerToCreate);
 	}
 	
 	/**
@@ -259,6 +256,7 @@ public class CLIController {
 				view.noNameEnteredForComputer();
 			}
 		} while (computerName.isEmpty());
+		
 		System.out.println("Enter new computer name (press Enter to keep the previous name):");
 		String newComputerNameInput = getInput();
 		System.out.println("Enter computer introduction date:");
@@ -281,7 +279,11 @@ public class CLIController {
 			companyName = Optional.of(companyNameInput);
 		}
 		
-		computerService.update(computerName, newComputerName, introduced, discontinued, companyName);
+		CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
+		Computer newComputer = computerMapper.cliInputToComputer(newComputerName, introduced, discontinued, companyName);
+		
+		
+		computerService.update(computerName, newComputer);
 	}
 	
 	/**

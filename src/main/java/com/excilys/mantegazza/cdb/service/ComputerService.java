@@ -90,36 +90,11 @@ public class ComputerService {
 	/**
 	 * Updates a computer in the database.
 	 * @param oldName The name of the computer to update (required)
-	 * @param newComputerName An Optional containing the new computer name.
+	 * @param newComputer The computer with the new data
 	 * If null, the new Computer object with have the previous name instead
-	 * @param introduced An Optional containing the new introduced date
-	 * @param discontinued An Optional containing the new discontinued date
-	 * @param companyName An Optional containing the new name of the company
 	 * @throws InconsistentDatesException 
 	 */
-	public void update(String oldName, Optional<String> newComputerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
-		String computerName;
-		if (newComputerName.isPresent()) {
-			computerName = newComputerName.get();
-		} else {
-			computerName = oldName;
-		}
-		
-		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
-		if (introduced.isPresent()) {
-			builder.withIntroduced(introduced.get());
-		}
-		if (discontinued.isPresent()) {
-			builder.withDiscontinued(discontinued.get());
-		}
-		if (companyName.isPresent()) {
-			Optional<Company> companyToAdd = companyService.getCompany(companyName.get());
-			if (companyToAdd.isPresent()) {
-				builder.withCompany(companyToAdd.get());
-			}
-		}
-		Computer newComputer = builder.build();
-		
+	public void update(String oldName, Computer newComputer) {
 		dao.update(oldName, newComputer);
 	}
 	

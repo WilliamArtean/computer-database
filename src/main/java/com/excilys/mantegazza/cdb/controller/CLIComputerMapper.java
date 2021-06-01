@@ -22,8 +22,11 @@ public class CLIComputerMapper {
 		this.companyService = companyService;
 	}
 	
-	public Computer cliInputToComputer(String computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) throws InconsistentDatesException {
-		ComputerBuilder builder = new Computer.ComputerBuilder(computerName);
+	public Computer cliInputToComputer(Optional<String> computerName, Optional<LocalDate> introduced, Optional<LocalDate> discontinued, Optional<String> companyName) {
+		ComputerBuilder builder = new Computer.ComputerBuilder();
+		if (computerName.isPresent()) {
+			builder.withName(computerName.get());
+		}
 		if (introduced.isPresent()) {
 			builder.withIntroduced(introduced.get());
 		}

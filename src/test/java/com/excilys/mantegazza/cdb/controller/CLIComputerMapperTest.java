@@ -39,7 +39,7 @@ class CLIComputerMapperTest {
 			.thenReturn(Optional.of(testCompany));
 		
 		Computer mappedComputer = mapperSUT.cliInputToComputer(
-				testComputer.getName(),
+				Optional.of(testComputer.getName()),
 				Optional.of(testComputer.getIntroductionDate()),
 				Optional.of(testComputer.getDiscontinuationDate()),
 				Optional.of(testComputer.getCompany().getName()));
@@ -54,7 +54,7 @@ class CLIComputerMapperTest {
 				.build();
 		
 		Computer mappedComputer = mapperSUT.cliInputToComputer(
-				testComputer.getName(),
+				Optional.empty(),
 				Optional.empty(),
 				Optional.empty(),
 				Optional.empty());
@@ -68,7 +68,7 @@ class CLIComputerMapperTest {
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
 		
-		Computer mappedComputer = mapperSUT.cliInputToComputer(computerWithoutCompany.getName(), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
+		Computer mappedComputer = mapperSUT.cliInputToComputer(Optional.of(computerWithoutCompany.getName()), Optional.empty(), Optional.empty(), Optional.of(ghostCompany.getName()));
 		assertEquals(computerWithoutCompany, mappedComputer);
 	}
 
