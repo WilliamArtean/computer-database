@@ -18,34 +18,29 @@
             <a class="navbar-brand" href="computers"> Application - Computer Database </a>
         </div>
     </header>
-
     <section id="main">
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
-                    
-                    <c:if test="${ not empty errors }">
-                   		<div class="has-error">
-	                    	<c:forEach var="error" items="${ errors }">
-	                    		<span><c:out value="${ error.value }"></c:out></span><br/>
-	                    	</c:forEach>
-                   		</div>
-                    </c:if>
-                    
-                    <form action="addComputer" method="POST">
+                    <div class="label label-default pull-right">
+                        <c:out value="${ computerToEdit.id }"/>
+                    </div>
+                    <h1>Edit Computer</h1>
+
+                    <form action="editComputer" method="POST">
+                        <input type="hidden" value="${ computerToEdit.id }" id="id"/> <!-- TODO: Change this value with the computer id -->
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" value="<c:out value="${ param.computerName }"/>" placeholder="Computer name">
+                                <input type="text" class="form-control" id="computerName" name="computerName" value="<c:out value="${ computerToEdit.name }"/>" placeholder="Computer name">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" value="<c:out value="${ param.introduced }"/>" placeholder="Introduced date">
+                                <input type="date" class="form-control" id="introduced" name="introduced" value="${ computerToEdit.introduced }"  placeholder="Introduced date">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="<c:out value="${ param.discontinued }"/>" placeholder="Discontinued date">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="${ computerToEdit.discontinued }" placeholder="Discontinued date">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -54,22 +49,21 @@
                                     
                                     <c:forEach var="company" items="${ requestScope.companies }">
                                     	<c:choose>
-                                    	<c:when test="${ param.companyId == company.getId() }">
-	                                    	<option value="${ company.getId() }" selected="true"><c:out value="${ company.getName() }"></c:out></option>
+                                    	<c:when test="${ computerToEdit.company.id == company.id }">
+	                                    	<option value="${ company.id }" selected="true"><c:out value="${ company.name }"></c:out></option>
                                     	</c:when>
                                     	<c:otherwise>
-                                    		<option value="${ company.getId() }"><c:out value="${ company.getName() }"></c:out></option>
+                                    		<option value="${ company.id }"><c:out value="${ company.name }"></c:out></option>
                                     	</c:otherwise>
                                     	</c:choose>
                                     </c:forEach>
-                                    
                                 </select>
-                            </div>
+                            </div>            
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
+                            <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="computers" class="btn btn-default">Cancel</a>
+                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

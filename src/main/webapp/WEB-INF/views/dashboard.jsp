@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html>
 <head>
 <title>Computer Database</title>
@@ -86,11 +86,11 @@
 	                            <input type="checkbox" name="cb" class="cb" value="0">
 	                        </td>
 	                        <td>
-	                            <a href="editComputer.html" onclick=""><c:out value="${computer.getName() }"/></a>
+	                            <a href="editComputer?name=${ computer.getName() }" onclick=""><c:out value="${computer.getName() }"/></a>
 	                        </td>
-	                        <td><c:out value="${computer.getIntroduced() }"/></td>
-	                        <td><c:out value="${computer.getDiscontinued() }"/></td>
-	                        <td><c:out value="${computer.getCompany().getName() }"/></td>
+	                        <td><c:out value="${ computer.getIntroduced() }"/></td>
+	                        <td><c:out value="${ computer.getDiscontinued() }"/></td>
+	                        <td><c:out value="${ computer.getCompany().getName() }"/></td>
 	                    </tr>
 	                </c:forEach>
 	                

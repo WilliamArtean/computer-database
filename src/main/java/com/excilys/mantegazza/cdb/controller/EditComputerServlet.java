@@ -2,7 +2,7 @@ package com.excilys.mantegazza.cdb.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,63 +19,48 @@ import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.validator.ComputerValidator;
 
-/**
- * Servlet implementation class AddComputerServlet.
- */
-@WebServlet("/addComputer")
-public class AddComputerServlet extends HttpServlet {
+@WebServlet("/editComputer")
+public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+      
 	private CompanyService companyService = new CompanyService();
 	private ComputerService computerService = new ComputerService();
 	private CompanyDTOMapper companyMapper = new CompanyDTOMapper();
 	private ComputerDTOMapper computerMapper = new ComputerDTOMapper();
 	private ComputerValidator computerValidator = new ComputerValidator();
 	
-	public static final String VIEW_ADD_COMPUTER = "/WEB-INF/views/addComputer.jsp";
+	public static final String VIEW_EDIT_COMPUTER = "/WEB-INF/views/editComputer.jsp";
+	public static final String PARAM_NAME_COMPUTER_TO_EDIT = "name";
 	public static final String PARAM_COMPUTER_NAME = "computerName";
 	public static final String PARAM_INTRODUCED = "introduced";
 	public static final String PARAM_DISCONTINUED = "discontinued";
 	public static final String PARAM_COMPANYID = "companyId";
+	public static final String ATT_COMPUTER_TO_EDIT = "computerToEdit";
 	public static final String ATT_COMPANY_LIST = "companies";
 	public static final String ERRORS = "errors";
 	
 	private ArrayList<CompanyDTO> companies;
-
-
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
 		
-		this.getServletContext().getRequestDispatcher(VIEW_ADD_COMPUTER).forward(request, response);
+		if (request.getParameterMap().containsKey(PARAM_NAME_COMPUTER_TO_EDIT)) {
+			Optional<Computer> computerToEdit = computerService.getComputer(request.getParameter(PARAM_NAME_COMPUTER_TO_EDIT));
+			if (computerToEdit.isPresent()) {
+				ComputerDTO dtoToEdit = computerMapper.computerToDTO(computerToEdit.get());
+				request.setAttribute(ATT_COMPUTER_TO_EDIT, dtoToEdit);
+				
+				this.getServletContext().getRequestDispatcher(VIEW_EDIT_COMPUTER).forward(request, response);
+			} else {
+				//Redirect to "computer not found" page?
+			}
+		} else {
+			//redirect to main page
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String companyId = request.getParameter(PARAM_COMPANYID);
-		CompanyDTO companyDTOToCreate = null;
-		if (!"0".equals(companyId)) {
-			for (CompanyDTO company : companies) {
-				if (companyId.equals(Long.toString(company.getId()))) {
-					companyDTOToCreate = company;
-				}
-			}
-		}
-		
-		String computerName = request.getParameter(PARAM_COMPUTER_NAME);
-		String introduced = request.getParameter(PARAM_INTRODUCED);
-		String discontinued = request.getParameter(PARAM_DISCONTINUED);
-		ComputerDTO computerDTOToCreate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyDTOToCreate);
-		
-		Computer computerToCreate = computerMapper.dtoToComputer(computerDTOToCreate);
-
-		HashMap<String, String> errors = computerValidator.validateComputer(computerToCreate);
-		request.setAttribute(ERRORS, errors);
-		
-		if (errors.isEmpty()) {
-			computerService.create(computerToCreate);
-		}
-		
 		doGet(request, response);
 	}
 
