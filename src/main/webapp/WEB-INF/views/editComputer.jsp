@@ -26,6 +26,14 @@
                         <c:out value="${ computerToEdit.id }"/>
                     </div>
                     <h1>Edit Computer</h1>
+                    
+                    <c:if test="${ not empty errors }">
+                   		<div class="has-error">
+	                    	<c:forEach var="error" items="${ errors }">
+	                    		<span><c:out value="${ error.value }"></c:out></span><br/>
+	                    	</c:forEach>
+                   		</div>
+                    </c:if>
 
                     <form action="editComputer" method="POST">
                         <input type="hidden" value="${ computerToEdit.id }" id="id"/> <!-- TODO: Change this value with the computer id -->
@@ -63,7 +71,7 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
+                            <a href="computers" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

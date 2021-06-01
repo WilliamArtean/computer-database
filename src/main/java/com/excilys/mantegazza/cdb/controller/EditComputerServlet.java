@@ -2,6 +2,7 @@ package com.excilys.mantegazza.cdb.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -29,17 +30,25 @@ public class EditComputerServlet extends HttpServlet {
 	private ComputerDTOMapper computerMapper = new ComputerDTOMapper();
 	private ComputerValidator computerValidator = new ComputerValidator();
 	
+	
+	public static final String SERVLET_LIST_COMPUTERS = "computers";
 	public static final String VIEW_EDIT_COMPUTER = "/WEB-INF/views/editComputer.jsp";
+	
 	public static final String PARAM_NAME_COMPUTER_TO_EDIT = "name";
 	public static final String PARAM_COMPUTER_NAME = "computerName";
 	public static final String PARAM_INTRODUCED = "introduced";
 	public static final String PARAM_DISCONTINUED = "discontinued";
 	public static final String PARAM_COMPANYID = "companyId";
+	
 	public static final String ATT_COMPUTER_TO_EDIT = "computerToEdit";
 	public static final String ATT_COMPANY_LIST = "companies";
+	public static final String ATT_PAGE_CONTROLLER = "webPageController";
+	
 	public static final String ERRORS = "errors";
 	
 	private ArrayList<CompanyDTO> companies;
+	private String currentComputerName;
+	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
@@ -50,17 +59,46 @@ public class EditComputerServlet extends HttpServlet {
 			if (computerToEdit.isPresent()) {
 				ComputerDTO dtoToEdit = computerMapper.computerToDTO(computerToEdit.get());
 				request.setAttribute(ATT_COMPUTER_TO_EDIT, dtoToEdit);
+				currentComputerName = dtoToEdit.getName();
 				
 				this.getServletContext().getRequestDispatcher(VIEW_EDIT_COMPUTER).forward(request, response);
 			} else {
 				//Redirect to "computer not found" page?
 			}
 		} else {
-			//redirect to main page
+			response.sendRedirect(SERVLET_LIST_COMPUTERS);
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String companyId = request.getParameter(PARAM_COMPANYID);
+		CompanyDTO companyDTO = null;
+		if (!"0".equals(companyId)) {
+			for (CompanyDTO company : companies) {
+				if (companyId.equals(Long.toString(company.getId()))) {
+					companyDTO = company;
+				}
+			}
+		}
+		
+		String computerName = request.getParameter(PARAM_COMPUTER_NAME);
+		String introduced = request.getParameter(PARAM_INTRODUCED);
+		String discontinued = request.getParameter(PARAM_DISCONTINUED);
+		ComputerDTO computerDTOToUpdate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyDTO);
+		
+		Computer newComputer = computerMapper.dtoToComputer(computerDTOToUpdate);
+
+		HashMap<String, String> errors = computerValidator.validateComputer(newComputer);
+		request.setAttribute(ERRORS, errors);
+		
+		if (errors.isEmpty()) {
+			computerService.update(currentComputerName, newComputer);
+			WebPageController pageController = (WebPageController) request.getSession().getAttribute(ATT_PAGE_CONTROLLER);
+			if (pageController != null) {
+				pageController.refreshPage();
+			}
+		}
+		
 		doGet(request, response);
 	}
 

@@ -51,7 +51,6 @@ public class AddComputerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		String companyId = request.getParameter(PARAM_COMPANYID);
 		CompanyDTO companyDTOToCreate = null;
 		if (!"0".equals(companyId)) {

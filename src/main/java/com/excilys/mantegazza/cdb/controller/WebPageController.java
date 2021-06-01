@@ -21,10 +21,11 @@ public class WebPageController {
 		this.service = new ComputerService();
 		this.count = service.getCount();
 		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
+		refreshPage();
 	}
 	
 	
-	private void refreshPage() {
+	public void refreshPage() {
 		clear();
 		int rowOffset = itemsPerPage * currentPageIndex;
 		list = service.getComputerSelection(itemsPerPage, rowOffset);

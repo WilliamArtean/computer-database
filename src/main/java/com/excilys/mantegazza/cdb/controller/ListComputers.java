@@ -37,14 +37,12 @@ public class ListComputers extends HttpServlet {
 			pageController.setItemsPerPage(Integer.parseInt(req.getParameter(PARAM_ITEMS_PER_PAGE)));
 		}
 		
-		int pageNumber = 1;
 		if (req.getParameterMap().containsKey(PARAM_PAGE_NUMBER)) {
 			int pageNumberParam = Integer.parseInt(req.getParameter(PARAM_PAGE_NUMBER));
 			if (pageNumberParam >= 1 && pageNumberParam <= pageController.getNumberOfPages()) {
-				pageNumber = pageNumberParam;
+				pageController.setToPage(pageNumberParam);
 			}
 		}
-		pageController.setToPage(pageNumber);
 		
 		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
 		req.setAttribute(COMPUTER_LIST, computerArray);
