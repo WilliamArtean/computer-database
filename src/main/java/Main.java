@@ -25,7 +25,6 @@ public class Main {
 		companyService.setCompanyDAO(companyDAO);
 		ComputerService computerService = new ComputerService();
 		computerService.setComputerDAO(computerDAO);
-		computerService.setCompanyService(companyService);
 		
 		CLIController controller = new CLIController(new CLIView(), computerService, companyService);
 		try {
