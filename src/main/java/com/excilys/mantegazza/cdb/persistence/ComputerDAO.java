@@ -30,6 +30,8 @@ public class ComputerDAO {
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
+	private final String queryLimitedSearchByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id LIMIT ? OFFSET ?";
+	private final String querySearchByName = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?";
 	
 	/**
 	 * Execute a SQL query to fetch the computer with the required id.
@@ -267,6 +269,46 @@ public class ComputerDAO {
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetCount);
 			ResultSet rs = ps.executeQuery();
+			rs.next();
+			count = rs.getInt("rowcount");
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return count;
+	}
+	
+	public ArrayList<Computer> searchByName(String name, int limit, int offset) {
+		ArrayList<Computer> computers = new ArrayList<Computer>();
+		try (
+				Connection co = DataSource.getConnection();
+			) {
+			PreparedStatement ps = co.prepareStatement(queryLimitedSearchByName);
+			ps.setString(1, "%" + name + "%");
+			ps.setString(2, "%" + name + "%");
+			ps.setInt(3, limit);
+			ps.setInt(4, offset);
+			ResultSet rs = ps.executeQuery();
+			
+			computers = mapper.mapToComputerArray(rs);
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		
+		logger.debug("Retrieved {} computers from database.", computers.size());
+		
+		return computers;
+	}
+	
+	public int getSearchCount(String name) {
+		int count = 0;
+		try (
+				Connection co = DataSource.getConnection();
+			) {
+			PreparedStatement ps = co.prepareStatement(querySearchByName);
+			ps.setString(1, "%" + name + "%");
+			ps.setString(2, "%" + name + "%");
+			ResultSet rs = ps.executeQuery();
+			
 			rs.next();
 			count = rs.getInt("rowcount");
 		} catch (SQLException e) {

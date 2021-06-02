@@ -29,7 +29,7 @@
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
+                        <input type="search" id="searchbox" name="search" class="form-control" value="<c:out value="${ sessionScope.itemToSearch }"/>" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
                         class="btn btn-primary" />
                     </form>
@@ -113,7 +113,7 @@
             	</c:if>
             	
               	<c:choose>
-              	<c:when test="${ sessionScope.webPageController.getNumberOfPages() >= 5 }">
+              	<c:when test="${ sessionScope.webPageController.getNumberOfPages() > 5 }">
               	
               		<c:choose>
               			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() < 2 }">
@@ -123,8 +123,8 @@
               			</c:when>
               			
               			<c:when test="${ sessionScope.webPageController.getCurrentPageIndex() > (sessionScope.webPageController.getNumberOfPages() - 3) }">
-              				<c:forEach var="p" begin="${ sessionScope.webPageController.getNumberOfPages() - 6 }" end="${ sessionScope.webPageController.getNumberOfPages() - 1 }">
-		              			<li><a href="?page=${ p + 1 }"><c:out value="${ p + 1 }"></c:out></a></li>
+              				<c:forEach var="p" begin="${ sessionScope.webPageController.getNumberOfPages() - 5 }" end="${ sessionScope.webPageController.getNumberOfPages() }">
+		              			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			

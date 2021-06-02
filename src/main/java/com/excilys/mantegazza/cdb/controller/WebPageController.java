@@ -2,6 +2,9 @@ package com.excilys.mantegazza.cdb.controller;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.dto.mappers.ComputerDTOMapper;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -16,6 +19,8 @@ public class WebPageController {
 	private ArrayList<Computer> list = new ArrayList<Computer>();
 	private ArrayList<ComputerDTO> dtoList = new ArrayList<ComputerDTO>();
 	private ComputerDTOMapper dtoMapper = new ComputerDTOMapper();
+	private String searchTerm;
+	private Logger logger = LoggerFactory.getLogger(WebPageController.class);
 	
 	public WebPageController() {
 		this.service = new ComputerService();
@@ -26,6 +31,17 @@ public class WebPageController {
 	public void refreshPage() {
 		clear();
 		
+		logger.debug("Refreshing page");
+		if (searchTerm == null) {
+			refreshListPage();
+		} else {
+			refreshSearchPage();
+		}
+		
+		dtoList = dtoMapper.computersToDTOArray(list);
+	}
+	
+	private void refreshListPage() {
 		this.count = service.getCount();
 		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
 		if (currentPageIndex >= numberOfPages) {
@@ -33,8 +49,20 @@ public class WebPageController {
 		}
 		
 		int rowOffset = itemsPerPage * currentPageIndex;
+		logger.debug("No item to search - call to {} computers from database", itemsPerPage);
 		list = service.getComputerSelection(itemsPerPage, rowOffset);
-		dtoList = dtoMapper.computersToDTOArray(list);
+	}
+	
+	private void refreshSearchPage() {
+		this.count = service.getSearchCount(searchTerm);
+		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
+		if (currentPageIndex >= numberOfPages) {
+			currentPageIndex = 0;
+		}
+		
+		int rowOffset = itemsPerPage * currentPageIndex;
+		logger.debug("Searching for computers with name matching '{}' - call to {} computers from database", searchTerm, itemsPerPage);
+		list = service.search(searchTerm, itemsPerPage, rowOffset);
 	}
 	
 	private void clear() {
@@ -68,9 +96,8 @@ public class WebPageController {
 	/**
 	 * Set the page controller to load the specified page number.
 	 * @param pageNumber Number of the page to load, the first page being 1.
-	 * @return An array of computer dto in the page
 	 */
-	public ArrayList<ComputerDTO> setToPage(int pageNumber) {
+	public void setToPage(int pageNumber) {
 		if (pageNumber < 1) {
 			currentPageIndex = 0;
 		} else if (pageNumber > numberOfPages) {
@@ -78,9 +105,6 @@ public class WebPageController {
 		} else {
 			this.currentPageIndex = pageNumber - 1;
 		}
-		
-		refreshPage();
-		return dtoList;
 	}
 	
 	public ArrayList<ComputerDTO> getCurrentPage() {
@@ -108,6 +132,20 @@ public class WebPageController {
 	
 	public int getNumberOfPages() {
 		return numberOfPages;
+	}
+
+	public String getSearchTerm() {
+		return searchTerm;
+	}
+
+	public void setSearchTerm(String searchTerm) {
+		logger.debug("Setting search term '{}'", searchTerm);
+		this.searchTerm = searchTerm;
+	}
+	
+	public void cancelSearch() {
+		logger.debug("Removing search term '{}'", searchTerm);
+		this.searchTerm = null;
 	}
 	
 }

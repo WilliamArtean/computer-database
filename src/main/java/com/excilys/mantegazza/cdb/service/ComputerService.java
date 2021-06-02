@@ -1,31 +1,19 @@
 package com.excilys.mantegazza.cdb.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
-import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
 public class ComputerService {
 	
 	private ComputerDAO dao = new ComputerDAO();
-	private CompanyService companyService = new CompanyService();
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
-	/**
-	 * Sets the company service from which this service can get the Company objects it needs.
-	 * @param companyService The CompanyService this service will use
-	 */
-	public void setCompanyService(CompanyService companyService) {
-		this.companyService = companyService;
-	}
-
 	/**
 	 * Set a ComputerDAO from which to get the computers from the database.
 	 * @param dao The ComputerDAO to use with this ComputerService
@@ -75,6 +63,14 @@ public class ComputerService {
 	 */
 	public int getCount() {
 		return dao.getCount();
+	}
+	
+	public ArrayList<Computer> search(String name, int limit, int offset) {
+		return dao.searchByName(name, limit, offset);
+	}
+	
+	public int getSearchCount(String name) {
+		return dao.getSearchCount(name);
 	}
 	
 	/**
