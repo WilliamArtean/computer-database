@@ -41,9 +41,8 @@
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="computers" method="POST">
             <input type="hidden" name="selection" value="">
-        </form>
 
         <div class="container" style="margin-top: 10px;">
             <table class="table table-striped table-bordered">
@@ -83,7 +82,7 @@
                 	<c:forEach var="computer" items="${ requestScope.computerList }">
 	                	<tr>
 	                        <td class="editMode">
-	                            <input type="checkbox" name="cb" class="cb" value="0">
+	                            <input type="checkbox" name="cb" class="cb" value="${ computer.id }">
 	                        </td>
 	                        <td>
 	                            <a href="editComputer?name=${ computer.getName() }" onclick=""><c:out value="${computer.getName() }"/></a>
@@ -97,6 +96,8 @@
                 </tbody>
             </table>
         </div>
+        </form>
+        
     </section>
 
     <footer class="navbar-fixed-bottom">
@@ -159,9 +160,9 @@
 	        </div>
 		</div>
     </footer>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/dashboard.js"></script>
+<script src="././js/jquery.min.js"></script>
+<script src="././js/bootstrap.min.js"></script>
+<script src="././js/dashboard.js"></script>
 
 </body>
 </html>

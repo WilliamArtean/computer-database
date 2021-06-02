@@ -2,6 +2,8 @@ package com.excilys.mantegazza.cdb.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +23,10 @@ public class ListComputers extends HttpServlet {
 	public static final String COMPUTER_LIST = "computerList";
 	
 	public static final String ATT_PAGE_CONTROLLER = "webPageController";
+	
 	public static final String PARAM_PAGE_NUMBER = "page";
 	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
+	public static final String PARAM_ITEMS_TO_DELETE = "cb";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,5 +53,20 @@ public class ListComputers extends HttpServlet {
 		
 		this.getServletContext().getRequestDispatcher(VIEW_COMPUTER).forward(req, resp);
 	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String[] checkboxesIds = request.getParameterValues(PARAM_ITEMS_TO_DELETE);
+		ArrayList<String> idsToDelete = new ArrayList<String>();
+		Collections.addAll(idsToDelete, checkboxesIds);
+		
+		for (String id : idsToDelete) {
+			System.out.println(id);
+		}
+		
+		doGet(request, response);
+	}
+	
+	
 	
 }
