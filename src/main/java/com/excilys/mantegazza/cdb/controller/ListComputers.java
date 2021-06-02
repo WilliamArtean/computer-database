@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.service.ComputerService;
 
 @WebServlet(urlPatterns  = "/computers")
 public class ListComputers extends HttpServlet {
@@ -28,6 +29,8 @@ public class ListComputers extends HttpServlet {
 	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
 	public static final String PARAM_ITEMS_TO_DELETE = "cb";
 
+	private ComputerService computerService = new ComputerService();
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
@@ -48,6 +51,7 @@ public class ListComputers extends HttpServlet {
 			}
 		}
 		
+		pageController.refreshPage();
 		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
 		req.setAttribute(COMPUTER_LIST, computerArray);
 		
@@ -57,12 +61,12 @@ public class ListComputers extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] checkboxesIds = request.getParameterValues(PARAM_ITEMS_TO_DELETE);
-		ArrayList<String> idsToDelete = new ArrayList<String>();
-		Collections.addAll(idsToDelete, checkboxesIds);
-		
-		for (String id : idsToDelete) {
-			System.out.println(id);
+		ArrayList<Long> idsToDelete = new ArrayList<Long>();
+		for (String checkboxId : checkboxesIds) {
+			idsToDelete.add(Long.parseLong(checkboxId));
 		}
+		
+		computerService.delete(idsToDelete);
 		
 		doGet(request, response);
 	}

@@ -19,14 +19,19 @@ public class WebPageController {
 	
 	public WebPageController() {
 		this.service = new ComputerService();
-		this.count = service.getCount();
-		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
 		refreshPage();
 	}
 	
 	
 	public void refreshPage() {
 		clear();
+		
+		this.count = service.getCount();
+		this.numberOfPages = ((count - 1) / itemsPerPage) + 1;
+		if (currentPageIndex >= numberOfPages) {
+			currentPageIndex = numberOfPages - 1;
+		}
+		
 		int rowOffset = itemsPerPage * currentPageIndex;
 		list = service.getComputerSelection(itemsPerPage, rowOffset);
 		dtoList = dtoMapper.computersToDTOArray(list);
@@ -66,10 +71,15 @@ public class WebPageController {
 	 * @return An array of computer dto in the page
 	 */
 	public ArrayList<ComputerDTO> setToPage(int pageNumber) {
-		if (pageNumber >= 0 && pageNumber <= numberOfPages) {
+		if (pageNumber < 1) {
+			currentPageIndex = 0;
+		} else if (pageNumber > numberOfPages) {
+			currentPageIndex = numberOfPages - 1;
+		} else {
 			this.currentPageIndex = pageNumber - 1;
-			refreshPage();
 		}
+		
+		refreshPage();
 		return dtoList;
 	}
 	

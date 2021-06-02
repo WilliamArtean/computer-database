@@ -112,4 +112,9 @@ public class ComputerService {
 	public void delete(long id) {
 		dao.delete(id);
 	}
+	
+	public void delete(ArrayList<Long> idsToDelete) {
+		dao.delete(idsToDelete);
+	}
+	
 }

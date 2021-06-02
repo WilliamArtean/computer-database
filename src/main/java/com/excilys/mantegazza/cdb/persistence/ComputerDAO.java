@@ -233,6 +233,29 @@ public class ComputerDAO {
 		}
 	}
 	
+	public void delete(ArrayList<Long> idsToDelete) {
+		try (
+				Connection co = DataSource.getConnection();
+			) {
+			co.setAutoCommit(false);
+			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
+			
+			StringBuilder ids = new StringBuilder();
+			for (long id : idsToDelete) {
+				ps.setLong(1, id);
+				ps.addBatch();
+				ids.append(id).append(", ");
+			}
+			
+			ps.executeBatch();
+			co.commit();
+			
+			logger.debug("Deleted computers in database with id: " + ids.toString());
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Execute a SQL query to fetch the number of Computer objects in the database.
 	 * @return An int corresponding to the number of rows in the computer database
