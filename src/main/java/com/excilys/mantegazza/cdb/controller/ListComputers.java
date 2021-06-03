@@ -31,6 +31,7 @@ public class ListComputers extends HttpServlet {
 	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
 	public static final String PARAM_ITEMS_TO_DELETE = "cb";
 	public static final String PARAM_SEARCH = "search";
+	public static final String PARAM_ORDER = "orderBy";
 
 	private ComputerService computerService = new ComputerService();
 	private WebPageController pageController;
@@ -39,6 +40,10 @@ public class ListComputers extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setPageController(request);
+		
+		if (request.getParameterMap().containsKey(PARAM_ORDER)) {
+			orderSelection(request);
+		}
 		
 		if (request.getParameterMap().containsKey(PARAM_SEARCH)) {
 			if (request.getParameter(PARAM_SEARCH).isEmpty()) {
@@ -108,6 +113,7 @@ public class ListComputers extends HttpServlet {
 		request.getSession().setAttribute(ATT_ITEM_TO_SEARCH, request.getParameter(PARAM_SEARCH));		
 		logger.debug("Added attribute ({}, {})", ATT_ITEM_TO_SEARCH, request.getParameter(PARAM_SEARCH));
 		
+		pageController.resetOrder();
 		pageController.setSearchTerm(request.getParameter(PARAM_SEARCH));
 		pageController.setToPage(1);
 		setSearchResults(request);
@@ -118,6 +124,7 @@ public class ListComputers extends HttpServlet {
 		request.getSession().removeAttribute(ATT_ITEM_TO_SEARCH);
 		logger.debug("Removed itemToSearch attribute from session");
 		
+		pageController.resetOrder();
 		pageController.cancelSearch();
 		pageController.setToPage(1);
 		setComputersList(request);
@@ -131,6 +138,10 @@ public class ListComputers extends HttpServlet {
 		}
 		
 		computerService.delete(idsToDelete);
+	}
+	
+	private void orderSelection(HttpServletRequest request) {
+		pageController.setOrder(request.getParameter(PARAM_ORDER));
 	}
 	
 }

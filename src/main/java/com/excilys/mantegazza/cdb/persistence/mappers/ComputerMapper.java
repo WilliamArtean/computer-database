@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
+import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class ComputerMapper {
 
@@ -63,6 +64,21 @@ public class ComputerMapper {
 			computers.add(computer);
 		}
 		return computers;
+	}
+	
+	public String orderColumnToSQL(SearchOrderColumn columnToOrder) {
+		switch (columnToOrder) {
+		case computerName:
+			return "computer.name";
+		case introduced:
+			return "introduced";
+		case discontinued:
+			return "discontinued";
+		case companyName:
+			return "company.name";
+		default:
+			return "computer.id";
+		}
 	}
 	
 }

@@ -60,18 +60,18 @@
                             </span>
                         </th>
                         <th>
-                            Computer name
+                            <a href="?orderBy=computerName">Computer name</a>
                         </th>
                         <th>
-                            Introduced date
+                            <a href="?orderBy=introduced">Introduced date</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date
+                        	<a href="?orderBy=discontinued">Discontinued date</a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company
+                        	<a href="?orderBy=companyName">Company</a>
                         </th>
 
                     </tr>

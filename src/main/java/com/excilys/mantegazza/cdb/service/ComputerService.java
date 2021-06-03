@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
+import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class ComputerService {
 	
@@ -56,6 +57,9 @@ public class ComputerService {
 	public ArrayList<Computer> getComputerSelection(int numberToGet, int rowOffset) {
 		return dao.getSelection(numberToGet, rowOffset);
 	}
+	public ArrayList<Computer> getComputerSelection(int numberToGet, int rowOffset, SearchOrderColumn orderColumn, boolean ascendant) {
+		return dao.getSelection(numberToGet, rowOffset, orderColumn, ascendant);
+	}
 	
 	/**
 	 * Return the number of computers in the database.
@@ -67,6 +71,10 @@ public class ComputerService {
 	
 	public ArrayList<Computer> search(String name, int limit, int offset) {
 		return dao.searchByName(name, limit, offset);
+	}
+	
+	public ArrayList<Computer> search(String name, int limit, int offset, SearchOrderColumn orderColumn, boolean ascendant) {
+		return dao.searchByNameOrdered(name, limit, offset, orderColumn, ascendant);
 	}
 	
 	public int getSearchCount(String name) {

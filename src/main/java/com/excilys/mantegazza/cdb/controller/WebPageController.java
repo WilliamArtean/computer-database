@@ -9,17 +9,22 @@ import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.dto.mappers.ComputerDTOMapper;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class WebPageController {
-	private ComputerService service;
 	private int currentPageIndex = 0;
-	private int numberOfPages;
 	private int itemsPerPage = 10;
 	private int count;
+	private int numberOfPages;
+	private String searchTerm;
+	private SearchOrderColumn columnToOrderBy = SearchOrderColumn.none;
+	private boolean ascendantOrder = true;
+	
 	private ArrayList<Computer> list = new ArrayList<Computer>();
 	private ArrayList<ComputerDTO> dtoList = new ArrayList<ComputerDTO>();
+
+	private ComputerService service;
 	private ComputerDTOMapper dtoMapper = new ComputerDTOMapper();
-	private String searchTerm;
 	private Logger logger = LoggerFactory.getLogger(WebPageController.class);
 	
 	public WebPageController() {
@@ -29,9 +34,9 @@ public class WebPageController {
 	
 	
 	public void refreshPage() {
+		logger.debug("Refreshing page");
 		clear();
 		
-		logger.debug("Refreshing page");
 		if (searchTerm == null) {
 			refreshListPage();
 		} else {
@@ -50,7 +55,19 @@ public class WebPageController {
 		
 		int rowOffset = itemsPerPage * currentPageIndex;
 		logger.debug("No item to search - call to {} computers from database", itemsPerPage);
-		list = service.getComputerSelection(itemsPerPage, rowOffset);
+		
+		if (SearchOrderColumn.none.equals(columnToOrderBy)) {
+			fillComputerList(itemsPerPage, rowOffset);
+		} else {
+			fillComputerListOrdered(itemsPerPage, rowOffset, columnToOrderBy, ascendantOrder);
+		}
+	}
+	
+	private void fillComputerList(int size, int rowOffset) {
+		list = service.getComputerSelection(size, rowOffset);
+	}
+	private void fillComputerListOrdered(int size, int rowOffset, SearchOrderColumn orderColumn, boolean ascendant) {
+		list = service.getComputerSelection(size, rowOffset, orderColumn, ascendant);
 	}
 	
 	private void refreshSearchPage() {
@@ -62,7 +79,19 @@ public class WebPageController {
 		
 		int rowOffset = itemsPerPage * currentPageIndex;
 		logger.debug("Searching for computers with name matching '{}' - call to {} computers from database", searchTerm, itemsPerPage);
-		list = service.search(searchTerm, itemsPerPage, rowOffset);
+		
+		if (SearchOrderColumn.none.equals(columnToOrderBy)) {
+			fillComputerSearch(searchTerm, itemsPerPage, rowOffset);
+		} else {
+			fillComputerSearchOrdered(searchTerm, itemsPerPage, rowOffset, columnToOrderBy, ascendantOrder);
+		}
+	}
+	
+	private void fillComputerSearch(String name, int size, int rowOffset) {
+		list = service.search(name, size, rowOffset);
+	}
+	private void fillComputerSearchOrdered(String name, int size, int rowOffset, SearchOrderColumn orderColumn, boolean ascendant) {
+		list = service.search(name, size, rowOffset, orderColumn, ascendant);
 	}
 	
 	private void clear() {
@@ -148,4 +177,35 @@ public class WebPageController {
 		this.searchTerm = null;
 	}
 	
+	public void setOrder(String order) {
+		SearchOrderColumn newOrderColumn;
+		switch (order) {
+		case "computerName":
+			newOrderColumn = SearchOrderColumn.computerName;
+			break;
+		case "introduced":
+			newOrderColumn = SearchOrderColumn.introduced;
+			break;
+		case "discontinued":
+			newOrderColumn = SearchOrderColumn.discontinued;
+			break;
+		case "companyName":
+			newOrderColumn = SearchOrderColumn.companyName;
+			break;
+		default:
+			newOrderColumn = SearchOrderColumn.none;
+			break;
+		}
+		
+		if (columnToOrderBy.equals(newOrderColumn) && !SearchOrderColumn.none.equals(newOrderColumn)) {
+			ascendantOrder = !ascendantOrder;
+		} else {
+			ascendantOrder = true;
+		}
+		this.columnToOrderBy = newOrderColumn;
+	}
+	
+	public void resetOrder() {
+		setOrder("none");
+	}
 }

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
+import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class ComputerDAO {
 	
@@ -25,13 +26,15 @@ public class ComputerDAO {
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
 	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
 	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
+	private final String queryGetSelectionOrdered = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY %s %s LIMIT ? OFFSET ?";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
-	private final String queryLimitedSearchByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id LIMIT ? OFFSET ?";
-	private final String querySearchByName = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ?";
+	private final String queryOrderedLimitedSearchByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s %s LIMIT ? OFFSET ?";
+	private final String querySearchByName = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id";
+	
 	
 	/**
 	 * Execute a SQL query to fetch the computer with the required id.
@@ -119,6 +122,28 @@ public class ComputerDAO {
 			PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			ps.setInt(1, numberToReturn);
 			ps.setInt(2, offset);
+			ResultSet rs = ps.executeQuery();
+			computers = mapper.mapToComputerArray(rs);
+			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return computers;
+	}
+	
+	public ArrayList<Computer> getSelection(int numberToReturn, int offset, SearchOrderColumn orderColumn, boolean ascending) {
+		ArrayList<Computer> computers = new ArrayList<Computer>();
+		
+		String orderType = ascending ? "ASC" : "DESC";
+		String query = String.format(queryGetSelectionOrdered, mapper.orderColumnToSQL(orderColumn), orderType);
+		try (
+				Connection co = DataSource.getConnection();
+			) {
+			PreparedStatement ps = co.prepareStatement(query);
+			
+			ps.setInt(1, numberToReturn);
+			ps.setInt(2, offset);
+			
 			ResultSet rs = ps.executeQuery();
 			computers = mapper.mapToComputerArray(rs);
 			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
@@ -278,15 +303,34 @@ public class ComputerDAO {
 	}
 	
 	public ArrayList<Computer> searchByName(String name, int limit, int offset) {
+		return searchByNameOrdered(name, limit, offset, SearchOrderColumn.none, true);
+	}
+	
+	/**
+	 * Search for a list of computer, specifying the name to search for, the search boundaries,
+	 * as well as how to order the result.
+	 * @param name The name of the computer or company to search for
+	 * @param limit The number of Computers the search will be returning
+	 * @param offset The row starting from which the Computers will be returned
+	 * @param orderColumn An enum matching the columns used to order the result
+	 * @param ascending If true, results will be ordered by ascending order, and if false, by descending order
+	 * @return ArrayList of computers, filtered and ordered according to the search parameters
+	 */
+	public ArrayList<Computer> searchByNameOrdered(String name, int limit, int offset, SearchOrderColumn orderColumn, boolean ascending) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
+		
+		String orderType = ascending ? "ASC" : "DESC";
+		String query = String.format(queryOrderedLimitedSearchByName, mapper.orderColumnToSQL(orderColumn), orderType);
 		try (
 				Connection co = DataSource.getConnection();
 			) {
-			PreparedStatement ps = co.prepareStatement(queryLimitedSearchByName);
+			PreparedStatement ps = co.prepareStatement(query);
 			ps.setString(1, "%" + name + "%");
 			ps.setString(2, "%" + name + "%");
 			ps.setInt(3, limit);
 			ps.setInt(4, offset);
+			
+			logger.info("Executed query : {}", ps.toString());
 			ResultSet rs = ps.executeQuery();
 			
 			computers = mapper.mapToComputerArray(rs);
