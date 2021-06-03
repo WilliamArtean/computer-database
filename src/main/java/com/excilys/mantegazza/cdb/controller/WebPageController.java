@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.dto.mappers.ComputerDTOMapper;
+import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.ComputerService;
-import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class WebPageController {
 	private int currentPageIndex = 0;
@@ -17,7 +17,7 @@ public class WebPageController {
 	private int count;
 	private int numberOfPages;
 	private String searchTerm;
-	private SearchOrderColumn columnToOrderBy = SearchOrderColumn.none;
+	private OrderBy columnToOrderBy = OrderBy.none;
 	private boolean ascendantOrder = true;
 	
 	private ArrayList<Computer> list = new ArrayList<Computer>();
@@ -56,7 +56,7 @@ public class WebPageController {
 		int rowOffset = itemsPerPage * currentPageIndex;
 		logger.debug("No item to search - call to {} computers from database", itemsPerPage);
 		
-		if (SearchOrderColumn.none.equals(columnToOrderBy)) {
+		if (OrderBy.none.equals(columnToOrderBy)) {
 			fillComputerList(itemsPerPage, rowOffset);
 		} else {
 			fillComputerListOrdered(itemsPerPage, rowOffset, columnToOrderBy, ascendantOrder);
@@ -66,7 +66,7 @@ public class WebPageController {
 	private void fillComputerList(int size, int rowOffset) {
 		list = service.getComputerSelection(size, rowOffset);
 	}
-	private void fillComputerListOrdered(int size, int rowOffset, SearchOrderColumn orderColumn, boolean ascendant) {
+	private void fillComputerListOrdered(int size, int rowOffset, OrderBy orderColumn, boolean ascendant) {
 		list = service.getComputerSelection(size, rowOffset, orderColumn, ascendant);
 	}
 	
@@ -80,7 +80,7 @@ public class WebPageController {
 		int rowOffset = itemsPerPage * currentPageIndex;
 		logger.debug("Searching for computers with name matching '{}' - call to {} computers from database", searchTerm, itemsPerPage);
 		
-		if (SearchOrderColumn.none.equals(columnToOrderBy)) {
+		if (OrderBy.none.equals(columnToOrderBy)) {
 			fillComputerSearch(searchTerm, itemsPerPage, rowOffset);
 		} else {
 			fillComputerSearchOrdered(searchTerm, itemsPerPage, rowOffset, columnToOrderBy, ascendantOrder);
@@ -90,36 +90,13 @@ public class WebPageController {
 	private void fillComputerSearch(String name, int size, int rowOffset) {
 		list = service.search(name, size, rowOffset);
 	}
-	private void fillComputerSearchOrdered(String name, int size, int rowOffset, SearchOrderColumn orderColumn, boolean ascendant) {
+	private void fillComputerSearchOrdered(String name, int size, int rowOffset, OrderBy orderColumn, boolean ascendant) {
 		list = service.search(name, size, rowOffset, orderColumn, ascendant);
 	}
 	
 	private void clear() {
 		list.clear();
 		dtoList.clear();
-	}
-	
-
-	public ArrayList<ComputerDTO> getFirstPage() {
-		this.currentPageIndex = 0;
-		refreshPage();
-		return dtoList;
-	}
-
-	public ArrayList<ComputerDTO> previousPage() {
-		if (currentPageIndex > 0) {
-			currentPageIndex--;
-			refreshPage();
-		}
-		return dtoList;
-	}
-	
-	public ArrayList<ComputerDTO> nextPage() {
-		if (currentPageIndex < (numberOfPages - 1)) {
-			currentPageIndex++;
-			refreshPage();
-		}
-		return dtoList;
 	}
 	
 	/**
@@ -178,26 +155,9 @@ public class WebPageController {
 	}
 	
 	public void setOrder(String order) {
-		SearchOrderColumn newOrderColumn;
-		switch (order) {
-		case "computerName":
-			newOrderColumn = SearchOrderColumn.computerName;
-			break;
-		case "introduced":
-			newOrderColumn = SearchOrderColumn.introduced;
-			break;
-		case "discontinued":
-			newOrderColumn = SearchOrderColumn.discontinued;
-			break;
-		case "companyName":
-			newOrderColumn = SearchOrderColumn.companyName;
-			break;
-		default:
-			newOrderColumn = SearchOrderColumn.none;
-			break;
-		}
+		OrderBy newOrderColumn = OrderBy.getOrderBy(order);
 		
-		if (columnToOrderBy.equals(newOrderColumn) && !SearchOrderColumn.none.equals(newOrderColumn)) {
+		if (columnToOrderBy.equals(newOrderColumn) && !OrderBy.none.equals(newOrderColumn)) {
 			ascendantOrder = !ascendantOrder;
 		} else {
 			ascendantOrder = true;

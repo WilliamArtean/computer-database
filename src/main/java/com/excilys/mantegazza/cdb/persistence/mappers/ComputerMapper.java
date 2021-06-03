@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
-import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class ComputerMapper {
 
@@ -66,7 +66,7 @@ public class ComputerMapper {
 		return computers;
 	}
 	
-	public String orderColumnToSQL(SearchOrderColumn columnToOrder) {
+	public String orderColumnToSQL(OrderBy columnToOrder) {
 		switch (columnToOrder) {
 		case computerName:
 			return "computer.name";

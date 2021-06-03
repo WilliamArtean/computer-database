@@ -12,9 +12,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
-import com.excilys.mantegazza.cdb.utils.SearchOrderColumn;
 
 public class ComputerDAO {
 	
@@ -131,7 +131,7 @@ public class ComputerDAO {
 		return computers;
 	}
 	
-	public ArrayList<Computer> getSelection(int numberToReturn, int offset, SearchOrderColumn orderColumn, boolean ascending) {
+	public ArrayList<Computer> getSelection(int numberToReturn, int offset, OrderBy orderColumn, boolean ascending) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		
 		String orderType = ascending ? "ASC" : "DESC";
@@ -303,7 +303,7 @@ public class ComputerDAO {
 	}
 	
 	public ArrayList<Computer> searchByName(String name, int limit, int offset) {
-		return searchByNameOrdered(name, limit, offset, SearchOrderColumn.none, true);
+		return searchByNameOrdered(name, limit, offset, OrderBy.none, true);
 	}
 	
 	/**
@@ -316,7 +316,7 @@ public class ComputerDAO {
 	 * @param ascending If true, results will be ordered by ascending order, and if false, by descending order
 	 * @return ArrayList of computers, filtered and ordered according to the search parameters
 	 */
-	public ArrayList<Computer> searchByNameOrdered(String name, int limit, int offset, SearchOrderColumn orderColumn, boolean ascending) {
+	public ArrayList<Computer> searchByNameOrdered(String name, int limit, int offset, OrderBy orderColumn, boolean ascending) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		
 		String orderType = ascending ? "ASC" : "DESC";

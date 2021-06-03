@@ -11,13 +11,13 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.mantegazza.cdb.enums.MenuInput;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
-import com.excilys.mantegazza.cdb.utils.MenuInput;
 
 public class CLIController {
 

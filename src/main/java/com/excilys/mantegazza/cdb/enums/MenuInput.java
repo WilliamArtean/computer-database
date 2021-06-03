@@ -1,4 +1,4 @@
-package com.excilys.mantegazza.cdb.utils;
+package com.excilys.mantegazza.cdb.enums;
 
 public enum MenuInput {
 	INVALID_COMMAND(0), LIST_COMPUTERS(1), LIST_COMPANIES(2), SHOW_DETAILS(3), CREATE_COMPUTER(4), UPDATE_COMPUTER(5), DELETE_COMPUTER(6), DELETE_COMPANY(7), EXIT(8);
