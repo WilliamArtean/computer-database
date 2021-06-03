@@ -11,10 +11,8 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
-import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
@@ -153,6 +151,9 @@ public class CLIController {
 			break;
 		case DELETE_COMPUTER:
 			deleteComputer();
+			break;
+		case DELETE_COMPANY:
+			deleteCompany();
 			break;
 		case EXIT:
 			logger.trace("Exiting application");
@@ -302,6 +303,28 @@ public class CLIController {
 		} while (computerName.isEmpty());
 		
 		computerService.delete(computerName);
+	}
+	
+	private void deleteCompany() throws IOException {
+		System.out.println("Enter the name of the company to delete:");
+		String companyName = getInput();
+		if (companyName.isEmpty()) {
+			System.out.println("Deletion canceled.");
+			return;
+		}
+		
+		System.out.println("Deleteing the company will delete all associated computers! Are you sure you want to continue? (y/n)");
+		String confirmation = "";
+		do {
+			confirmation = getInput();
+		} while (!"Y".equals(confirmation) && !"y".equals(confirmation) && !"N".equals(confirmation) && !"n".equals(confirmation));
+		
+		if ("Y".equals(confirmation) || "y".equals(confirmation)) {
+			companyService.delete(companyName);
+			System.out.println("Deleted company " + companyName + "!");
+		} else {
+			System.out.println("Deletion canceled.");
+		}
 	}
 	
 }

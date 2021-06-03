@@ -54,4 +54,8 @@ public class CompanyService {
 		return companyDAO.getSelection(numberToGet, rowOffset);
 	}
 	
+	public void delete(String name) {
+		companyDAO.delete(name);
+	}
+	
 }

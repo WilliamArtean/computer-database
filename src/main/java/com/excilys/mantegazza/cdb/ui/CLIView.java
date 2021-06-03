@@ -17,7 +17,8 @@ public class CLIView {
 		System.out.println("4 - Create a computer");
 		System.out.println("5 - Update a computer");
 		System.out.println("6 - Delete a computer");
-		System.out.println("7 - Exit");
+		System.out.println("7 - Delete a company");
+		System.out.println("8 - Exit");
 	}
 	
 	/**

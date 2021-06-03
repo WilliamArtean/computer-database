@@ -1,7 +1,7 @@
 package com.excilys.mantegazza.cdb.utils;
 
 public enum MenuInput {
-	INVALID_COMMAND(0), LIST_COMPUTERS(1), LIST_COMPANIES(2), SHOW_DETAILS(3), CREATE_COMPUTER(4), UPDATE_COMPUTER(5), DELETE_COMPUTER(6), EXIT(7);
+	INVALID_COMMAND(0), LIST_COMPUTERS(1), LIST_COMPANIES(2), SHOW_DETAILS(3), CREATE_COMPUTER(4), UPDATE_COMPUTER(5), DELETE_COMPUTER(6), DELETE_COMPANY(7), EXIT(8);
 
 	private int number;
 	
@@ -50,6 +50,8 @@ public enum MenuInput {
 		case 6:
 			return DELETE_COMPUTER;
 		case 7:
+			return DELETE_COMPANY;
+		case 8:
 			return EXIT;
 		default:
 			return INVALID_COMMAND;

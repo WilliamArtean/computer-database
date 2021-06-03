@@ -23,6 +23,8 @@ public class CompanyDAO {
 	private final String queryGetAll = "SELECT id, name FROM company";
 	private final String queryGetSelection = "SELECT id, name FROM company ORDER BY id LIMIT ? OFFSET ?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
+	private final String queryDeleteAssociatedComputers = "DELETE computer FROM computer LEFT JOIN company ON (computer.company_id = company.id) WHERE company.name=?";
+	private final String queryDeleteByName = "DELETE FROM company WHERE name=?";
 	
 	/**
 	 * Execute a SQL query to fetch the company with the required id.
@@ -124,6 +126,39 @@ public class CompanyDAO {
 			logger.error(e.getMessage());
 		}
 		return count;
+	}
+	
+	public void delete(String name) {
+		Connection co = null;
+		try {
+			co = DataSource.getConnection();
+			co.setAutoCommit(false);
+			
+			PreparedStatement psComputers = co.prepareStatement(queryDeleteAssociatedComputers);
+			psComputers.setString(1, name);
+			psComputers.executeUpdate();
+			logger.debug("Preparing query: {}", psComputers.toString());
+			
+			PreparedStatement psCompany = co.prepareStatement(queryDeleteByName);
+			psCompany.setString(1, name);
+			psCompany.executeUpdate();
+			logger.debug("Preparing query: {}", psCompany.toString());
+			
+			co.commit();
+			co.close();
+			logger.debug("Deleted computers associated with company '{}' from computer", name);
+			logger.debug("Deleted company '{}' from company", name);
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+			if (co != null) {
+				try {
+					logger.error("Transaction failed. Initiating rollback.");
+					co.rollback();
+				} catch (SQLException e1) {
+					logger.error(e.getMessage());
+				}
+			}
+		}
 	}
 	
 }
