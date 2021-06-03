@@ -57,7 +57,7 @@
                                     
                                     <c:forEach var="company" items="${ requestScope.companies }">
                                     	<c:choose>
-                                    	<c:when test="${ computerToEdit.company.id == company.id }">
+                                    	<c:when test="${ computerToEdit.companyId == company.id }">
 	                                    	<option value="${ company.id }" selected="true"><c:out value="${ company.name }"></c:out></option>
                                     	</c:when>
                                     	<c:otherwise>

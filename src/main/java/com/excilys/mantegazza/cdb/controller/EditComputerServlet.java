@@ -34,7 +34,7 @@ public class EditComputerServlet extends HttpServlet {
 	public static final String SERVLET_LIST_COMPUTERS = "computers";
 	public static final String VIEW_EDIT_COMPUTER = "/WEB-INF/views/editComputer.jsp";
 	
-	public static final String PARAM_NAME_COMPUTER_TO_EDIT = "name";
+	public static final String PARAM_ID_COMPUTER_TO_EDIT = "id";
 	public static final String PARAM_COMPUTER_NAME = "computerName";
 	public static final String PARAM_INTRODUCED = "introduced";
 	public static final String PARAM_DISCONTINUED = "discontinued";
@@ -46,16 +46,17 @@ public class EditComputerServlet extends HttpServlet {
 	
 	public static final String ERRORS = "errors";
 	
-	private ArrayList<CompanyDTO> companies;
 	private String currentComputerName;
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
+		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
 		
-		if (request.getParameterMap().containsKey(PARAM_NAME_COMPUTER_TO_EDIT)) {
-			Optional<Computer> computerToEdit = computerService.getComputer(request.getParameter(PARAM_NAME_COMPUTER_TO_EDIT));
+		if (request.getParameterMap().containsKey(PARAM_ID_COMPUTER_TO_EDIT)) {
+			long id = Long.parseLong(request.getParameter(PARAM_ID_COMPUTER_TO_EDIT));
+			Optional<Computer> computerToEdit = computerService.getComputer(id);
+			
 			if (computerToEdit.isPresent()) {
 				ComputerDTO dtoToEdit = computerMapper.computerToDTO(computerToEdit.get());
 				request.setAttribute(ATT_COMPUTER_TO_EDIT, dtoToEdit);
@@ -71,28 +72,19 @@ public class EditComputerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String companyId = request.getParameter(PARAM_COMPANYID);
-		CompanyDTO companyDTO = null;
-		if (!"0".equals(companyId)) {
-			for (CompanyDTO company : companies) {
-				if (companyId.equals(Long.toString(company.getId()))) {
-					companyDTO = company;
-				}
-			}
-		}
-		
+		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));
 		String computerName = request.getParameter(PARAM_COMPUTER_NAME);
 		String introduced = request.getParameter(PARAM_INTRODUCED);
 		String discontinued = request.getParameter(PARAM_DISCONTINUED);
-		ComputerDTO computerDTOToUpdate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyDTO);
+		ComputerDTO computerDTOToUpdate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyId);
 		
-		Computer newComputer = computerMapper.dtoToComputer(computerDTOToUpdate);
-
-		HashMap<String, String> errors = computerValidator.validateComputer(newComputer);
+		HashMap<String, String> errors = computerValidator.validateComputer(computerDTOToUpdate);
 		request.setAttribute(ERRORS, errors);
 		
 		if (errors.isEmpty()) {
+			Computer newComputer = computerMapper.dtoToComputer(computerDTOToUpdate);
 			computerService.update(currentComputerName, newComputer);
+			
 			WebPageController pageController = (WebPageController) request.getSession().getAttribute(ATT_PAGE_CONTROLLER);
 			if (pageController != null) {
 				pageController.refreshPage();

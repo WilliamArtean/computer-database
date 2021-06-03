@@ -40,38 +40,26 @@ public class AddComputerServlet extends HttpServlet {
 	public static final String ATT_COMPANY_LIST = "companies";
 	public static final String ERRORS = "errors";
 	
-	private ArrayList<CompanyDTO> companies;
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
+		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
 		
 		this.getServletContext().getRequestDispatcher(VIEW_ADD_COMPUTER).forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String companyId = request.getParameter(PARAM_COMPANYID);
-		CompanyDTO companyDTOToCreate = null;
-		if (!"0".equals(companyId)) {
-			for (CompanyDTO company : companies) {
-				if (companyId.equals(Long.toString(company.getId()))) {
-					companyDTOToCreate = company;
-				}
-			}
-		}
-		
+		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));
 		String computerName = request.getParameter(PARAM_COMPUTER_NAME);
 		String introduced = request.getParameter(PARAM_INTRODUCED);
 		String discontinued = request.getParameter(PARAM_DISCONTINUED);
-		ComputerDTO computerDTOToCreate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyDTOToCreate);
-		
-		Computer computerToCreate = computerMapper.dtoToComputer(computerDTOToCreate);
+		ComputerDTO computerDTOToCreate = computerMapper.createComputerDTO(computerName, "", introduced, discontinued, companyId);
 
-		HashMap<String, String> errors = computerValidator.validateComputer(computerToCreate);
+		HashMap<String, String> errors = computerValidator.validateComputer(computerDTOToCreate);
 		request.setAttribute(ERRORS, errors);
 		
 		if (errors.isEmpty()) {
+			Computer computerToCreate = computerMapper.dtoToComputer(computerDTOToCreate);
 			computerService.create(computerToCreate);
 		}
 		

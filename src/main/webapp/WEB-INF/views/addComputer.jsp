@@ -54,11 +54,11 @@
                                     
                                     <c:forEach var="company" items="${ requestScope.companies }">
                                     	<c:choose>
-                                    	<c:when test="${ param.companyId == company.getId() }">
-	                                    	<option value="${ company.getId() }" selected="true"><c:out value="${ company.getName() }"></c:out></option>
+                                    	<c:when test="${ param.companyId == company.id }">
+	                                    	<option value="${ company.id }" selected="true"><c:out value="${ company.name }"></c:out></option>
                                     	</c:when>
                                     	<c:otherwise>
-                                    		<option value="${ company.getId() }"><c:out value="${ company.getName() }"></c:out></option>
+                                    		<option value="${ company.id }"><c:out value="${ company.name }"></c:out></option>
                                     	</c:otherwise>
                                     	</c:choose>
                                     </c:forEach>

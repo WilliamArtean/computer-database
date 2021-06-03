@@ -1,18 +1,23 @@
 package com.excilys.mantegazza.cdb.validator;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
+import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.exceptions.InexistentNameException;
-import com.excilys.mantegazza.cdb.model.Computer;
 
 public class ComputerValidator {
 
 	public static final String ERR_COMPUTER_NAME = "computerNameError";
 	public static final String ERR_DATES = "datesError";
+	public static final String ERR_PARSE_DATE = "dateParseError";
 	
-	public HashMap<String, String> validateComputer(Computer computer) {
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	public HashMap<String, String> validateComputer(ComputerDTO computer) {
 		HashMap<String, String> errors = new HashMap<String, String>();
 		
 		try {
@@ -22,7 +27,9 @@ public class ComputerValidator {
 		}
 		
 		try {
-			validateDates(computer.getIntroductionDate(), computer.getDiscontinuationDate());
+			validateDates(computer.getIntroduced(), computer.getDiscontinued());
+		} catch (DateTimeParseException e) {
+			errors.put(ERR_PARSE_DATE, "The date format is incorrect");
 		} catch (InconsistentDatesException e) {
 			errors.put(ERR_DATES, "The dates are inconsistent.");
 		}
@@ -36,9 +43,12 @@ public class ComputerValidator {
 		}
 	}
 	
-	private void validateDates(LocalDate introduced, LocalDate discontinued) throws InconsistentDatesException {
-		if (introduced != null && discontinued != null) {
-			if (introduced.isAfter(discontinued)) {
+	private void validateDates(String introduced, String discontinued) throws InconsistentDatesException, DateTimeParseException {
+		if (!introduced.isEmpty() && !discontinued.isEmpty()) {
+			LocalDate introducedDate = LocalDate.parse(introduced, df);
+			LocalDate discontinuedDate = LocalDate.parse(discontinued, df);
+			
+			if (introducedDate.isAfter(discontinuedDate)) {
 				throw new InconsistentDatesException();
 			}
 		}
