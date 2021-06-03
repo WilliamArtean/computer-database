@@ -16,7 +16,7 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
-import com.excilys.mantegazza.cdb.ui.Page;
+import com.excilys.mantegazza.cdb.ui.CLIPageView;
 import com.excilys.mantegazza.cdb.utils.MenuInput;
 
 public class CLIController {
@@ -39,7 +39,7 @@ public class CLIController {
 		this.view = view;
 		this.computerService = computerService;
 		this.companyService = companyService;
-		this.pageController = new PageController(new Page(), computerService);
+		this.pageController = new PageController(new CLIPageView(), computerService);
 		this.scanner = new Scanner(System.in);
 	}
 	

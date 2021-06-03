@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.ComputerService;
-import com.excilys.mantegazza.cdb.ui.Page;
+import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
 public class PageController {
 
-	private Page view;
+	private CLIPageView view;
 	private ComputerService service;
 	private int currentPageIndex = 0;
 	private final int numberOfPages;
@@ -42,7 +42,7 @@ public class PageController {
 	 * @param view The Page view the PageController will send the data to output.
 	 * @param service The service for Computer objects the PageController will use
 	 */
-	public PageController(Page view, ComputerService service) {
+	public PageController(CLIPageView view, ComputerService service) {
 		this.view = view;
 		this.service = service;
 		this.numberOfPages = ((service.getCount() - 1) / itemsPerPage) + 1;
