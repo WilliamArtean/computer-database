@@ -1,7 +1,7 @@
 package com.excilys.mantegazza.cdb.enums;
 
 public enum OrderBy {
-	none("none"), computerName("computerName"), introduced("introduced"), discontinued("discontinued"), companyName("companyName");
+	none("computer.id"), computerName("computer.name"), introduced("introduced"), discontinued("discontinued"), companyName("company.name");
 
 	private final String name;
 	
@@ -22,5 +22,9 @@ public enum OrderBy {
 		default:
 			return OrderBy.none;
 		}
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 }
