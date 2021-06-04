@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.service.Page;
 
 @WebServlet(urlPatterns  = "/computers")
 public class ListComputers extends HttpServlet {
@@ -24,8 +25,8 @@ public class ListComputers extends HttpServlet {
 	public static final String VIEW_COMPUTER = "/WEB-INF/views/dashboard.jsp";
 	public static final String COMPUTER_LIST = "computerList";
 	
-	public static final String ATT_PAGE_CONTROLLER = "webPageController";
-	public static final String ATT_ITEM_TO_SEARCH = "itemToSearch";
+	public static final String ATT_PAGE = "page";
+	public static final String ATT_SEARCH_TERM = "searchTerm";
 	
 	public static final String PARAM_PAGE_NUMBER = "page";
 	public static final String PARAM_ITEMS_PER_PAGE = "itemsPerPage";
@@ -34,31 +35,14 @@ public class ListComputers extends HttpServlet {
 	public static final String PARAM_ORDER = "orderBy";
 
 	private ComputerService computerService = new ComputerService();
-	private WebPageController pageController;
+	private Page page;
 	private Logger logger = LoggerFactory.getLogger(ListComputers.class);
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		setPageController(request);
-		
-		if (request.getParameterMap().containsKey(PARAM_ORDER)) {
-			orderSelection(request);
-		}
-		
-		if (request.getParameterMap().containsKey(PARAM_SEARCH)) {
-			if (request.getParameter(PARAM_SEARCH).isEmpty()) {
-				endSearch(request);
-			} else {
-				startSearch(request);
-			}
-		} else {
-			Object searchAttribute = request.getSession().getAttribute(ATT_ITEM_TO_SEARCH);
-			if (searchAttribute == null) {
-				setComputersList(request);
-			} else {
-				setSearchResults(request);
-			}
-		}
+		initPageAttribute(request);
+		processParameters(request);
+		fetchComputers(request);
 		
 		this.getServletContext().getRequestDispatcher(VIEW_COMPUTER).forward(request, response);
 	}
@@ -73,63 +57,51 @@ public class ListComputers extends HttpServlet {
 	}
 	
 	
-	private void setPageController(HttpServletRequest request) {
+	private void fetchComputers(HttpServletRequest request) {
+		page.refreshPage();
+		ArrayList<ComputerDTO> computerArray = page.getCurrentPage();
+		request.setAttribute(COMPUTER_LIST, computerArray);
+	}
+	
+	private void initPageAttribute(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		pageController = (WebPageController) session.getAttribute(ATT_PAGE_CONTROLLER);
+		page = (Page) session.getAttribute(ATT_PAGE);
 		
-		if (pageController == null) {
-			pageController = new WebPageController();
-			session.setAttribute(ATT_PAGE_CONTROLLER, pageController);
+		if (page == null) {
+			page = new Page();
+			session.setAttribute(ATT_PAGE, page);
+			logger.debug("Set session attribute ({}, Page)", ATT_PAGE);
+		}
+	}
+	
+	private void processParameters(HttpServletRequest request) {
+		if (request.getParameterMap().containsKey(PARAM_SEARCH)) {
+			setSearch(request);
+		}
+		
+		if (request.getParameterMap().containsKey(PARAM_ORDER)) {
+			orderSelection(request);
 		}
 		
 		if (request.getParameterMap().containsKey(PARAM_ITEMS_PER_PAGE)) {
-			pageController.setItemsPerPage(Integer.parseInt(request.getParameter(PARAM_ITEMS_PER_PAGE)));
+			page.setItemsPerPage(Integer.parseInt(request.getParameter(PARAM_ITEMS_PER_PAGE)));
 		}
 		
 		if (request.getParameterMap().containsKey(PARAM_PAGE_NUMBER)) {
 			int pageNumberParam = Integer.parseInt(request.getParameter(PARAM_PAGE_NUMBER));
-			if (pageNumberParam >= 1 && pageNumberParam <= pageController.getNumberOfPages()) {
-				pageController.setToPage(pageNumberParam);
-			}
+			page.setToPage(pageNumberParam);
 		}
-	}
-	
-	private void setComputersList(HttpServletRequest request) {
-		pageController.refreshPage();
 		
-		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
-		request.setAttribute(COMPUTER_LIST, computerArray);
 	}
 	
-	private void setSearchResults(HttpServletRequest request) {
-		pageController.refreshPage();
+	private void setSearch(HttpServletRequest request) {
+		String searchParam = request.getParameter(PARAM_SEARCH);
+		request.getSession().setAttribute(ATT_SEARCH_TERM, searchParam);
+		logger.debug("Set session attribute ({}, {})", ATT_SEARCH_TERM, searchParam);
 		
-		ArrayList<ComputerDTO> computerArray = pageController.getCurrentPage();
-		request.setAttribute(COMPUTER_LIST, computerArray);
+		page.setSearchTerm(searchParam);
 	}
-	
-	private void startSearch(HttpServletRequest request) {
-		logger.info("User started search");		
-		request.getSession().setAttribute(ATT_ITEM_TO_SEARCH, request.getParameter(PARAM_SEARCH));		
-		logger.debug("Added attribute ({}, {})", ATT_ITEM_TO_SEARCH, request.getParameter(PARAM_SEARCH));
 		
-		pageController.resetOrder();
-		pageController.setSearchTerm(request.getParameter(PARAM_SEARCH));
-		pageController.setToPage(1);
-		setSearchResults(request);
-	}
-	
-	private void endSearch(HttpServletRequest request) {
-		logger.info("User ended search");
-		request.getSession().removeAttribute(ATT_ITEM_TO_SEARCH);
-		logger.debug("Removed itemToSearch attribute from session");
-		
-		pageController.resetOrder();
-		pageController.cancelSearch();
-		pageController.setToPage(1);
-		setComputersList(request);
-	}
-	
 	private void deleteComputers(HttpServletRequest request) {
 		String[] checkboxesIds = request.getParameterValues(PARAM_ITEMS_TO_DELETE);
 		ArrayList<Long> idsToDelete = new ArrayList<Long>();
@@ -141,7 +113,7 @@ public class ListComputers extends HttpServlet {
 	}
 	
 	private void orderSelection(HttpServletRequest request) {
-		pageController.setOrder(request.getParameter(PARAM_ORDER));
+		page.setOrderBy(request.getParameter(PARAM_ORDER));
 	}
 	
 }

@@ -3,10 +3,10 @@ package com.excilys.mantegazza.cdb.enums;
 public enum OrderBy {
 	none("computer.id"), computerName("computer.name"), introduced("introduced"), discontinued("discontinued"), companyName("company.name");
 
-	private final String name;
+	private final String word;
 	
 	OrderBy(String name) {
-		this.name = name;
+		this.word = name;
 	}
 	
 	public static OrderBy getOrderBy(String name) {
@@ -24,7 +24,7 @@ public enum OrderBy {
 		}
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getSQLKeyword() {
+		return this.word;
 	}
 }

@@ -12,9 +12,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
+import com.excilys.mantegazza.cdb.service.Page;
 
 public class ComputerDAO {
 	
@@ -24,16 +26,12 @@ public class ComputerDAO {
 	
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
-	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
-	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
-	private final String queryGetSelectionOrdered = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY %s %s LIMIT ? OFFSET ?";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
 	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
-	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
-	private final String queryOrderedLimitedSearchByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s %s LIMIT ? OFFSET ?";
-	private final String querySearchByName = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id";
+	private final String queryOrderedLimitedSearch = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s %s LIMIT ? OFFSET ?";
+	private final String queryCount = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id";
 	
 	
 	/**
@@ -94,11 +92,18 @@ public class ComputerDAO {
 	 */
 	public ArrayList<Computer> getAll() {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
+		
+		String query = String.format(queryOrderedLimitedSearch, OrderBy.none.getSQLKeyword(), Order.ascending.getSQLKeyword());
 		try (
 				Connection co = DataSource.getConnection();
 			) {
-			PreparedStatement ps = co.prepareStatement(queryGetAll);
+			PreparedStatement ps = co.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
+			ps.setString(1, "%%");
+			ps.setString(2, "%%");
+			ps.setLong(3, Long.MAX_VALUE);
+			ps.setInt(4, 0);
+			
 			computers = mapper.mapToComputerArray(rs);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -107,46 +112,22 @@ public class ComputerDAO {
 		return computers;
 	}
 	
-	/**
-	 * Execute a SQL query to fetch a selected number of computers from the database.
-	 * The computers are ordered by their id.
-	 * @param numberToReturn The number of computers to fetch from the database
-	 * @param offset The index of row from which to start the selection. 0 to start from the first row (included).
-	 * @return An ArrayList of Computer objects in the database, of size numberToReturn at most (less if the end of the database has been reached)
-	 */
-	public ArrayList<Computer> getSelection(int numberToReturn, int offset) {
-		ArrayList<Computer> computers = new ArrayList<Computer>();
-		try (
-				Connection co = DataSource.getConnection();
-			) {
-			PreparedStatement ps = co.prepareStatement(queryGetSelection);
-			ps.setInt(1, numberToReturn);
-			ps.setInt(2, offset);
-			ResultSet rs = ps.executeQuery();
-			computers = mapper.mapToComputerArray(rs);
-			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-		return computers;
-	}
-	
-	public ArrayList<Computer> getSelection(int numberToReturn, int offset, OrderBy orderColumn, boolean ascending) {
+	public ArrayList<Computer> getSelection(Page page) {
 		ArrayList<Computer> computers = new ArrayList<Computer>();
 		
-		String orderType = ascending ? "ASC" : "DESC";
-		String query = String.format(queryGetSelectionOrdered, mapper.orderColumnToSQL(orderColumn), orderType);
+		String query = String.format(queryOrderedLimitedSearch, page.getOrderBy().getSQLKeyword(), page.getOrder().getSQLKeyword());
 		try (
 				Connection co = DataSource.getConnection();
-			) {
+				) {
 			PreparedStatement ps = co.prepareStatement(query);
-			
-			ps.setInt(1, numberToReturn);
-			ps.setInt(2, offset);
+			ps.setString(1, "%" + page.getSearchTerm() + "%");
+			ps.setString(2, "%" + page.getSearchTerm() + "%");
+			ps.setInt(3, page.getItemsPerPage());
+			ps.setInt(4, page.getRowOffset());
 			
 			ResultSet rs = ps.executeQuery();
 			computers = mapper.mapToComputerArray(rs);
-			logger.debug("Retrieved computer selection of maximum size " + numberToReturn + " from database.");
+			logger.debug("Retrieved computer selection of size " + computers.size() + " from database.");
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -157,6 +138,47 @@ public class ComputerDAO {
 	 * Execute a SQL query to insert a Computer object data into the database.
 	 * @param computer The Computer object to insert into the database
 	 */
+	/**
+	 * Execute a SQL query to fetch the number of Computer objects in the database.
+	 * @return An int corresponding to the number of rows in the computer database
+	 */
+	public int getCount() {
+		int count = 0;
+		try (
+				Connection co = DataSource.getConnection();
+				) {
+			PreparedStatement ps = co.prepareStatement(queryCount);
+			ps.setString(1, "%%");
+			ps.setString(2, "%%");
+			
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			count = rs.getInt("rowcount");
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return count;
+	}
+	
+	public int getCount(Page page) {
+		int count = 0;
+		try (
+				Connection co = DataSource.getConnection();
+				) {
+			PreparedStatement ps = co.prepareStatement(queryCount);
+			ps.setString(1, "%" + page.getSearchTerm() + "%");
+			ps.setString(2, "%" + page.getSearchTerm() + "%");
+			
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			count = rs.getInt("rowcount");
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return count;
+	}
+	
+	
 	public void create(Computer computer) {
 		try (
 				Connection co = DataSource.getConnection();
@@ -283,82 +305,5 @@ public class ComputerDAO {
 		}
 	}
 	
-	/**
-	 * Execute a SQL query to fetch the number of Computer objects in the database.
-	 * @return An int corresponding to the number of rows in the computer database
-	 */
-	public int getCount() {
-		int count = 0;
-		try (
-				Connection co = DataSource.getConnection();
-			) {
-			PreparedStatement ps = co.prepareStatement(queryGetCount);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			count = rs.getInt("rowcount");
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-		return count;
-	}
-	
-	public ArrayList<Computer> searchByName(String name, int limit, int offset) {
-		return searchByNameOrdered(name, limit, offset, OrderBy.none, true);
-	}
-	
-	/**
-	 * Search for a list of computer, specifying the name to search for, the search boundaries,
-	 * as well as how to order the result.
-	 * @param name The name of the computer or company to search for
-	 * @param limit The number of Computers the search will be returning
-	 * @param offset The row starting from which the Computers will be returned
-	 * @param orderColumn An enum matching the columns used to order the result
-	 * @param ascending If true, results will be ordered by ascending order, and if false, by descending order
-	 * @return ArrayList of computers, filtered and ordered according to the search parameters
-	 */
-	public ArrayList<Computer> searchByNameOrdered(String name, int limit, int offset, OrderBy orderColumn, boolean ascending) {
-		ArrayList<Computer> computers = new ArrayList<Computer>();
-		
-		String orderType = ascending ? "ASC" : "DESC";
-		String query = String.format(queryOrderedLimitedSearchByName, mapper.orderColumnToSQL(orderColumn), orderType);
-		try (
-				Connection co = DataSource.getConnection();
-			) {
-			PreparedStatement ps = co.prepareStatement(query);
-			ps.setString(1, "%" + name + "%");
-			ps.setString(2, "%" + name + "%");
-			ps.setInt(3, limit);
-			ps.setInt(4, offset);
-			
-			logger.info("Executed query : {}", ps.toString());
-			ResultSet rs = ps.executeQuery();
-			
-			computers = mapper.mapToComputerArray(rs);
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-		
-		logger.debug("Retrieved {} computers from database.", computers.size());
-		
-		return computers;
-	}
-	
-	public int getSearchCount(String name) {
-		int count = 0;
-		try (
-				Connection co = DataSource.getConnection();
-			) {
-			PreparedStatement ps = co.prepareStatement(querySearchByName);
-			ps.setString(1, "%" + name + "%");
-			ps.setString(2, "%" + name + "%");
-			ResultSet rs = ps.executeQuery();
-			
-			rs.next();
-			count = rs.getInt("rowcount");
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
-		return count;
-	}
 	
 }

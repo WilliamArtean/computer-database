@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
@@ -48,17 +47,8 @@ public class ComputerService {
 		return dao.getAll();
 	}
 	
-	/**
-	 * Get a selected number of computers from the database.
-	 * @param numberToGet The number of computers to return.
-	 * @param rowOffset The offset from which to start the selection. 0 to start from the first row (included)
-	 * @return An ArrayList of Computer objects in the database, of size numberToReturn at most (less if the end of the database has been reached)
-	 */
-	public ArrayList<Computer> getComputerSelection(int numberToGet, int rowOffset) {
-		return dao.getSelection(numberToGet, rowOffset);
-	}
-	public ArrayList<Computer> getComputerSelection(int numberToGet, int rowOffset, OrderBy orderColumn, boolean ascendant) {
-		return dao.getSelection(numberToGet, rowOffset, orderColumn, ascendant);
+	public ArrayList<Computer> getComputerSelection(Page page) {
+		return dao.getSelection(page);
 	}
 	
 	/**
@@ -69,16 +59,8 @@ public class ComputerService {
 		return dao.getCount();
 	}
 	
-	public ArrayList<Computer> search(String name, int limit, int offset) {
-		return dao.searchByName(name, limit, offset);
-	}
-	
-	public ArrayList<Computer> search(String name, int limit, int offset, OrderBy orderColumn, boolean ascendant) {
-		return dao.searchByNameOrdered(name, limit, offset, orderColumn, ascendant);
-	}
-	
-	public int getSearchCount(String name) {
-		return dao.getSearchCount(name);
+	public int getCount(Page page) {
+		return dao.getCount(page);
 	}
 	
 	/**

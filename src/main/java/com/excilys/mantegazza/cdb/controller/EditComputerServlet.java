@@ -84,11 +84,6 @@ public class EditComputerServlet extends HttpServlet {
 		if (errors.isEmpty()) {
 			Computer newComputer = computerMapper.dtoToComputer(computerDTOToUpdate);
 			computerService.update(currentComputerName, newComputer);
-			
-			WebPageController pageController = (WebPageController) request.getSession().getAttribute(ATT_PAGE_CONTROLLER);
-			if (pageController != null) {
-				pageController.refreshPage();
-			}
 		}
 		
 		doGet(request, response);

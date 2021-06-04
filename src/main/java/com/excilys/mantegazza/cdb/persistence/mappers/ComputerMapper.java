@@ -66,19 +66,4 @@ public class ComputerMapper {
 		return computers;
 	}
 	
-	public String orderColumnToSQL(OrderBy columnToOrder) {
-		switch (columnToOrder) {
-		case computerName:
-			return "computer.name";
-		case introduced:
-			return "introduced";
-		case discontinued:
-			return "discontinued";
-		case companyName:
-			return "company.name";
-		default:
-			return "computer.id";
-		}
-	}
-	
 }
