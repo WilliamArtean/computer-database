@@ -36,10 +36,10 @@ public class TestComputerService {
 	@BeforeEach
 	public void setUpService() {
 		computerDB = new ArrayList<Computer>();
-		computerDB.add(new Computer.ComputerBuilder("Computer 1").build());
-		computerDB.add(new Computer.ComputerBuilder("Computer 2").build());
-		computerDB.add(new Computer.ComputerBuilder("Computer 3").build());
-		computerDB.add(new Computer.ComputerBuilder("Computer 4").build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 1").withID(1001).build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 2").withID(1002).build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 3").withID(1003).build());
+		computerDB.add(new Computer.ComputerBuilder("Computer 4").withID(1004).build());
 		
 		service = new ComputerService();
 		MockitoAnnotations.openMocks(this);
@@ -73,18 +73,6 @@ public class TestComputerService {
 	}
 	
 	@Test
-	public void testGetSelection() {
-		ArrayList<Computer> computerSelection = new ArrayList<Computer>();
-		computerSelection.add(computerDB.get(1));
-		computerSelection.add(computerDB.get(2));
-		
-		when(dao.getSelection(2, 1)).thenReturn(computerSelection);
-		
-		ArrayList<Computer> computersReturned = service.getComputerSelection(2, 1);
-		assertEquals(computersReturned, computerSelection);
-	}
-	
-	@Test
 	public void testCount() {
 		when(dao.getCount()).thenReturn(computerDB.size());
 		assertEquals(service.getCount(), computerDB.size());
@@ -92,7 +80,7 @@ public class TestComputerService {
 	
 	@Test
 	public void testUpdateComputer() throws InconsistentDatesException {
-		String oldName = "Old computer";
+		long id = 999999L;
 		String newName = "New computer";
 		LocalDate introduced = LocalDate.of(2000, 10, 31);
 		LocalDate discontinued = LocalDate.of(2020, 8, 9);
@@ -100,6 +88,7 @@ public class TestComputerService {
 		
 		Computer updatedComputer = new Computer.ComputerBuilder()
 				.withName(newName)
+				.withID(id)
 				.withIntroduced(introduced)
 				.withDiscontinued(discontinued)
 				.withCompany(company)
@@ -107,29 +96,29 @@ public class TestComputerService {
 		
 		when(companyService.getCompany(company.getName())).thenReturn(Optional.of(company));
 		
-		service.update(oldName, updatedComputer);
-		verify(dao).update(oldName, updatedComputer);
+		service.update(id, updatedComputer);
+		verify(dao).update(id, updatedComputer);
 	}
 	
 	@Test
 	public void testUpdateEmptyComputer() throws InconsistentDatesException {
-		String oldName = "Old computer";
-		Computer updatedComputer = new Computer.ComputerBuilder().withName(oldName).build();
+		long id = 999999L;
+		Computer updatedComputer = new Computer.ComputerBuilder().withID(id).build();
 		
-		service.update(oldName, updatedComputer);
-		verify(dao).update(oldName, updatedComputer);
+		service.update(id, updatedComputer);
+		verify(dao).update(id, updatedComputer);
 	}
 	
 	@Test
 	public void updateWithNonExistingCompany() throws InconsistentDatesException {
-		String oldName = "computer 1";
-		Computer computerWithoutCompany = new Computer.ComputerBuilder().withName(oldName).build();
+		long id = 999999L;
+		Computer computerWithoutCompany = new Computer.ComputerBuilder().withID(id).build();
 		Company ghostCompany = new Company.CompanyBuilder("Non-existing company").build();
 		
 		when(companyService.getCompany(ghostCompany.getName())).thenReturn(Optional.empty());
 		
-		service.update(oldName, computerWithoutCompany);
-		verify(dao).update(oldName, computerWithoutCompany);
+		service.update(id, computerWithoutCompany);
+		verify(dao).update(id, computerWithoutCompany);
 	}
 	
 	@Test
