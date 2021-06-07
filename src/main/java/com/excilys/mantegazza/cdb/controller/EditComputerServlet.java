@@ -46,8 +46,6 @@ public class EditComputerServlet extends HttpServlet {
 	
 	public static final String ERRORS = "errors";
 	
-	private String currentComputerName;
-	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
@@ -60,7 +58,6 @@ public class EditComputerServlet extends HttpServlet {
 			if (computerToEdit.isPresent()) {
 				ComputerDTO dtoToEdit = computerMapper.computerToDTO(computerToEdit.get());
 				request.setAttribute(ATT_COMPUTER_TO_EDIT, dtoToEdit);
-				currentComputerName = dtoToEdit.getName();
 				
 				this.getServletContext().getRequestDispatcher(VIEW_EDIT_COMPUTER).forward(request, response);
 			} else {

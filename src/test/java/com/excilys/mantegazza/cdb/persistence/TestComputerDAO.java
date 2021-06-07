@@ -23,7 +23,6 @@ import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 public class TestComputerDAO {
 
 	private final String queryGetAll = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id";
-	private final String queryGetSelection = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id ORDER BY computer.id LIMIT ? OFFSET ?";
 	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM computer";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
@@ -98,21 +97,6 @@ public class TestComputerDAO {
 		ArrayList<Computer> sourceComputers = mapper.mapToComputerArray(rs);
 		
 		ArrayList<Computer> fetchedComputers = computerDAOSUT.getAll();
-		assertFalse(fetchedComputers.isEmpty());
-		assertEquals(sourceComputers, fetchedComputers);
-	}
-	
-	@Test
-	public void getComputerSelection() throws SQLException {
-		ComputerMapper mapper = new ComputerMapper();
-		PreparedStatement ps = co.prepareStatement(queryGetSelection);
-		ps.setInt(1, 10);
-		ps.setInt(2, 20);
-		ResultSet rs = ps.executeQuery();
-		
-		ArrayList<Computer> sourceComputers = mapper.mapToComputerArray(rs);
-		
-		ArrayList<Computer> fetchedComputers = computerDAOSUT.getSelection(10, 20);
 		assertFalse(fetchedComputers.isEmpty());
 		assertEquals(sourceComputers, fetchedComputers);
 	}
@@ -195,7 +179,7 @@ public class TestComputerDAO {
 				.withCompany(ti)
 				.build();
 		
-		computerDAOSUT.update(oldComputer.get().getName(), newComputer);
+		computerDAOSUT.update(oldComputer.get().getID(), newComputer);
 		
 		PreparedStatement ps = co.prepareStatement(queryGetByName);
 		ps.setString(1, newComputer.getName());
@@ -206,7 +190,7 @@ public class TestComputerDAO {
 		assertTrue(updatedComputer.isPresent());
 		assertEquals(newComputer, updatedComputer.get());
 		
-		computerDAOSUT.update(updatedComputer.get().getName(), oldComputer.get());
+		computerDAOSUT.update(updatedComputer.get().getID(), oldComputer.get());
 	}
 	
 	@Test
@@ -224,7 +208,7 @@ public class TestComputerDAO {
 				.withID(oldComputer.get().getID())
 				.build();
 		
-		computerDAOSUT.update(oldComputer.get().getName(), newComputer);
+		computerDAOSUT.update(oldComputer.get().getID(), newComputer);
 		
 		PreparedStatement ps = co.prepareStatement(queryGetByID);
 		ps.setLong(1, oldComputer.get().getID());
@@ -235,7 +219,7 @@ public class TestComputerDAO {
 		assertTrue(updatedComputer.isPresent());
 		assertEquals(newComputer, updatedComputer.get());
 		
-		computerDAOSUT.update(updatedComputer.get().getName(), oldComputer.get());
+		computerDAOSUT.update(updatedComputer.get().getID(), oldComputer.get());
 	}
 	
 	@Test
