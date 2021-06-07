@@ -8,28 +8,20 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mantegazza.cdb.model.Computer;
-import com.excilys.mantegazza.cdb.service.ComputerService;
+import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.service.Page;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
 public class PageController {
 
 	private CLIPageView view;
-	private ComputerService service;
+	private Page page;
 	private int currentPageIndex = 0;
-	private final int numberOfPages;
-	private final int itemsPerPage = 10;
-	private ArrayList<Computer> list = new ArrayList<Computer>();
+	private ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private Logger logger = LoggerFactory.getLogger(PageController.class);
 	
-	/**
-	 * @return the total number of pages in the view.
-	 */
-	public int getNumberOfPages() {
-		return numberOfPages;
-	}
 	/**
 	 * @return the index of the currently displayed page. First page index is 0, second page index is 1,...
 	 */
@@ -40,12 +32,11 @@ public class PageController {
 	/**
 	 * Creates a PageController to show a list of computers using a view with pagination.
 	 * @param view The Page view the PageController will send the data to output.
-	 * @param service The service for Computer objects the PageController will use
 	 */
-	public PageController(CLIPageView view, ComputerService service) {
+	public PageController(CLIPageView view) {
 		this.view = view;
-		this.service = service;
-		this.numberOfPages = ((service.getCount() - 1) / itemsPerPage) + 1;
+		page = new Page();
+		page.setItemsPerPage(10);
 	}
 	
 	/**
@@ -71,9 +62,12 @@ public class PageController {
 	 */
 	private void newPage() {
 		clear();
-		logger.debug("Selecting {} computers from ComputerService", itemsPerPage);
-		list = service.getComputerSelection(itemsPerPage, itemsPerPage * currentPageIndex);
-		for (Computer computer : list) {
+		
+		Page page  = new Page();
+		page.setToPage(currentPageIndex + 1);
+		page.refreshPage();
+		list = page.getCurrentPage();
+		for (ComputerDTO computer : list) {
 			nameList.add(computer.getName());
 		}
 		view.displayPage(nameList);
@@ -89,7 +83,7 @@ public class PageController {
 		
 		String userInput = "";
 		do {
-			view.displayPagination(currentPageIndex, numberOfPages);
+			view.displayPagination(currentPageIndex, page.getNumberOfPages());
 			userInput = getInput();
 			switch (userInput) {
 			case "p":
@@ -123,7 +117,7 @@ public class PageController {
 	 * Do nothing if the current page is already the last one.
 	 */
 	public void nextPage() {
-		if (currentPageIndex < (numberOfPages - 1)) {
+		if (currentPageIndex < (page.getNumberOfPages() - 1)) {
 			currentPageIndex++;
 			newPage();
 		}

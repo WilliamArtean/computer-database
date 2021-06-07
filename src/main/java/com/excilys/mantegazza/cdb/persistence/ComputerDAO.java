@@ -29,7 +29,7 @@ public class ComputerDAO {
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	private final String queryDeleteByName = "DELETE FROM computer WHERE name=?";
 	private final String queryCreate = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?)";
-	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE name=?";
+	private final String queryUpdate = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final String queryOrderedLimitedSearch = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY %s %s LIMIT ? OFFSET ?";
 	private final String queryCount = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE ? OR company.name LIKE ? ORDER BY computer.id";
 	
@@ -211,11 +211,11 @@ public class ComputerDAO {
 	/**
 	 * Updates all the field in the chosen computer with the one from the updated computer.
 	 * If the name of the updated computer is null, the previous value will remain
-	 * @param computerName the name of the computer to update
+	 * @param computerId the id of the computer to update
 	 * @param updatedComputer the updated computer containing the new fields
 	 * @throws SQLException
 	 */
-	public void update(String computerName, Computer updatedComputer) {
+	public void update(long computerId, Computer updatedComputer) {
 		try (
 				Connection co = DataSource.getConnection();
 			) {
@@ -240,8 +240,9 @@ public class ComputerDAO {
 			} else {
 				ps.setNull(4, Types.BIGINT);
 			}
-			ps.setString(5, computerName);
+			ps.setLong(5, computerId);
 			
+			logger.debug("Executing update query: {}", ps);
 			ps.executeUpdate();
 			logger.debug("Computer updated in database: " + updatedComputer.toString());
 		} catch (SQLException e) {

@@ -72,6 +72,7 @@ public class EditComputerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		long computerId = Long.parseLong(request.getParameter(PARAM_ID_COMPUTER_TO_EDIT));
 		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));
 		String computerName = request.getParameter(PARAM_COMPUTER_NAME);
 		String introduced = request.getParameter(PARAM_INTRODUCED);
@@ -83,7 +84,7 @@ public class EditComputerServlet extends HttpServlet {
 		
 		if (errors.isEmpty()) {
 			Computer newComputer = computerMapper.dtoToComputer(computerDTOToUpdate);
-			computerService.update(currentComputerName, newComputer);
+			computerService.update(computerId, newComputer);
 		}
 		
 		doGet(request, response);

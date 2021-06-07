@@ -75,13 +75,13 @@ public class ComputerService {
 	
 	/**
 	 * Updates a computer in the database.
-	 * @param oldName The name of the computer to update (required)
+	 * @param computerId The id of the computer to update (required)
 	 * @param newComputer The computer with the new data
 	 * If null, the new Computer object with have the previous name instead
 	 * @throws InconsistentDatesException 
 	 */
-	public void update(String oldName, Computer newComputer) {
-		dao.update(oldName, newComputer);
+	public void update(long computerId, Computer newComputer) {
+		dao.update(computerId, newComputer);
 	}
 	
 	/**

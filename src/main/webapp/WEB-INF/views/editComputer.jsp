@@ -36,7 +36,7 @@
                     </c:if>
 
                     <form action="editComputer" method="POST">
-                        <input type="hidden" value="${ computerToEdit.id }" id="id"/> <!-- TODO: Change this value with the computer id -->
+                        <input type="hidden" value="${ computerToEdit.id }" id="id" name="id"/> <!-- TODO: Change this value with the computer id -->
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>

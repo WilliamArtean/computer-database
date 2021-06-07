@@ -39,7 +39,7 @@ public class CLIController {
 		this.view = view;
 		this.computerService = computerService;
 		this.companyService = companyService;
-		this.pageController = new PageController(new CLIPageView(), computerService);
+		this.pageController = new PageController(new CLIPageView());
 		this.scanner = new Scanner(System.in);
 	}
 	
@@ -250,13 +250,20 @@ public class CLIController {
 		Optional<String> companyName = Optional.empty();
 		
 		String computerName = "";
+		Optional<Computer> computerToUpdate = Optional.empty();
 		do {
 			System.out.println("Enter the name of the computer to update:");
 			computerName = getInput();
 			if (computerName.isEmpty()) {
 				view.noNameEnteredForComputer();
+			} else {
+				computerToUpdate = computerService.getComputer(computerName);
+				if (computerToUpdate.isEmpty()) {
+					System.out.println("No computer with such name.");
+				}
 			}
-		} while (computerName.isEmpty());
+		} while (computerToUpdate.isEmpty());
+		
 		
 		System.out.println("Enter new computer name (press Enter to keep the previous name):");
 		String newComputerNameInput = getInput();
@@ -284,7 +291,7 @@ public class CLIController {
 		Computer newComputer = computerMapper.cliInputToComputer(newComputerName, introduced, discontinued, companyName);
 		
 		
-		computerService.update(computerName, newComputer);
+		computerService.update(computerToUpdate.get().getID(), newComputer);
 	}
 	
 	/**
