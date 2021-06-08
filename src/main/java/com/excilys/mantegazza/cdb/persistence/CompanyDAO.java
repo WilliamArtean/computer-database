@@ -9,14 +9,20 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.persistence.mappers.CompanyMapper;
 
+@Repository
 public class CompanyDAO {
 
+	@Autowired
+	private CompanyMapper mapper;
+	@Autowired
+	private DataSource dataSource;
 	private Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	private CompanyMapper mapper = new CompanyMapper();
 	
 	private final String queryGetByID = "SELECT id, name FROM company WHERE id=?";
 	private final String queryGetByName = "SELECT id, name FROM company WHERE name=?";
@@ -34,7 +40,7 @@ public class CompanyDAO {
 	public Optional<Company> getByID(long id) {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByID);
 			ps.setLong(1, id);
@@ -54,7 +60,7 @@ public class CompanyDAO {
 	public Optional<Company> getByName(String name) {
 		Optional<Company> company = Optional.empty();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByName);
 			ps.setString(1, name);
@@ -74,7 +80,7 @@ public class CompanyDAO {
 	public ArrayList<Company> getAll() {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetAll);
 			ResultSet rs = ps.executeQuery();
@@ -95,7 +101,7 @@ public class CompanyDAO {
 	public ArrayList<Company> getSelection(int numberToReturn, int offset) {
 		ArrayList<Company> companies = new ArrayList<Company>();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetSelection);
 			ps.setInt(1, numberToReturn);
@@ -115,7 +121,7 @@ public class CompanyDAO {
 	public int getCount() {
 		int count = 0;
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetCount);
 			ResultSet rs = ps.executeQuery();
@@ -131,7 +137,7 @@ public class CompanyDAO {
 	public void delete(String name) {
 		Connection co = null;
 		try {
-			co = DataSource.getConnection();
+			co = dataSource.getConnection();
 			co.setAutoCommit(false);
 			
 			PreparedStatement psComputers = co.prepareStatement(queryDeleteAssociatedComputers);

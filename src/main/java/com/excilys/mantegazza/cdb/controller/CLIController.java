@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import com.excilys.mantegazza.cdb.enums.MenuInput;
 import com.excilys.mantegazza.cdb.model.Company;
@@ -17,46 +19,23 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.ui.CLIView;
-import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
+@Controller
 public class CLIController {
 
+	@Autowired
 	private CLIView view;
+	@Autowired
+	private CLIComputerMapper computerMapper;
+	@Autowired
 	private ComputerService computerService;
+	@Autowired
 	private CompanyService companyService;
+	@Autowired
 	private PageController pageController;
-	private Scanner scanner;
+	private Scanner scanner = new Scanner(System.in);
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private Logger logger = LoggerFactory.getLogger(CLIController.class);
-
-	/**
-	 * Creates a CLIController that processes user input through CLI.
-	 * @param view The view that will display the output in the CLI
-	 * @param computerService The service for Computer objects the CLIController will use
-	 * @param companyService The service for Company objects the CLIController will use
-	 */
-	public CLIController(CLIView view, ComputerService computerService, CompanyService companyService) {
-		this.view = view;
-		this.computerService = computerService;
-		this.companyService = companyService;
-		this.pageController = new PageController(new CLIPageView());
-		this.scanner = new Scanner(System.in);
-	}
-	
-	/**
-	 * Set the view that will be used by the CLIController.
-	 * @param view The view that will display the output in the CLI
-	 */
-	public void setView(CLIView view) {
-		this.view = view;
-	}
-	public void setScanner(Scanner sc) {
-		this.scanner = sc;
-	}
-	
-	public void setPageController(PageController pageController) {
-		this.pageController = pageController;
-	}
 
 	/**
 	 * Returns the user input from the CLI.
@@ -233,7 +212,6 @@ public class CLIController {
 			companyName = Optional.of(companyNameInput);
 		}
 		
-		CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
 		Computer computerToCreate = computerMapper.cliInputToComputer(Optional.of(computerName), introduced, discontinued, companyName);
 		computerService.create(computerToCreate);
 	}
@@ -287,7 +265,6 @@ public class CLIController {
 			companyName = Optional.of(companyNameInput);
 		}
 		
-		CLIComputerMapper computerMapper = new CLIComputerMapper(companyService);
 		Computer newComputer = computerMapper.cliInputToComputer(newComputerName, introduced, discontinued, companyName);
 		
 		

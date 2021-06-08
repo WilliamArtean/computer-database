@@ -70,8 +70,17 @@ public class Company {
 		//Optional parameters
 		private long id;
 		
+		public CompanyBuilder() {
+			
+		}
+		
 		public CompanyBuilder(String name) {
 			this.name = name;
+		}
+		
+		public CompanyBuilder withName(String name) {
+			this.name = name;
+			return this;
 		}
 		
 		public CompanyBuilder withID(long id) {

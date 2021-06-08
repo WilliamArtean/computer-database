@@ -3,6 +3,9 @@ package com.excilys.mantegazza.cdb.ui;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CLIPageView {
 	
 	/**

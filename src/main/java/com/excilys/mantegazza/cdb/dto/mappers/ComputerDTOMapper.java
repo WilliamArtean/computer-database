@@ -3,18 +3,19 @@ package com.excilys.mantegazza.cdb.dto.mappers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Optional;
+
+import org.springframework.stereotype.Component;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.model.Company;
+import com.excilys.mantegazza.cdb.model.Company.CompanyBuilder;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
-import com.excilys.mantegazza.cdb.service.CompanyService;
 
+@Component
 public class ComputerDTOMapper {
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private CompanyService companyService = new CompanyService();
 	
 	public ComputerDTO createComputerDTO(String name, String id, String introduced, String discontinued, long companyId) {
 		ComputerDTO computerDTO = new ComputerDTO();
@@ -84,10 +85,11 @@ public class ComputerDTOMapper {
 		}
 		
 		if (computerDTO.getCompanyId() != 0) {
-			Optional<Company> company = companyService.getCompany(computerDTO.getCompanyId());
-			if (company.isPresent()) {
-				computerbuilder.withCompany(company.get());
+			CompanyBuilder companyBuilder = new Company.CompanyBuilder().withID(computerDTO.getCompanyId());
+			if (!computerDTO.getCompanyName().isEmpty()) {
+				companyBuilder.withName(computerDTO.getCompanyName());
 			}
+			computerbuilder.withCompany(companyBuilder.build());
 		}
 		
 		//TODO Ajouter validation back

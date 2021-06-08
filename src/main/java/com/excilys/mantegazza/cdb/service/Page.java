@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.dto.mappers.ComputerDTOMapper;
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 
+@Service
 public class Page {
 
 	private int currentPageIndex = 0;
@@ -21,14 +24,11 @@ public class Page {
 	private Order order = Order.ascending;
 	private ArrayList<ComputerDTO> dtoList = new ArrayList<ComputerDTO>();
 	
+	@Autowired
 	private ComputerService service;
-	private ComputerDTOMapper dtoMapper = new ComputerDTOMapper();
+	@Autowired
+	private ComputerDTOMapper dtoMapper;
 	private Logger logger = LoggerFactory.getLogger(Page.class);
-	
-	
-	public Page() {
-		this.service = new ComputerService();
-	}
 	
 	
 	public void refreshPage() {

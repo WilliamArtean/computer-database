@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.excilys.mantegazza.cdb.enums.OrderBy;
+import org.springframework.stereotype.Component;
+
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
 
+@Component
 public class ComputerMapper {
 
 	/**
