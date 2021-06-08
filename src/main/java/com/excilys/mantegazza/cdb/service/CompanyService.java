@@ -3,12 +3,17 @@ package com.excilys.mantegazza.cdb.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
 
+@Service
 public class CompanyService {
 	
-	private CompanyDAO companyDAO = new CompanyDAO();
+	@Autowired
+	private CompanyDAO companyDAO;
 	
 	/**
 	 * Set a CompanyDAO from which to get the companies from the database.

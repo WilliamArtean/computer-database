@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,12 +11,18 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.service.Page;
 
-@WebServlet(urlPatterns  = "/computers")
+@Controller
+@RequestMapping("/computers")
 public class ListComputers extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -34,26 +39,30 @@ public class ListComputers extends HttpServlet {
 	public static final String PARAM_SEARCH = "search";
 	public static final String PARAM_ORDER = "orderBy";
 
-	private ComputerService computerService = new ComputerService();
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
 	private Page page;
 	private Logger logger = LoggerFactory.getLogger(ListComputers.class);
 	
 	@Override
+	@GetMapping
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initPageAttribute(request);
 		processParameters(request);
 		fetchComputers(request);
 		
-		this.getServletContext().getRequestDispatcher(VIEW_COMPUTER).forward(request, response);
+		request.getRequestDispatcher(VIEW_COMPUTER).forward(request, response);
 	}
 
 	@Override
+	@PostMapping
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameterMap().containsKey(PARAM_ITEMS_TO_DELETE)) {
 			deleteComputers(request);
 		}
 		
-		this.getServletContext().getRequestDispatcher(VIEW_COMPUTER).forward(request, response);
+		doGet(request, response);
 	}
 	
 	
@@ -65,11 +74,10 @@ public class ListComputers extends HttpServlet {
 	
 	private void initPageAttribute(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		page = (Page) session.getAttribute(ATT_PAGE);
+		Page sessionPage = (Page) session.getAttribute(ATT_PAGE);
 		
-		if (page == null) {
-			page = new Page();
-			session.setAttribute(ATT_PAGE, page);
+		if (sessionPage == null) {
+			session.setAttribute(ATT_PAGE, this.page);
 			logger.debug("Set session attribute ({}, Page)", ATT_PAGE);
 		}
 	}

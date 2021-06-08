@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
@@ -18,11 +20,15 @@ import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 import com.excilys.mantegazza.cdb.service.Page;
 
+@Repository
 public class ComputerDAO {
 	
-	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	@Autowired
+	private ComputerMapper mapper;
+	@Autowired
+	private DataSource dataSource;
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private ComputerMapper mapper = new ComputerMapper();
+	private Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
 	private final String queryGetByName = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name=?";
@@ -42,7 +48,7 @@ public class ComputerDAO {
 	public Optional<Computer> getByID(long id) {
 		Optional<Computer> computer = Optional.empty();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByID);
 			ps.setLong(1, id);
@@ -68,7 +74,7 @@ public class ComputerDAO {
 	public Optional<Computer> getByName(String name) {
 		Optional<Computer> computer = Optional.empty();
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryGetByName);
 			ps.setString(1, name);
@@ -95,7 +101,7 @@ public class ComputerDAO {
 		
 		String query = String.format(queryOrderedLimitedSearch, OrderBy.none.getSQLKeyword(), Order.ascending.getSQLKeyword());
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
@@ -117,7 +123,7 @@ public class ComputerDAO {
 		
 		String query = String.format(queryOrderedLimitedSearch, page.getOrderBy().getSQLKeyword(), page.getOrder().getSQLKeyword());
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 				) {
 			PreparedStatement ps = co.prepareStatement(query);
 			ps.setString(1, "%" + page.getSearchTerm() + "%");
@@ -145,7 +151,7 @@ public class ComputerDAO {
 	public int getCount() {
 		int count = 0;
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 				) {
 			PreparedStatement ps = co.prepareStatement(queryCount);
 			ps.setString(1, "%%");
@@ -163,7 +169,7 @@ public class ComputerDAO {
 	public int getCount(Page page) {
 		int count = 0;
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 				) {
 			PreparedStatement ps = co.prepareStatement(queryCount);
 			ps.setString(1, "%" + page.getSearchTerm() + "%");
@@ -181,7 +187,7 @@ public class ComputerDAO {
 	
 	public void create(Computer computer) {
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryCreate);
 			ps.setString(1, computer.getName());
@@ -217,7 +223,7 @@ public class ComputerDAO {
 	 */
 	public void update(long computerId, Computer updatedComputer) {
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryUpdate);
 			if (updatedComputer.getName() != null) {
@@ -256,7 +262,7 @@ public class ComputerDAO {
 	 */
 	public void delete(long id) {
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryDeleteByID);
 			ps.setLong(1, id);
@@ -272,7 +278,7 @@ public class ComputerDAO {
 	 */
 	public void delete(String name) {
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			PreparedStatement ps = co.prepareStatement(queryDeleteByName);
 			ps.setString(1, name);
@@ -285,7 +291,7 @@ public class ComputerDAO {
 	
 	public void delete(ArrayList<Long> idsToDelete) {
 		try (
-				Connection co = DataSource.getConnection();
+				Connection co = dataSource.getConnection();
 			) {
 			co.setAutoCommit(false);
 			PreparedStatement ps = co.prepareStatement(queryDeleteByID);

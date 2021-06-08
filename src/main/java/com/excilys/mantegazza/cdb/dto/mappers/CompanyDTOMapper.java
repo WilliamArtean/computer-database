@@ -2,9 +2,12 @@ package com.excilys.mantegazza.cdb.dto.mappers;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.model.Company;
 
+@Component
 public class CompanyDTOMapper {
 	
 	public CompanyDTO createCompanyDTO(String id, String name) {

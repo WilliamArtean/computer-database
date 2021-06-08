@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
@@ -20,15 +25,21 @@ import com.excilys.mantegazza.cdb.service.CompanyService;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.validator.ComputerValidator;
 
-@WebServlet("/editComputer")
+@Controller
+@RequestMapping("/editComputer")
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-      
-	private CompanyService companyService = new CompanyService();
-	private ComputerService computerService = new ComputerService();
-	private CompanyDTOMapper companyMapper = new CompanyDTOMapper();
-	private ComputerDTOMapper computerMapper = new ComputerDTOMapper();
-	private ComputerValidator computerValidator = new ComputerValidator();
+    
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyDTOMapper companyMapper;
+	@Autowired
+	private ComputerDTOMapper computerMapper;
+	@Autowired
+	private ComputerValidator computerValidator;
 	
 	
 	public static final String SERVLET_LIST_COMPUTERS = "computers";
@@ -46,7 +57,8 @@ public class EditComputerServlet extends HttpServlet {
 	
 	public static final String ERRORS = "errors";
 	
-	
+	@Override
+	@GetMapping
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
@@ -59,7 +71,7 @@ public class EditComputerServlet extends HttpServlet {
 				ComputerDTO dtoToEdit = computerMapper.computerToDTO(computerToEdit.get());
 				request.setAttribute(ATT_COMPUTER_TO_EDIT, dtoToEdit);
 				
-				this.getServletContext().getRequestDispatcher(VIEW_EDIT_COMPUTER).forward(request, response);
+				request.getRequestDispatcher(VIEW_EDIT_COMPUTER).forward(request, response);
 			} else {
 				//Redirect to "computer not found" page?
 			}
@@ -67,7 +79,9 @@ public class EditComputerServlet extends HttpServlet {
 			response.sendRedirect(SERVLET_LIST_COMPUTERS);
 		}
 	}
-
+	
+	@Override
+	@PostMapping
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		long computerId = Long.parseLong(request.getParameter(PARAM_ID_COMPUTER_TO_EDIT));
 		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));

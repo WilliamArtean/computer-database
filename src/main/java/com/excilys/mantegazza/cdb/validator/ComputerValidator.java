@@ -5,10 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.exceptions.InexistentNameException;
 
+@Component
 public class ComputerValidator {
 
 	public static final String ERR_COMPUTER_NAME = "computerNameError";

@@ -5,13 +5,17 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
+@Service
 public class ComputerService {
 	
-	private ComputerDAO dao = new ComputerDAO();
+	@Autowired
+	private ComputerDAO dao;
 	private Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
 	/**

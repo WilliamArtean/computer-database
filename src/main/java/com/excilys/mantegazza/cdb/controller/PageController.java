@@ -7,20 +7,26 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.service.Page;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
+@Controller
 public class PageController {
 
+	@Autowired
 	private CLIPageView view;
+	@Autowired
 	private Page page;
+	private Logger logger = LoggerFactory.getLogger(PageController.class);
+	
 	private int currentPageIndex = 0;
 	private ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	private Logger logger = LoggerFactory.getLogger(PageController.class);
 	
 	/**
 	 * @return the index of the currently displayed page. First page index is 0, second page index is 1,...

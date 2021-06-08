@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.mantegazza.cdb.model.Company;
 
+@Component
 public class CompanyMapper {
 
 	public Optional<Company> mapToCompany(ResultSet rs) throws SQLException {
