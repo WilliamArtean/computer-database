@@ -16,6 +16,7 @@ public class ComputerRowMapper implements RowMapper<Computer> {
 	@Override
 	public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
+		computerBuilder.withName(rs.getString("computer.name"));
 		computerBuilder.withID(rs.getLong("computer.id"));
 		if (rs.getString("introduced") != null) {
 			computerBuilder.withIntroduced(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());

@@ -75,7 +75,7 @@ public class ComputerDAO {
 		String query = String.format(queryOrderedLimitedSearch, OrderBy.none.getSQLKeyword(), Order.ascending.getSQLKeyword());
 		
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("search", page.getSearchTerm());
+		namedParameters.addValue("search", "%" + page.getSearchTerm() + "%");
 		namedParameters.addValue("limit", page.getItemsPerPage());
 		namedParameters.addValue("offset", page.getRowOffset());
 		
@@ -90,7 +90,7 @@ public class ComputerDAO {
 	
 	public int getCount(Page page) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("search", page.getSearchTerm());
+		namedParameters.addValue("search", "%" + page.getSearchTerm() + "%");
 		return npJdbcTemplate.queryForObject(queryCount, namedParameters, Integer.class);
 	}
 	
