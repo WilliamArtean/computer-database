@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
@@ -25,7 +24,6 @@ import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.validator.ComputerValidator;
 
 @Controller
-@RequestMapping("/addComputer")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -49,7 +47,7 @@ public class AddComputerServlet extends HttpServlet {
 	public static final String ERRORS = "errors";
 	
 	@Override
-	@GetMapping
+	@GetMapping("/addComputer")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
@@ -58,7 +56,7 @@ public class AddComputerServlet extends HttpServlet {
 	}
 
 	@Override
-	@PostMapping
+	@PostMapping("/addComputer")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));
 		String computerName = request.getParameter(PARAM_COMPUTER_NAME);

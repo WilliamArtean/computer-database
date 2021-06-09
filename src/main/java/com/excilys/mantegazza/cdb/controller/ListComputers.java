@@ -15,14 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
 import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.service.Page;
 
 @Controller
-@RequestMapping("/computers")
 public class ListComputers extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -46,7 +44,7 @@ public class ListComputers extends HttpServlet {
 	private Logger logger = LoggerFactory.getLogger(ListComputers.class);
 	
 	@Override
-	@GetMapping
+	@GetMapping("/computers")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initPageAttribute(request);
 		processParameters(request);
@@ -56,7 +54,7 @@ public class ListComputers extends HttpServlet {
 	}
 
 	@Override
-	@PostMapping
+	@PostMapping("/computers")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameterMap().containsKey(PARAM_ITEMS_TO_DELETE)) {
 			deleteComputers(request);

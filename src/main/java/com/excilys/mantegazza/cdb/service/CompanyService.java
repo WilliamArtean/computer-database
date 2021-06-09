@@ -49,16 +49,6 @@ public class CompanyService {
 		return companyDAO.getAll();
 	}
 	
-	/**
-	 * Get a selected number of companies from the database.
-	 * @param numberToGet The number of companies to return.
-	 * @param rowOffset The offset from which to start the selection. 0 to start from the first row (included)
-	 * @return An ArrayList of Company objects in the database, of size numberToReturn at most (less if the end of the database has been reached)
-	 */
-	public ArrayList<Company> getCompanySelection(int numberToGet, int rowOffset) {
-		return companyDAO.getSelection(numberToGet, rowOffset);
-	}
-	
 	public void delete(String name) {
 		companyDAO.delete(name);
 	}

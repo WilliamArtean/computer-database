@@ -28,7 +28,7 @@ public class TestComputerDAO {
 	private final String queryGetByID = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.id=?";
 	private final String queryDeleteByID = "DELETE FROM computer WHERE id=?";
 	
-	private ComputerDAO computerDAOSUT = new ComputerDAO();
+	private ComputerDAO computerDAOSUT;
 	private DBConnectionManager connectionManager = DBConnectionManager.getInstance();;
 	private Connection co;
 	
@@ -236,28 +236,6 @@ public class TestComputerDAO {
 		
 		PreparedStatement ps = co.prepareStatement(queryGetByID);
 		ps.setLong(1, snes.getID());
-		ResultSet rs = ps.executeQuery();
-		
-		ComputerMapper mapper = new ComputerMapper();
-		Optional<Computer> deletedComputer = mapper.mapToComputer(rs);
-		
-		assertTrue(deletedComputer.isEmpty());
-	}
-	
-	@Test
-	public void testComputerDeletionByName() throws SQLException {
-		Company nintendo = new Company.CompanyBuilder("Nintendo").withID(24).build();
-		Computer snes = new Computer.ComputerBuilder("Super Nintendo Entertainment System")
-				.withID(154)
-				.withIntroduced(LocalDate.of(1991, 8, 1))
-				.withDiscontinued(LocalDate.of(1999, 1, 1))
-				.withCompany(nintendo)
-				.build();
-		
-		computerDAOSUT.delete(snes.getName());
-		
-		PreparedStatement ps = co.prepareStatement(queryGetByName);
-		ps.setString(1, snes.getName());
 		ResultSet rs = ps.executeQuery();
 		
 		ComputerMapper mapper = new ComputerMapper();

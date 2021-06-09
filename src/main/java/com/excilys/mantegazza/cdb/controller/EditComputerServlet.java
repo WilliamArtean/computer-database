@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.excilys.mantegazza.cdb.dto.CompanyDTO;
 import com.excilys.mantegazza.cdb.dto.ComputerDTO;
@@ -26,7 +25,6 @@ import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.validator.ComputerValidator;
 
 @Controller
-@RequestMapping("/editComputer")
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
@@ -58,7 +56,7 @@ public class EditComputerServlet extends HttpServlet {
 	public static final String ERRORS = "errors";
 	
 	@Override
-	@GetMapping
+	@GetMapping("/editComputer")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<CompanyDTO> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		request.setAttribute(ATT_COMPANY_LIST, companies);
@@ -81,7 +79,7 @@ public class EditComputerServlet extends HttpServlet {
 	}
 	
 	@Override
-	@PostMapping
+	@PostMapping("/editComputer")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		long computerId = Long.parseLong(request.getParameter(PARAM_ID_COMPUTER_TO_EDIT));
 		long companyId = Long.parseLong(request.getParameter(PARAM_COMPANYID));

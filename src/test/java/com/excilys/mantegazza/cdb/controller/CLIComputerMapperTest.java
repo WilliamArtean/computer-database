@@ -23,7 +23,7 @@ class CLIComputerMapperTest {
 	@Mock
 	private CompanyService companyService;
 	@InjectMocks
-	CLIComputerMapper mapperSUT = new CLIComputerMapper(companyService);
+	CLIComputerMapper mapperSUT = new CLIComputerMapper();
 
 	@Test
 	void testMapToComputer() throws InconsistentDatesException {

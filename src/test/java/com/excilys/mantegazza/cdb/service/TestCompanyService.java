@@ -64,16 +64,4 @@ public class TestCompanyService {
 		assertEquals(companiesReturned, companyDB);
 	}
 	
-	@Test
-	public void testGetSelection() {
-		ArrayList<Company> companySelection = new ArrayList<Company>();
-		companySelection.add(companyDB.get(1));
-		companySelection.add(companyDB.get(2));
-		
-		when(dao.getSelection(2, 1)).thenReturn(companySelection);
-		
-		ArrayList<Company> companiesReturned = service.getCompanySelection(2, 1);
-		assertEquals(companiesReturned, companySelection);
-	}
-	
 }
