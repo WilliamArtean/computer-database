@@ -29,7 +29,7 @@
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="search" class="form-control" value="<c:out value="${ sessionScope.searchTerm }"/>" placeholder="Search name" />
+                        <input type="search" id="searchbox" name="search" class="form-control" value="<c:out value="${ page.searchTerm }"/>" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
                         class="btn btn-primary" />
                     </form>
@@ -104,32 +104,32 @@
         <div class="container text-center">
             <ul class="pagination">
             	
-            	<c:if test="${ sessionScope.page.currentPageIndex > 0 }">
+            	<c:if test="${ page.currentPageIndex > 0 }">
 	              	<li>
-	                	<a href="?page=${ sessionScope.page.currentPageIndex }" aria-label="Previous">
+	                	<a href="?page=${ page.currentPageIndex }" aria-label="Previous">
 	                    	<span aria-hidden="true">&laquo;</span>
 	                	</a>
 	              	</li>
             	</c:if>
             	
               	<c:choose>
-              	<c:when test="${ sessionScope.page.numberOfPages > 5 }">
+              	<c:when test="${ page.numberOfPages > 5 }">
               	
               		<c:choose>
-              			<c:when test="${ sessionScope.page.currentPageIndex < 2 }">
+              			<c:when test="${ page.currentPageIndex < 2 }">
               				<c:forEach var="p" begin="1" end="5">
 		              			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			
-              			<c:when test="${ sessionScope.page.currentPageIndex > (sessionScope.page.numberOfPages - 3) }">
-              				<c:forEach var="p" begin="${ sessionScope.page.numberOfPages - 5 }" end="${ sessionScope.page.numberOfPages }">
+              			<c:when test="${ page.currentPageIndex > (page.numberOfPages - 3) }">
+              				<c:forEach var="p" begin="${ page.numberOfPages - 5 }" end="${ page.numberOfPages }">
 		              			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
 		              		</c:forEach>
               			</c:when>
               			
               			<c:otherwise>
-              				<c:forEach var="p" begin="${ sessionScope.page.currentPageIndex - 2 }" end="${ sessionScope.page.currentPageIndex + 2 }">
+              				<c:forEach var="p" begin="${ page.currentPageIndex - 2 }" end="${ page.currentPageIndex + 2 }">
 		              			<li><a href="?page=${ p + 1 }"><c:out value="${ p + 1 }"></c:out></a></li>
 		              		</c:forEach>
               			</c:otherwise>
@@ -138,15 +138,15 @@
               	</c:when>
               	
               	<c:otherwise>
-              		<c:forEach var="p" begin="1" end="${ sessionScope.page.numberOfPages }">
+              		<c:forEach var="p" begin="1" end="${ page.numberOfPages }">
               			<li><a href="?page=${ p }"><c:out value="${ p }"></c:out></a></li>
               		</c:forEach>
               	</c:otherwise>
               	</c:choose>
               	
-              	<c:if test="${ sessionScope.page.currentPageIndex < (sessionScope.page.numberOfPages - 1) }">
+              	<c:if test="${ page.currentPageIndex < (page.numberOfPages - 1) }">
 	              	<li>
-		                <a href="?page=${ sessionScope.page.currentPageIndex + 2 }" aria-label="Next">
+		                <a href="?page=${ page.currentPageIndex + 2 }" aria-label="Next">
 		                    <span aria-hidden="true">&raquo;</span>
 		                </a>
 	            	</li>

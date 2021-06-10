@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Company.CompanyBuilder;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -17,8 +17,8 @@ public class ComputerDTOMapper {
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	public ComputerDTO createComputerDTO(String name, String id, String introduced, String discontinued, long companyId) {
-		ComputerDTO computerDTO = new ComputerDTO();
+	public ComputerDto createComputerDTO(String name, String id, String introduced, String discontinued, long companyId) {
+		ComputerDto computerDTO = new ComputerDto();
 		if (!name.isBlank()) {
 			computerDTO.setName(name);
 		}
@@ -40,8 +40,8 @@ public class ComputerDTOMapper {
 		return computerDTO;
 	}
 
-	public ComputerDTO computerToDTO(Computer computer) {
-		ComputerDTO computerDTO = new ComputerDTO();
+	public ComputerDto computerToDTO(Computer computer) {
+		ComputerDto computerDTO = new ComputerDto();
 		if (computer.getName() != null) {
 			computerDTO.setName(computer.getName());
 		}
@@ -62,15 +62,15 @@ public class ComputerDTOMapper {
 		return computerDTO;
 	}
 	
-	public ArrayList<ComputerDTO> computersToDTOArray(ArrayList<Computer> computers) {
-		ArrayList<ComputerDTO> computerDTOArray = new ArrayList<ComputerDTO>();
+	public ArrayList<ComputerDto> computersToDTOArray(ArrayList<Computer> computers) {
+		ArrayList<ComputerDto> computerDTOArray = new ArrayList<ComputerDto>();
 		for (Computer computer : computers) {
 			computerDTOArray.add(computerToDTO(computer));
 		}
 		return computerDTOArray;
 	}
 	
-	public Computer dtoToComputer(ComputerDTO computerDTO) {
+	public Computer dtoToComputer(ComputerDto computerDTO) {
 		ComputerBuilder computerbuilder = new Computer.ComputerBuilder();
 		computerbuilder.withID(computerDTO.getId());
 		if (!computerDTO.getName().isEmpty()) {

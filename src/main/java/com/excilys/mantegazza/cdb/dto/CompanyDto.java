@@ -1,11 +1,11 @@
 package com.excilys.mantegazza.cdb.dto;
 
-public class CompanyDTO {
+public class CompanyDto {
 
 	private String name = "";
 	private long id;
 	
-	public CompanyDTO() {
+	public CompanyDto() {
 		
 	}
 

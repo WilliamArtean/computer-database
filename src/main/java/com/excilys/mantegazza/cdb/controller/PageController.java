@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.service.Page;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
@@ -19,12 +19,11 @@ public class PageController {
 
 	@Autowired
 	private CLIPageView view;
-	@Autowired
-	private Page page;
+	private Page page = new Page();
 	private Logger logger = LoggerFactory.getLogger(PageController.class);
 	
 	private int currentPageIndex = 0;
-	private ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
+	private ArrayList<ComputerDto> list = new ArrayList<ComputerDto>();
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	
@@ -73,7 +72,7 @@ public class PageController {
 		page.setToPage(currentPageIndex + 1);
 		page.refreshPage();
 		list = page.getCurrentPage();
-		for (ComputerDTO computer : list) {
+		for (ComputerDto computer : list) {
 			nameList.add(computer.getName());
 		}
 		view.displayPage(nameList);

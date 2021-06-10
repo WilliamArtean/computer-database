@@ -1,6 +1,6 @@
 package com.excilys.mantegazza.cdb.dto;
 
-public class ComputerDTO {
+public class ComputerDto {
 
 	private String name = "";
 	private long id;
@@ -9,7 +9,7 @@ public class ComputerDTO {
 	private String companyName = "";
 	private long companyId;
 	
-	public ComputerDTO() {
+	public ComputerDto() {
 		
 	}
 

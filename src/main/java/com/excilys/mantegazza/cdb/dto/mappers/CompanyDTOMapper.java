@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.mantegazza.cdb.dto.CompanyDTO;
+import com.excilys.mantegazza.cdb.dto.CompanyDto;
 import com.excilys.mantegazza.cdb.model.Company;
 
 @Component
 public class CompanyDTOMapper {
 	
-	public CompanyDTO createCompanyDTO(String id, String name) {
-		CompanyDTO companyDTO = new CompanyDTO();
+	public CompanyDto createCompanyDTO(String id, String name) {
+		CompanyDto companyDTO = new CompanyDto();
 		
 		if (!id.isBlank()) {
 			companyDTO.setId(Long.parseLong(id));
@@ -23,8 +23,8 @@ public class CompanyDTOMapper {
 		return companyDTO;
 	}
 	
-	public CompanyDTO companyToDTO(Company company) {
-		CompanyDTO companyDTO = new CompanyDTO();
+	public CompanyDto companyToDTO(Company company) {
+		CompanyDto companyDTO = new CompanyDto();
 		if (company.getName() != null) {
 			companyDTO.setName(company.getName());
 		}
@@ -32,15 +32,15 @@ public class CompanyDTOMapper {
 		return companyDTO;
 	}
 	
-	public ArrayList<CompanyDTO> companiesToDTOArray(ArrayList<Company> companies) {
-		ArrayList<CompanyDTO> companyDTOArray = new ArrayList<CompanyDTO>();
+	public ArrayList<CompanyDto> companiesToDTOArray(ArrayList<Company> companies) {
+		ArrayList<CompanyDto> companyDTOArray = new ArrayList<CompanyDto>();
 		for (Company company : companies) {
 			companyDTOArray.add(companyToDTO(company));
 		}
 		return companyDTOArray;
 	}
 	
-	public Company dtoToCompany(CompanyDTO companyDTO) {
+	public Company dtoToCompany(CompanyDto companyDTO) {
 		String nameToTransfer = null;
 		if (!companyDTO.getName().isEmpty()) {
 			nameToTransfer = companyDTO.getName();

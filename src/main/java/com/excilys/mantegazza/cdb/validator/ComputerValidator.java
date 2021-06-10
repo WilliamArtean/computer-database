@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import org.springframework.stereotype.Component;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.exceptions.InconsistentDatesException;
 import com.excilys.mantegazza.cdb.exceptions.InexistentNameException;
 
@@ -20,7 +20,7 @@ public class ComputerValidator {
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	public HashMap<String, String> validateComputer(ComputerDTO computer) {
+	public HashMap<String, String> validateComputer(ComputerDto computer) {
 		HashMap<String, String> errors = new HashMap<String, String>();
 		
 		try {

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!DOCTYPE html>
 <html>
@@ -33,37 +34,37 @@
                    		</div>
                     </c:if>
                     
-                    <form action="addComputer" method="POST">
+                    <form:form action="addComputer" method="POST" modelAttribute="computerDto">
                         <fieldset>
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" value="<c:out value="${ param.computerName }"/>" placeholder="Computer name">
+                                <form:label path="name" for="computerName">Computer name</form:label>
+                                <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" value="${ computerDto.name }" placeholder="Computer name"/>
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" value="<c:out value="${ param.introduced }"/>" placeholder="Introduced date">
+                                <form:label path="introduced" for="introduced">Introduced date</form:label>
+                                <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" value="${ computerDto.introduced }" placeholder="Introduced date"/>
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" value="<c:out value="${ param.discontinued }"/>" placeholder="Discontinued date">
+                                <form:label path="discontinued" for="discontinued">Discontinued date</form:label>
+                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" value="${ computerDto.discontinued }" placeholder="Discontinued date"/>
                             </div>
                             <div class="form-group">
-                                <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId">
+                                <form:label path="companyId" for="companyId">Company</form:label>
+                                <form:select path="companyId" class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
                                     
-                                    <c:forEach var="company" items="${ requestScope.companies }">
+                                    <c:forEach var="company" items="${ companies }">
                                     	<c:choose>
-                                    	<c:when test="${ param.companyId == company.id }">
-	                                    	<option value="${ company.id }" selected="true"><c:out value="${ company.name }"></c:out></option>
+                                    	<c:when test="${ computerDto.companyId == company.id }">
+	                                    	<option value="${ company.id }" selected="true"><c:out value='${ company.name }'></c:out></option>
                                     	</c:when>
                                     	<c:otherwise>
-                                    		<option value="${ company.id }"><c:out value="${ company.name }"></c:out></option>
+                                    		<option value="${ company.id }"><c:out value='${ company.name }'></c:out></option>
                                     	</c:otherwise>
                                     	</c:choose>
                                     </c:forEach>
                                     
-                                </select>
+                                </form:select>
                             </div>
                         </fieldset>
                         <div class="actions pull-right">
@@ -71,7 +72,7 @@
                             or
                             <a href="computers" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

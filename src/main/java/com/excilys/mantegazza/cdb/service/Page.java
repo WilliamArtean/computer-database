@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDTO;
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.dto.mappers.ComputerDTOMapper;
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Page {
 
 	private int currentPageIndex = 0;
@@ -22,7 +26,7 @@ public class Page {
 	private String searchTerm = "";
 	private OrderBy orderBy = OrderBy.none;
 	private Order order = Order.ascending;
-	private ArrayList<ComputerDTO> dtoList = new ArrayList<ComputerDTO>();
+	private ArrayList<ComputerDto> dtoList = new ArrayList<ComputerDto>();
 	
 	@Autowired
 	private ComputerService service;
@@ -59,7 +63,7 @@ public class Page {
 		}
 	}
 	
-	public ArrayList<ComputerDTO> getCurrentPage() {
+	public ArrayList<ComputerDto> getCurrentPage() {
 		return dtoList;
 	}
 	
