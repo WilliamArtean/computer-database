@@ -75,7 +75,7 @@ public class ComputerDAO {
 	}
 	
 	public ArrayList<Computer> getSelection(Page page) {
-		String query = String.format(queryOrderedLimitedSearch, OrderBy.none.getSQLKeyword(), Order.ascending.getSQLKeyword());
+		String query = String.format(queryOrderedLimitedSearch, page.getOrderBy().getSQLKeyword(), page.getOrder().getSQLKeyword());
 		
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("search", "%" + page.getSearchTerm() + "%");

@@ -2,11 +2,13 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><fmt:message key="tab.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="././css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -16,7 +18,9 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="computers"> Application - Computer Database </a>
+            <a class="navbar-brand" href="computers"> <fmt:message key="title" /> </a>
+            <a href="?lang=en"><fmt:message key="lang.eng" /></a>
+	        <a href="?lang=fr"><fmt:message key="lang.fr" /></a>
         </div>
     </header>
 
@@ -24,7 +28,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <h1>Add Computer</h1>
+                    <h1><fmt:message key="title.addComputer" /></h1>
                     
                     <c:if test="${ not empty errors }">
                    		<div class="has-error">
@@ -37,19 +41,19 @@
                     <form:form action="addComputer" method="POST" modelAttribute="computerDto">
                         <fieldset>
                             <div class="form-group">
-                                <form:label path="name" for="computerName">Computer name</form:label>
+                                <form:label path="name" for="computerName"><fmt:message key="column.name" /></form:label>
                                 <form:input path="name" type="text" class="form-control" id="computerName" name="computerName" value="${ computerDto.name }" placeholder="Computer name"/>
                             </div>
                             <div class="form-group">
-                                <form:label path="introduced" for="introduced">Introduced date</form:label>
-                                <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" value="${ computerDto.introduced }" placeholder="Introduced date"/>
+                                <form:label path="introduced" for="introduced"><fmt:message key="column.introduced" /></form:label>
+                                <form:input path="introduced" type="date" class="form-control" id="introduced" name="introduced" value="${ computerDto.introduced }" />
                             </div>
                             <div class="form-group">
-                                <form:label path="discontinued" for="discontinued">Discontinued date</form:label>
-                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" value="${ computerDto.discontinued }" placeholder="Discontinued date"/>
+                                <form:label path="discontinued" for="discontinued"><fmt:message key="column.discontinued" /></form:label>
+                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" name="discontinued" value="${ computerDto.discontinued }"/>
                             </div>
                             <div class="form-group">
-                                <form:label path="companyId" for="companyId">Company</form:label>
+                                <form:label path="companyId" for="companyId"><fmt:message key="column.company" /></form:label>
                                 <form:select path="companyId" class="form-control" id="companyId" name="companyId">
                                     <option value="0">--</option>
                                     
@@ -68,9 +72,9 @@
                             </div>
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Add" class="btn btn-primary">
+                            <input type="submit" value="<fmt:message key='button.add' />" class="btn btn-primary">
                             or
-                            <a href="computers" class="btn btn-default">Cancel</a>
+                            <a href="computers" class="btn btn-default"><fmt:message key="button.cancel" /></a>
                         </div>
                     </form:form>
                 </div>

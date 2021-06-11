@@ -2,11 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><fmt:message key="tab.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="././css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -16,9 +17,12 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="computers"> Application - Computer Database </a>
+            <a class="navbar-brand" href="computers"> <fmt:message key="title" /> </a>
+            <a href="?id=${ computerDto.id }&lang=en"><fmt:message key="lang.eng" /></a>
+	        <a href="?id=${ computerDto.id }&lang=fr"><fmt:message key="lang.fr" /></a>
         </div>
     </header>
+    
     <section id="main">
         <div class="container">
             <div class="row">
@@ -26,7 +30,7 @@
                     <div class="label label-default pull-right">
                         <c:out value="${ computerDto.id }"/>
                     </div>
-                    <h1>Edit Computer</h1>
+                    <h1><fmt:message key="title.editComputer" /></h1>
                     
                     <c:if test="${ not empty errors }">
                    		<div class="has-error">
@@ -40,19 +44,19 @@
                         <form:input type="hidden" value="${ computerToEdit.id }" path="id" id="id" name="id"/> <!-- TODO: Change this value with the computer id -->
                         <fieldset>
                             <div class="form-group">
-                                <form:label path="name" for="computerName">Computer name</form:label>
-                                <form:input type="text" class="form-control" path="name" id="computerName" name="computerName" value="${ computerDto.name }" placeholder="Computer name"/>
+                                <form:label path="name" for="computerName"><fmt:message key="column.name" /></form:label>
+                                <form:input type="text" class="form-control" path="name" id="computerName" name="computerName" value="${ computerDto.name }" placeholder="Computer Name"/>
                             </div>
                             <div class="form-group">
-                                <form:label path="introduced" for="introduced">Introduced date</form:label>
-                                <form:input type="date" class="form-control" path="introduced" id="introduced" name="introduced" value='${ computerDto.introduced }'  placeholder="Introduced date"/>
+                                <form:label path="introduced" for="introduced"><fmt:message key="column.introduced" /></form:label>
+                                <form:input type="date" class="form-control" path="introduced" id="introduced" name="introduced" value='${ computerDto.introduced }'  placeholder="<fmt:message key='placeholder.introduced' />"/>
                             </div>
                             <div class="form-group">
-                                <form:label path="discontinued" for="discontinued">Discontinued date</form:label>
-                                <form:input type="date" class="form-control" path="discontinued" id="discontinued" name="discontinued" value='${ computerDto.discontinued }' placeholder="Discontinued date"/>
+                                <form:label path="discontinued" for="discontinued"><fmt:message key="column.discontinued" /></form:label>
+                                <form:input type="date" class="form-control" path="discontinued" id="discontinued" name="discontinued" value='${ computerDto.discontinued }' placeholder="<fmt:message key='placeholder.discontinued' />"/>
                             </div>
                             <div class="form-group">
-                                <form:label path="companyId" for="companyId">Company</form:label>
+                                <form:label path="companyId" for="companyId"><fmt:message key="column.company" /></form:label>
                                 <form:select class="form-control" path="companyId" id="companyId" name="companyId">
                                     <option value="0">--</option>
                                     
@@ -70,9 +74,9 @@
                             </div>            
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Edit" class="btn btn-primary">
+                            <input type="submit" value="<fmt:message key='button.edit' />" class="btn btn-primary">
                             or
-                            <a href="computers" class="btn btn-default">Cancel</a>
+                            <a href="computers" class="btn btn-default"><fmt:message key="button.cancel" /></a>
                         </div>
                     </form:form>
                 </div>

@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><fmt:message key="tab.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -16,27 +17,29 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="computers"> Application - Computer Database </a>
+            <a class="navbar-brand" href="computers"> <fmt:message key="title" /> </a>
+	        <a href="?lang=en"><fmt:message key="lang.eng" /></a>
+	        <a href="?lang=fr"><fmt:message key="lang.fr" /></a>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${ sessionScope.page.getCount() } Computers found
+                ${ page.getCount() } <fmt:message key="computersFound" />
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="search" class="form-control" value="<c:out value="${ page.searchTerm }"/>" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
+                        <input type="search" id="searchbox" name="search" class="form-control" value="<c:out value="${ page.searchTerm }"/>" placeholder="<fmt:message key='placeholder.searchName' />" />
+                        <input type="submit" id="searchsubmit" value="<fmt:message key='button.filter' />"
                         class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="addComputer"><fmt:message key="button.addComputer" /></a> 
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><fmt:message key="button.edit" /></a>
                 </div>
             </div>
         </div>
@@ -60,18 +63,18 @@
                             </span>
                         </th>
                         <th>
-                            <a href="?orderBy=computerName">Computer name</a>
+                            <a href="?orderBy=computerName"><fmt:message key="column.name" /></a>
                         </th>
                         <th>
-                            <a href="?orderBy=introduced">Introduced date</a>
+                            <a href="?orderBy=introduced"><fmt:message key="column.introduced" /></a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                        	<a href="?orderBy=discontinued">Discontinued date</a>
+                        	<a href="?orderBy=discontinued"><fmt:message key="column.discontinued" /></a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                        	<a href="?orderBy=companyName">Company</a>
+                        	<a href="?orderBy=companyName"><fmt:message key="column.company" /></a>
                         </th>
 
                     </tr>
