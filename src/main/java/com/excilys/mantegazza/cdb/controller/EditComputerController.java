@@ -1,15 +1,17 @@
 package com.excilys.mantegazza.cdb.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.mantegazza.cdb.dto.CompanyDto;
@@ -76,12 +78,12 @@ public class EditComputerController {
 	
 	@PostMapping("/editComputer")
 	public RedirectView editComputer(@ModelAttribute("computerDto") ComputerDto computerDto,
-			BindingResult result,
-			ModelAndView modelAndView) {
-		
-		if (result.hasErrors()) {
-			modelAndView.addObject(ERRORS, result.getAllErrors());
-			return new RedirectView(VIEW_EDIT_COMPUTER, true);
+			RedirectAttributes redirectAttributes
+			) {
+		HashMap<String, String> errors = computerValidator.validateComputer(computerDto);
+		if (!errors.isEmpty()) {
+			redirectAttributes.addFlashAttribute(ERRORS, errors);
+			return new RedirectView("editComputer?id=" + computerDto.getId(), true);
 		}
 		
 		Computer newComputer = computerMapper.dtoToComputer(computerDto);

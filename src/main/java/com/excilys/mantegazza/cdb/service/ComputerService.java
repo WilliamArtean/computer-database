@@ -44,7 +44,6 @@ public class ComputerService {
 	}
 	
 	public void create(Computer computerToCreate) {
-		//TODO Validation?
 		dao.create(computerToCreate);
 	}
 	

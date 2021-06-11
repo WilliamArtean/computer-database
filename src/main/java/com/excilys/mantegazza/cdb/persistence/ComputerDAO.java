@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.persistence.mappers.ComputerMapper;
 import com.excilys.mantegazza.cdb.persistence.mappers.ComputerRowMapper;
 import com.excilys.mantegazza.cdb.service.Page;
 
@@ -27,12 +28,14 @@ public class ComputerDAO {
 	private final String queryOrderedLimitedSearch = "SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE :search OR company.name LIKE :search ORDER BY %s %s LIMIT :limit OFFSET :offset";
 	private final String queryCount = "SELECT COUNT(computer.id) AS rowcount FROM computer LEFT JOIN company on computer.company_id = company.id WHERE computer.name LIKE :search OR company.name LIKE :search ORDER BY computer.id";
 
-	@Autowired
+	ComputerMapper computerMapper;
 	private ComputerRowMapper rowMapper;
 	private NamedParameterJdbcTemplate npJdbcTemplate;
 	
-	public ComputerDAO(NamedParameterJdbcTemplate npJdbcTemplate) {
+	public ComputerDAO(NamedParameterJdbcTemplate npJdbcTemplate, ComputerRowMapper rowMapper, ComputerMapper computerMapper) {
 		this.npJdbcTemplate = npJdbcTemplate;
+		this.rowMapper = rowMapper;
+		this.computerMapper = computerMapper;
 	}
 
 	
@@ -97,10 +100,7 @@ public class ComputerDAO {
 	
 	public void create(Computer computer) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("computerName", computer.getName());
-		namedParameters.addValue("introduced", computer.getIntroductionDate());
-		namedParameters.addValue("discontinued", computer.getDiscontinuationDate());
-		namedParameters.addValue("companyId", computer.getCompany().getID());
+		namedParameters = computerMapper.computerToParameterSource(computer, namedParameters);
 		
 		npJdbcTemplate.update(queryCreate, namedParameters);
 	}
@@ -108,11 +108,8 @@ public class ComputerDAO {
 	public void update(long computerId, Computer updatedComputer) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("computerId", computerId);
-		namedParameters.addValue("computerName", updatedComputer.getName());
-		namedParameters.addValue("introduced", updatedComputer.getIntroductionDate());
-		namedParameters.addValue("discontinued", updatedComputer.getDiscontinuationDate());
-		namedParameters.addValue("companyId", updatedComputer.getCompany().getID());
-		
+		namedParameters = computerMapper.computerToParameterSource(updatedComputer, namedParameters);
+
 		npJdbcTemplate.update(queryUpdate, namedParameters);
 	}
 	
@@ -133,4 +130,5 @@ public class ComputerDAO {
 		namedParameters.addValue("computerName", name);
 		npJdbcTemplate.update(queryDeleteByName, namedParameters);
 	}
+	
 }

@@ -2,9 +2,11 @@ package com.excilys.mantegazza.cdb.persistence.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import com.excilys.mantegazza.cdb.model.Company;
@@ -90,6 +92,34 @@ public class ComputerMapper {
 		}
 		
 		return computerDto;
+	}
+	
+	public MapSqlParameterSource computerToParameterSource(Computer computer, MapSqlParameterSource namedParameters) {
+		if (computer.getName() != null) {
+			namedParameters.addValue("computerName", computer.getName());			
+		} else {
+			namedParameters.addValue("computerName", null);		
+		}
+		
+		if (computer.getIntroductionDate() != null) {
+			namedParameters.addValue("introduced", computer.getIntroductionDate());			
+		} else {
+			namedParameters.addValue("introduced", null);		
+		}
+		
+		if (computer.getDiscontinuationDate() != null) {
+			namedParameters.addValue("discontinued", computer.getDiscontinuationDate());			
+		} else {
+			namedParameters.addValue("discontinued", null);		
+		}
+		
+		if (computer.getCompany() != null) {
+			namedParameters.addValue("companyId", computer.getCompany().getID());
+		} else {
+			namedParameters.addValue("companyId", null);
+		}
+		
+		return namedParameters;
 	}
 	
 }

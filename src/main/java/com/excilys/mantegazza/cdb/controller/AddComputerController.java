@@ -1,6 +1,7 @@
 package com.excilys.mantegazza.cdb.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.excilys.mantegazza.cdb.dto.CompanyDto;
@@ -49,24 +51,24 @@ public class AddComputerController {
 	}
 
 	@GetMapping("/addComputer")
-	public ModelAndView getCompaniesInfo(Model model) {
+	public ModelAndView getCompaniesInfo() {
 		ModelAndView modelAndView = new ModelAndView(VIEW_ADD_COMPUTER, "computerDto", new ComputerDto());
 		
 		ArrayList<CompanyDto> companies = companyMapper.companiesToDTOArray(companyService.getAllCompanies());
 		modelAndView.addObject(ATT_COMPANY_LIST, companies);
-
 		return modelAndView;
 	}
 	
 	@PostMapping("/addComputer")
 	public RedirectView createComputer(@ModelAttribute("computerDto") ComputerDto computerDto,
-			/*BindingResult result,*/
-			Model model) {
-		/*
-		if (result.hasErrors()) {
-			model.addAttribute(ERRORS, result.getAllErrors());
-			return VIEW_ADD_COMPUTER;
-		}*/
+			RedirectAttributes redirectAttributes
+			) {
+		HashMap<String, String> errors = computerValidator.validateComputer(computerDto);
+		if (!errors.isEmpty()) {
+			redirectAttributes.addFlashAttribute(ERRORS, errors);
+			return new RedirectView(VIEW_ADD_COMPUTER, true);
+		}
+		
 		Computer computerToCreate = computerMapper.dtoToComputer(computerDto);
 		computerService.create(computerToCreate);
 		
