@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,16 @@ public class Page {
 	private Order order = Order.ascending;
 	private ArrayList<ComputerDto> dtoList = new ArrayList<ComputerDto>();
 	
-	@Autowired
 	private ComputerService service;
-	@Autowired
 	private ComputerDTOMapper dtoMapper;
 	private Logger logger = LoggerFactory.getLogger(Page.class);
 	
 	
+	public Page(ComputerService service, ComputerDTOMapper dtoMapper) {
+		this.service = service;
+		this.dtoMapper = dtoMapper;
+	}
+
 	public void refreshPage() {
 		clearPage();
 		

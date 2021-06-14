@@ -1,5 +1,21 @@
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import java.io.IOException;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import com.excilys.mantegazza.cdb.config.AppConfig;
+import com.excilys.mantegazza.cdb.config.WebConfig;
+import com.excilys.mantegazza.cdb.controller.CLIController;
 
 public class App {
-	AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
+	public static void main(String... args) {
+		ApplicationContext appContext = new AnnotationConfigApplicationContext(AppConfig.class);
+		
+		CLIController cliController = appContext.getBean(CLIController.class);
+		try {
+			cliController.chooseMainMenuAction();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

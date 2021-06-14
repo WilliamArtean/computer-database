@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.mantegazza.cdb.enums.MenuInput;
@@ -23,19 +22,24 @@ import com.excilys.mantegazza.cdb.ui.CLIView;
 @Controller
 public class CLIController {
 
-	@Autowired
 	private CLIView view;
-	@Autowired
 	private CLIComputerMapper computerMapper;
-	@Autowired
 	private ComputerService computerService;
-	@Autowired
 	private CompanyService companyService;
-	@Autowired
 	private PageController pageController;
 	private Scanner scanner = new Scanner(System.in);
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private Logger logger = LoggerFactory.getLogger(CLIController.class);
+
+	
+	public CLIController(CLIView view, CLIComputerMapper computerMapper, ComputerService computerService,
+			CompanyService companyService, PageController pageController) {
+		this.view = view;
+		this.computerMapper = computerMapper;
+		this.computerService = computerService;
+		this.companyService = companyService;
+		this.pageController = pageController;
+	}
 
 	/**
 	 * Returns the user input from the CLI.

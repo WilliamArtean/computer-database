@@ -11,19 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.excilys.mantegazza.cdb.dto.ComputerDto;
+import com.excilys.mantegazza.cdb.model.Computer;
+import com.excilys.mantegazza.cdb.service.ComputerService;
 import com.excilys.mantegazza.cdb.service.Page;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
 @Controller
 public class PageController {
 
-	@Autowired
 	private CLIPageView view;
-	private Page page = new Page();
+	private ComputerService service;
 	private Logger logger = LoggerFactory.getLogger(PageController.class);
 	
-	private int currentPageIndex = 0;
-	private ArrayList<ComputerDto> list = new ArrayList<ComputerDto>();
+	private int currentPageIndex;
+	private int count;
+	private int numberOfPages;
+	private ArrayList<Computer> list = new ArrayList<Computer>();
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	
@@ -34,14 +37,9 @@ public class PageController {
 		return currentPageIndex;
 	}
 	
-	/**
-	 * Creates a PageController to show a list of computers using a view with pagination.
-	 * @param view The Page view the PageController will send the data to output.
-	 */
-	public PageController(CLIPageView view) {
+	public PageController(CLIPageView view, ComputerService service) {
 		this.view = view;
-		page = new Page();
-		page.setItemsPerPage(10);
+		this.service = service;
 	}
 	
 	/**
@@ -68,10 +66,10 @@ public class PageController {
 	private void newPage() {
 		clear();
 		
-		Page page  = new Page();
-		page.setToPage(currentPageIndex + 1);
-		page.refreshPage();
-		list = page.getCurrentPage();
+		count = service.getCount();
+		numberOfPages = ((count - 1) / 10) + 1;
+		
+		list = service.getComputerSelection(currentPageIndex * 10, 10);
 		list.stream().forEach(computer -> nameList.add(computer.getName()));
 		view.displayPage(nameList);
 	}
@@ -86,7 +84,7 @@ public class PageController {
 		
 		String userInput = "";
 		do {
-			view.displayPagination(currentPageIndex, page.getNumberOfPages());
+			view.displayPagination(currentPageIndex, numberOfPages);
 			userInput = getInput();
 			switch (userInput) {
 			case "p":
@@ -120,7 +118,7 @@ public class PageController {
 	 * Do nothing if the current page is already the last one.
 	 */
 	public void nextPage() {
-		if (currentPageIndex < (page.getNumberOfPages() - 1)) {
+		if (currentPageIndex < (numberOfPages - 1)) {
 			currentPageIndex++;
 			newPage();
 		}

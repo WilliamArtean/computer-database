@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
@@ -128,6 +129,18 @@ public class ComputerDAO {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("computerName", name);
 		npJdbcTemplate.update(queryDeleteByName, namedParameters);
+	}
+
+
+	public ArrayList<Computer> getSimpleSelection(int offset, int limit) {
+		String query = String.format(queryOrderedLimitedSearch, OrderBy.none.getSQLKeyword(), Order.ascending.getSQLKeyword());
+		
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("search", "%%");
+		namedParameters.addValue("limit", limit);
+		namedParameters.addValue("offset", offset);
+		
+		return (ArrayList<Computer>) npJdbcTemplate.query(query, namedParameters, rowMapper);
 	}
 	
 }

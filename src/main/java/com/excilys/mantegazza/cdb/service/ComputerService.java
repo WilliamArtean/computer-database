@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
@@ -61,6 +62,10 @@ public class ComputerService {
 	
 	public void delete(String name) {
 		dao.delete(name);
+	}
+
+	public ArrayList<Computer> getComputerSelection(int offset, int limit) {
+		return dao.getSimpleSelection(offset, limit);
 	}
 	
 }
