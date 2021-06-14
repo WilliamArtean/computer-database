@@ -161,9 +161,8 @@ public class CLIController {
 		if (companyList.isEmpty()) {
 			companyNameList.add("No company in the database");
 		}
-		for (Company company : companyList) {
-			companyNameList.add(company.getName());
-		}
+		
+		companyList.stream().forEach(c -> companyNameList.add(c.getName()));
 		
 		view.displayList(companyNameList);
 	}

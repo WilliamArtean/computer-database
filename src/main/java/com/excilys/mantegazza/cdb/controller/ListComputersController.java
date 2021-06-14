@@ -1,6 +1,7 @@
 package com.excilys.mantegazza.cdb.controller;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,9 +75,7 @@ public class ListComputersController {
 	@PostMapping("/computers")
 	public RedirectView delete(@RequestParam(name = PARAM_ITEMS_TO_DELETE, required = false) String[] checkboxesIds) {
 		ArrayList<Long> idsToDelete = new ArrayList<Long>();
-		for (String checkboxId : checkboxesIds) {
-			idsToDelete.add(Long.parseLong(checkboxId));
-		}
+		Stream.of(checkboxesIds).forEach(checkboxId -> idsToDelete.add(Long.parseLong(checkboxId)));
 		computerService.delete(idsToDelete);
 		
 		return new RedirectView("/computers", true);

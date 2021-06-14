@@ -26,18 +26,18 @@ public class CompanyDAO {
 
 	@Autowired
 	private CompanyRowMapper rowMapper;
-	private NamedParameterJdbcTemplate npJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParametersJdbcTemplate;
 	private TransactionTemplate transactionTemplate;
 	
 	public CompanyDAO(NamedParameterJdbcTemplate npJdbcTemplate) {
-		this.npJdbcTemplate = npJdbcTemplate;
+		this.namedParametersJdbcTemplate = npJdbcTemplate;
 	}
 
 	
 	public Optional<Company> getByID(long id) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("companyId", id);
-		Company company = (Company) npJdbcTemplate.queryForObject(queryGetByID, namedParameters, rowMapper);
+		Company company = (Company) namedParametersJdbcTemplate.queryForObject(queryGetByID, namedParameters, rowMapper);
 		
 		Optional<Company> optCompany = Optional.empty();
 		if (company != null) {
@@ -49,7 +49,7 @@ public class CompanyDAO {
 	public Optional<Company> getByName(String name) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 		namedParameters.addValue("companyName", name);
-		Company company = (Company) npJdbcTemplate.queryForObject(queryGetByName, namedParameters, rowMapper);
+		Company company = (Company) namedParametersJdbcTemplate.queryForObject(queryGetByName, namedParameters, rowMapper);
 		
 		Optional<Company> optCompany = Optional.empty();
 		if (company != null) {
@@ -59,13 +59,13 @@ public class CompanyDAO {
 	}
 	
 	public ArrayList<Company> getAll() {
-		ArrayList<Company> companies = (ArrayList<Company>) npJdbcTemplate.query(queryGetAll, rowMapper);
+		ArrayList<Company> companies = (ArrayList<Company>) namedParametersJdbcTemplate.query(queryGetAll, rowMapper);
 		return companies;
 	}
 	
 	public int getCount() {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		return npJdbcTemplate.queryForObject(queryGetCount, namedParameters, Integer.class);
+		return namedParametersJdbcTemplate.queryForObject(queryGetCount, namedParameters, Integer.class);
 	}
 	
 	public void delete(String name) {
@@ -75,8 +75,8 @@ public class CompanyDAO {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				npJdbcTemplate.update(queryDeleteAssociatedComputers, namedParameters);
-				npJdbcTemplate.update(queryDeleteByName, namedParameters);
+				namedParametersJdbcTemplate.update(queryDeleteAssociatedComputers, namedParameters);
+				namedParametersJdbcTemplate.update(queryDeleteByName, namedParameters);
 			}
 		});
 	}

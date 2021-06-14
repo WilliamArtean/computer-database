@@ -72,9 +72,7 @@ public class PageController {
 		page.setToPage(currentPageIndex + 1);
 		page.refreshPage();
 		list = page.getCurrentPage();
-		for (ComputerDto computer : list) {
-			nameList.add(computer.getName());
-		}
+		list.stream().forEach(computer -> nameList.add(computer.getName()));
 		view.displayPage(nameList);
 	}
 	

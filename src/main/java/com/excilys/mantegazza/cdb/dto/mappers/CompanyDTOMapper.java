@@ -34,9 +34,7 @@ public class CompanyDTOMapper {
 	
 	public ArrayList<CompanyDto> companiesToDTOArray(ArrayList<Company> companies) {
 		ArrayList<CompanyDto> companyDTOArray = new ArrayList<CompanyDto>();
-		for (Company company : companies) {
-			companyDTOArray.add(companyToDTO(company));
-		}
+		companies.stream().forEach(company -> companyDTOArray.add(companyToDTO(company)));
 		return companyDTOArray;
 	}
 	

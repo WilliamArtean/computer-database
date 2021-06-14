@@ -64,9 +64,7 @@ public class ComputerDTOMapper {
 	
 	public ArrayList<ComputerDto> computersToDTOArray(ArrayList<Computer> computers) {
 		ArrayList<ComputerDto> computerDTOArray = new ArrayList<ComputerDto>();
-		for (Computer computer : computers) {
-			computerDTOArray.add(computerToDTO(computer));
-		}
+		computers.stream().forEach(computer -> computerDTOArray.add(computerToDTO(computer)));
 		return computerDTOArray;
 	}
 	
