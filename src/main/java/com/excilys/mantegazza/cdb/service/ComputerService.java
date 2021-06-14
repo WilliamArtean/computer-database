@@ -3,19 +3,20 @@ package com.excilys.mantegazza.cdb.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
 
 @Service
 public class ComputerService {
 	
-	@Autowired
 	private ComputerDAO dao;
 	
+	public ComputerService(ComputerDAO dao) {
+		this.dao = dao;
+	}
+
 	public void setComputerDAO(ComputerDAO dao) {
 		this.dao = dao;
 	}

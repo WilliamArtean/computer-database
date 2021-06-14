@@ -33,7 +33,7 @@ public class TestCompanyService {
 		companyDB.add(new Company.CompanyBuilder("Company 4").withID(4).build());
 		
 		
-		service = new CompanyService();
+		service = new CompanyService(dao);
 		service.setCompanyDAO(dao);
 	}
 	

@@ -7,13 +7,10 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.service.ComputerService;
-import com.excilys.mantegazza.cdb.service.Page;
 import com.excilys.mantegazza.cdb.ui.CLIPageView;
 
 @Controller

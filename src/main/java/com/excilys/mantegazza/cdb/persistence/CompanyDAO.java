@@ -3,7 +3,6 @@ package com.excilys.mantegazza.cdb.persistence;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,12 +23,12 @@ public class CompanyDAO {
 	private final String queryDeleteAssociatedComputers = "DELETE computer FROM computer LEFT JOIN company ON (computer.company_id = company.id) WHERE company.name = :companyName";
 	private final String queryDeleteByName = "DELETE FROM company WHERE name = :companyName";
 
-	@Autowired
 	private CompanyRowMapper rowMapper;
 	private NamedParameterJdbcTemplate namedParametersJdbcTemplate;
 	private TransactionTemplate transactionTemplate;
 	
-	public CompanyDAO(NamedParameterJdbcTemplate npJdbcTemplate) {
+	public CompanyDAO(CompanyRowMapper rowMapper, NamedParameterJdbcTemplate npJdbcTemplate) {
+		this.rowMapper = rowMapper;
 		this.namedParametersJdbcTemplate = npJdbcTemplate;
 	}
 

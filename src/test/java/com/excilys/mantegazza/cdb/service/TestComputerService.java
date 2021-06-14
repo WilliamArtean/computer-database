@@ -41,7 +41,7 @@ public class TestComputerService {
 		computerDB.add(new Computer.ComputerBuilder("Computer 3").withID(1003).build());
 		computerDB.add(new Computer.ComputerBuilder("Computer 4").withID(1004).build());
 		
-		service = new ComputerService();
+		service = new ComputerService(dao);
 		MockitoAnnotations.openMocks(this);
 	}
 	

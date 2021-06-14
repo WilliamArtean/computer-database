@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.enums.Order;
 import com.excilys.mantegazza.cdb.enums.OrderBy;
 import com.excilys.mantegazza.cdb.model.Computer;
