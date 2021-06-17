@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.model.Computer.ComputerBuilder;
-import com.excilys.mantegazza.cdb.persistence.dto.ComputerPersistenceDto;
 
 @Component
 public class ComputerMapper {
@@ -68,29 +67,6 @@ public class ComputerMapper {
 			computers.add(computer);
 		}
 		return computers;
-	}
-	
-	
-	public ComputerPersistenceDto computerToPersistenceDto(Computer computer) {
-		ComputerPersistenceDto computerDto = new ComputerPersistenceDto();
-		
-		if (computer.getID() != 0) {
-			computerDto.setId(computer.getID());
-		}
-		if (computer.getName() != null) {
-			computerDto.setName(computer.getName());
-		}
-		if (computer.getIntroductionDate() != null) {
-			computerDto.setIntroduced(computer.getIntroductionDate().toString());
-		}
-		if (computer.getDiscontinuationDate() != null) {
-			computerDto.setDiscontinued(computer.getDiscontinuationDate().toString());
-		}
-		if (computer.getCompany() != null) {
-			computerDto.setCompanyId(computer.getCompany().getID());
-		}
-		
-		return computerDto;
 	}
 	
 	public MapSqlParameterSource computerToParameterSource(Computer computer, MapSqlParameterSource namedParameters) {

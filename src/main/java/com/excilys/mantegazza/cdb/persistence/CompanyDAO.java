@@ -3,81 +3,78 @@ package com.excilys.mantegazza.cdb.persistence;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.mantegazza.cdb.model.Company;
-import com.excilys.mantegazza.cdb.persistence.mappers.CompanyRowMapper;
+import com.excilys.mantegazza.cdb.persistence.dto.CompanyPersistenceDto;
+import com.excilys.mantegazza.cdb.persistence.dto.QCompanyPersistenceDto;
+import com.excilys.mantegazza.cdb.persistence.dto.QComputerPersistenceDto;
+import com.excilys.mantegazza.cdb.persistence.dto.mappers.CompanyPersistenceDtoMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
-public class CompanyDAO {
+public class CompanyDAO implements ICompanyDao {
 	
-	private final String queryGetByID = "SELECT id, name FROM company WHERE id = :companyId";
-	private final String queryGetByName = "SELECT id, name FROM company WHERE name = :companyName";
-	private final String queryGetAll = "SELECT id, name FROM company";
-	private final String queryGetCount = "SELECT COUNT(id) AS rowcount FROM company";
-	private final String queryDeleteAssociatedComputers = "DELETE computer FROM computer LEFT JOIN company ON (computer.company_id = company.id) WHERE company.name = :companyName";
-	private final String queryDeleteByName = "DELETE FROM company WHERE name = :companyName";
-
-	private CompanyRowMapper rowMapper;
-	private NamedParameterJdbcTemplate namedParametersJdbcTemplate;
-	private TransactionTemplate transactionTemplate;
+	@PersistenceContext(type = PersistenceContextType.EXTENDED)
+	private EntityManager entityManager;
+	JPAQueryFactory queryFactory;
+	CompanyPersistenceDtoMapper companyDtoMapper;
+	QCompanyPersistenceDto qCompanyDto = QCompanyPersistenceDto.companyPersistenceDto;
 	
-	public CompanyDAO(CompanyRowMapper rowMapper, NamedParameterJdbcTemplate npJdbcTemplate) {
-		this.rowMapper = rowMapper;
-		this.namedParametersJdbcTemplate = npJdbcTemplate;
+	
+	public CompanyDAO(SessionFactory sessionFactory, CompanyPersistenceDtoMapper companyDtoMapper) {
+		this.entityManager = sessionFactory.createEntityManager();
+		this.queryFactory = new JPAQueryFactory(entityManager);
+		this.companyDtoMapper = companyDtoMapper;
 	}
 
 	
-	public Optional<Company> getByID(long id) {
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("companyId", id);
-		Company company = (Company) namedParametersJdbcTemplate.queryForObject(queryGetByID, namedParameters, rowMapper);
+	public Optional<Company> getById(long id) {
+		CompanyPersistenceDto companyDto = queryFactory.selectFrom(qCompanyDto)
+				.where(qCompanyDto.id.eq(id))
+				.fetchOne();
 		
-		Optional<Company> optCompany = Optional.empty();
-		if (company != null) {
-			optCompany = Optional.of(company);
-		}
-		return optCompany;
+		Optional<Company> company = companyDtoMapper.dtoToCompany(companyDto);
+		return company;
 	}
 	
 	public Optional<Company> getByName(String name) {
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("companyName", name);
-		Company company = (Company) namedParametersJdbcTemplate.queryForObject(queryGetByName, namedParameters, rowMapper);
+		CompanyPersistenceDto companyDto = queryFactory.selectFrom(qCompanyDto)
+				.where(qCompanyDto.name.eq(name))
+				.fetchOne();
 		
-		Optional<Company> optCompany = Optional.empty();
-		if (company != null) {
-			optCompany = Optional.of(company);
-		}
-		return optCompany;
+		Optional<Company> company = companyDtoMapper.dtoToCompany(companyDto);
+		return company;
 	}
-	
+
 	public ArrayList<Company> getAll() {
-		ArrayList<Company> companies = (ArrayList<Company>) namedParametersJdbcTemplate.query(queryGetAll, rowMapper);
+		ArrayList<CompanyPersistenceDto> companyDtos = new ArrayList<CompanyPersistenceDto>(
+			queryFactory.selectFrom(qCompanyDto).fetch()
+		);
+		
+		ArrayList<Company> companies = companyDtoMapper.dtosTocompanyArray(companyDtos);
 		return companies;
 	}
 	
 	public int getCount() {
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		return namedParametersJdbcTemplate.queryForObject(queryGetCount, namedParameters, Integer.class);
+		return (int) queryFactory.selectFrom(qCompanyDto).fetchCount();
 	}
 	
-	public void delete(String name) {
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("companyName", name);
-		
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				namedParametersJdbcTemplate.update(queryDeleteAssociatedComputers, namedParameters);
-				namedParametersJdbcTemplate.update(queryDeleteByName, namedParameters);
-			}
-		});
+	@Transactional
+	public void delete(long id) {
+		QComputerPersistenceDto qComputerDto = QComputerPersistenceDto.computerPersistenceDto;
+		queryFactory.delete(qComputerDto)
+			.where(qComputerDto.companyDto.id.eq(id))
+			.execute();
+		queryFactory.delete(qCompanyDto)
+			.where(qCompanyDto.id.eq(id))
+			.execute();
 	}
 	
 }

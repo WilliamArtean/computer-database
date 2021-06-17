@@ -39,7 +39,7 @@ public class TestCompanyDAO {
 	public void getCompanyByID() {
 		Company sourceCompany = new Company.CompanyBuilder("Nintendo").withID(24).build();
 		
-		Optional<Company> fetchedCompany = companyDAOSUT.getByID(sourceCompany.getID());
+		Optional<Company> fetchedCompany = companyDAOSUT.getById(sourceCompany.getID());
 		assertTrue(fetchedCompany.isPresent());
 		assertEquals(sourceCompany, fetchedCompany.get());
 	}
@@ -48,7 +48,7 @@ public class TestCompanyDAO {
 	public void getNonExistingCompanyByID() {
 		Company sourceCompany = new Company.CompanyBuilder("Ghost Company").withID(9999).build();
 		
-		Optional<Company> fetchedCompany = companyDAOSUT.getByID(sourceCompany.getID());
+		Optional<Company> fetchedCompany = companyDAOSUT.getById(sourceCompany.getID());
 		assertTrue(fetchedCompany.isEmpty());
 	}
 	

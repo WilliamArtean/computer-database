@@ -2,10 +2,10 @@ package com.excilys.mantegazza.cdb.model;
 
 public class Company {
 	
-	//Required parameters
-	private String name;
 	//Optional parameters
 	private long id;
+	//Required parameters
+	private String name;
 	
 	private Company(CompanyBuilder builder) {
 		this.name = builder.name;

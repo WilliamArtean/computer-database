@@ -11,6 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -27,10 +31,11 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan({ "com.excilys.mantegazza.cdb.service", "com.excilys.mantegazza.cdb.controller",
-	"com.excilys.mantegazza.cdb.persistence", "com.excilys.mantegazza.cdb.dto.mappers",
-	"com.excilys.mantegazza.cdb.persistence.mappers", "com.excilys.mantegazza.cdb.ui",
-	"com.excilys.mantegazza.cdb.validator" })
+	"com.excilys.mantegazza.cdb.persistence", "com.excilys.mantegazza.cdb.persistence.mappers",
+	"com.excilys.mantegazza.cdb.dto", "com.excilys.mantegazza.cdb.persistence.dto.mappers",
+	"com.excilys.mantegazza.cdb.ui", "com.excilys.mantegazza.cdb.validator" })
 public class WebConfig implements WebMvcConfigurer {
 
 	@Override
@@ -92,5 +97,26 @@ public class WebConfig implements WebMvcConfigurer {
 		return messageSource;
 	}
 	
+	@Bean
+	public LocalSessionFactoryBean sessionFactory() {
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+		sessionFactory.setDataSource(getDataSource());
+		sessionFactory.setPackagesToScan("com.excilys.mantegazza.cdb.persistence.dto");
+		sessionFactory.setHibernateProperties(hibernateProperties());
+		return sessionFactory;
+	}
+	
+	@Bean
+	public PlatformTransactionManager hibernateTransactionManager() {
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+		transactionManager.setSessionFactory(sessionFactory().getObject());
+		return transactionManager;
+	}
+
+	private Properties hibernateProperties() {
+		Properties hibernateProperties = new Properties();
+		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+		return hibernateProperties;
+	} 
 	
 }

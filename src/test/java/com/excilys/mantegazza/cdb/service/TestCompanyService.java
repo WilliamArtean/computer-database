@@ -49,7 +49,7 @@ public class TestCompanyService {
 	
 	@Test
 	public void testGetByID() {
-		when(dao.getByID(companyDB.get(0).getID()))
+		when(dao.getById(companyDB.get(0).getID()))
 		.thenReturn(Optional.of(companyDB.get(0)));
 
 		Optional<Company> company1 = Optional.of(companyDB.get(0));

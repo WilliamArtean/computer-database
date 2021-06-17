@@ -3,9 +3,9 @@ package com.excilys.mantegazza.cdb.model;
 import java.time.LocalDate;
 
 public class Computer {
-	
-	private String name;
+
 	private long id;
+	private String name;
 	private LocalDate introductionDate;
 	private LocalDate discontinuationDate;
 	private Company company;

@@ -7,17 +7,18 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.mantegazza.cdb.model.Computer;
 import com.excilys.mantegazza.cdb.persistence.ComputerDAO;
+import com.excilys.mantegazza.cdb.persistence.IComputerDao;
 
 @Service
 public class ComputerService {
 	
-	private ComputerDAO dao;
+	private IComputerDao dao;
 	
-	public ComputerService(ComputerDAO dao) {
+	public ComputerService(IComputerDao dao) {
 		this.dao = dao;
 	}
 
-	public void setComputerDAO(ComputerDAO dao) {
+	public void setComputerDAO(IComputerDao dao) {
 		this.dao = dao;
 	}
 	
@@ -62,11 +63,12 @@ public class ComputerService {
 	}
 	
 	public void delete(String name) {
-		dao.delete(name);
+		Optional<Computer> computerToDelete = dao.getByName(name);
+		computerToDelete.ifPresent(c -> dao.delete(c.getID()));
 	}
 
 	public ArrayList<Computer> getComputerSelection(int offset, int limit) {
-		return dao.getSimpleSelection(offset, limit);
+		return dao.getSelection(offset, limit);
 	}
 	
 }

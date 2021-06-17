@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.mantegazza.cdb.model.Company;
 import com.excilys.mantegazza.cdb.persistence.CompanyDAO;
+import com.excilys.mantegazza.cdb.persistence.ICompanyDao;
 
 @Service
 public class CompanyService {
 	
-	private CompanyDAO companyDAO;
+	private ICompanyDao companyDAO;
 	
-	public CompanyService(CompanyDAO companyDAO) {
+	public CompanyService(ICompanyDao companyDAO) {
 		this.companyDAO = companyDAO;
 	}
 
@@ -21,7 +22,7 @@ public class CompanyService {
 	 * Set a CompanyDAO from which to get the companies from the database.
 	 * @param companyDAO The CompanyDAO to use with this CompanyService
 	 */
-	public void setCompanyDAO(CompanyDAO companyDAO) {
+	public void setCompanyDAO(ICompanyDao companyDAO) {
 		this.companyDAO = companyDAO;
 	}
 	
@@ -40,7 +41,7 @@ public class CompanyService {
 	 * @return An Optional containing a Company object matching the id, or an empty Optional if the company could not be found
 	 */
 	public Optional<Company> getCompany(long id) {
-		return companyDAO.getByID(id);
+		return companyDAO.getById(id);
 	}
 	
 	/**
@@ -52,7 +53,8 @@ public class CompanyService {
 	}
 	
 	public void delete(String name) {
-		companyDAO.delete(name);
+		Optional<Company> companyToDelete = companyDAO.getByName(name);
+		companyToDelete.ifPresent(c -> companyDAO.delete(c.getID()));
 	}
 	
 }
