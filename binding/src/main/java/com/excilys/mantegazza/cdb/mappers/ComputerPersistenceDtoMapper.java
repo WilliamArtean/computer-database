@@ -15,7 +15,7 @@ import com.excilys.mantegazza.cdb.dto.ComputerPersistenceDto;
 public class ComputerPersistenceDtoMapper {
 
 	private CompanyPersistenceDtoMapper companyDtoMapper;
-	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 
 	public ComputerPersistenceDtoMapper(CompanyPersistenceDtoMapper companyDtoMapper) {

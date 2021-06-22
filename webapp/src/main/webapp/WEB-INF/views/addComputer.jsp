@@ -21,6 +21,10 @@
             <a class="navbar-brand" href="computers"> <fmt:message key="title" /> </a>
             <a href="?lang=en"><fmt:message key="lang.eng" /></a>
 	        <a href="?lang=fr"><fmt:message key="lang.fr" /></a>
+	        
+	        <form:form name='f' action="logout" method="POST">
+	        	<td><input name="logout" type="submit" value="<fmt:message key="button.logout" />" /></td>
+	        </form:form>
         </div>
     </header>
 

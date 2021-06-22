@@ -13,6 +13,15 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
@@ -26,17 +35,19 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.excilys.mantegazza.cdb.UserDetailsServiceImpl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableWebSecurity
 @ComponentScan({ "com.excilys.mantegazza.cdb", "com.excilys.mantegazza.cdb.dao",
 	"com.excilys.mantegazza.cdb.dto", "com.excilys.mantegazza.cdb.mappers",
 	"com.excilys.mantegazza.cdb.validator", "com.excilys.mantegazza.cdb.controller",
 	"com.excilys.mantegazza.cdb.view" })
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -117,6 +128,56 @@ public class WebConfig implements WebMvcConfigurer {
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 		return hibernateProperties;
-	} 
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+			.authenticationProvider(authenticationProvider());
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.authorizeRequests()
+				.antMatchers("/editComputer**", "/addComputer**").hasRole("ADMIN")
+				.antMatchers("/computers**").authenticated()
+				.antMatchers("/login").permitAll()
+			
+			.and()
+			.formLogin()
+				.loginPage("/login")
+				.defaultSuccessUrl("/computers", false)
+				.failureUrl("/login?error=true")		
+			.and()
+			.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login")
+				.deleteCookies("JSESSIONID");
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(this.userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+	
+	@Bean
+	public AuthenticationFailureHandler authenticationFailureHandler() {
+		return new CdbAuthenticationFailureHandler();
+	}
+	
+	@Override
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
 	
 }
