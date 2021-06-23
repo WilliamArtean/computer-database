@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.excilys.mantegazza.cdb.Computer;
 import com.excilys.mantegazza.cdb.ComputerService;
@@ -28,9 +29,9 @@ public class ComputerController {
 	private ComputerService service;
 	private ComputerDTOMapper mapper;
 	
-	public ComputerController(ComputerService service) {
-		super();
+	public ComputerController(ComputerService service, ComputerDTOMapper mapper) {
 		this.service = service;
+		this.mapper = mapper;
 	}
 	
 	
@@ -46,6 +47,8 @@ public class ComputerController {
 		
 		if (computer.isPresent()) {
 			dto = mapper.computerToDTO(computer.get());
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer not found");
 		}
 		
 		return dto;
@@ -64,6 +67,8 @@ public class ComputerController {
 		Preconditions.checkNotNull(dto);
 		if (service.getComputer(id.longValue()).isPresent()) {
 			service.update(id.longValue(), mapper.dtoToComputer(dto));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer to update not found");
 		}
 	}
 	

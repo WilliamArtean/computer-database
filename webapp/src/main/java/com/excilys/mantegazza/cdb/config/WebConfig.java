@@ -139,6 +139,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcCon
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.csrf().disable()
+			
 			.authorizeRequests()
 				.antMatchers("/editComputer**", "/addComputer**").hasRole("ADMIN")
 				.antMatchers("/computers**").authenticated()

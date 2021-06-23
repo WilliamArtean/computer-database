@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -144,9 +143,9 @@ public class ComputerDAO implements IComputerDao {
 					dto.getCompanyDto()));
 			
 			queryFactory.update(qComputerDto)
-			.where(qComputerDto.id.eq(computerId))
-			.set(paths, values)
-			.execute();
+				.where(qComputerDto.id.eq(computerId))
+				.set(paths, values)
+				.execute();
 			
 			entityManager.getTransaction().commit();
 			entityManager.clear();
