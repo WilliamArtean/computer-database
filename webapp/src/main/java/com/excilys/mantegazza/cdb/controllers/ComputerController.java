@@ -1,8 +1,10 @@
 package com.excilys.mantegazza.cdb.controllers;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import com.excilys.mantegazza.cdb.Computer;
 import com.excilys.mantegazza.cdb.ComputerService;
+import com.excilys.mantegazza.cdb.controllers.assemblers.ComputerModelAssembler;
 import com.excilys.mantegazza.cdb.dto.ComputerDto;
 import com.excilys.mantegazza.cdb.mappers.ComputerDTOMapper;
 import com.google.common.base.Preconditions;
@@ -28,30 +33,34 @@ public class ComputerController {
 	
 	private ComputerService service;
 	private ComputerDTOMapper mapper;
+	private ComputerModelAssembler assembler;
 	
-	public ComputerController(ComputerService service, ComputerDTOMapper mapper) {
+	
+	public ComputerController(ComputerService service, ComputerDTOMapper mapper, ComputerModelAssembler assembler) {
 		this.service = service;
 		this.mapper = mapper;
+		this.assembler = assembler;
 	}
-	
-	
+
+
 	@GetMapping
-	public List<ComputerDto> findAll() {
-		return mapper.computersToDTOArray(service.getAllComputers());
+	public CollectionModel<EntityModel<ComputerDto>> findAll() {
+		List<EntityModel<ComputerDto>> computers = mapper.computersToDTOArray(service.getAllComputers()).stream()
+				.map(assembler::toModel)
+				.collect(Collectors.toList());
+		
+		return CollectionModel.of(computers,
+				linkTo(methodOn(ComputerController.class).findAll()).withSelfRel());
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ComputerDto findById(@PathVariable("id") Long id) {
-		ComputerDto dto = null;
-		Optional<Computer> computer = service.getComputer(id.longValue());
+	public EntityModel<ComputerDto> findById(@PathVariable("id") Long id) {
+		Computer computer = service.getComputer(id.longValue())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer not found"));
 		
-		if (computer.isPresent()) {
-			dto = mapper.computerToDTO(computer.get());
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer not found");
-		}
+		ComputerDto dto = mapper.computerToDTO(computer);
 		
-		return dto;
+		return assembler.toModel(dto);
 	}
 	
 	@PostMapping
@@ -63,13 +72,13 @@ public class ComputerController {
 	
 	@PutMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public void update(@PathVariable( "id" ) Long id, @RequestBody ComputerDto dto) {
+	public void update(@PathVariable("id") Long id, @RequestBody ComputerDto dto) {
 		Preconditions.checkNotNull(dto);
-		if (service.getComputer(id.longValue()).isPresent()) {
-			service.update(id.longValue(), mapper.dtoToComputer(dto));
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer to update not found");
-		}
+		
+		service.getComputer(id.longValue())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Computer to update not found"));
+		
+		service.update(id.longValue(), mapper.dtoToComputer(dto));
 	}
 	
 	@DeleteMapping(value = "/{id}")

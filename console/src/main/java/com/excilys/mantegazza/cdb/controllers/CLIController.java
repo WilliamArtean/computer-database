@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -19,8 +22,11 @@ import com.excilys.mantegazza.cdb.ComputerService;
 import com.excilys.mantegazza.cdb.enums.MenuInput;
 import com.excilys.mantegazza.cdb.view.CLIView;
 
+
 @Controller
 public class CLIController {
+	
+	private static final String COMPUTER_URL = "";
 
 	private CLIView view;
 	private CLIComputerMapper computerMapper;
@@ -30,7 +36,8 @@ public class CLIController {
 	private Scanner scanner = new Scanner(System.in);
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private Logger logger = LoggerFactory.getLogger(CLIController.class);
-
+	
+	Client client = ClientBuilder.newClient();
 	
 	public CLIController(CLIView view, CLIComputerMapper computerMapper, ComputerService computerService,
 			CompanyService companyService, PageController pageController) {
