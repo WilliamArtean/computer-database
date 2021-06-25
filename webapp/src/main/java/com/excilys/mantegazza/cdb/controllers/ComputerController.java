@@ -63,14 +63,14 @@ public class ComputerController {
 		return assembler.toModel(dto);
 	}
 	
-	@PostMapping
+	@PostMapping(value = "/add")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void create(@RequestBody ComputerDto dto) {
 		Preconditions.checkNotNull(dto);
 		service.create(mapper.dtoToComputer(dto));
 	}
 	
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/edit/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void update(@PathVariable("id") Long id, @RequestBody ComputerDto dto) {
 		Preconditions.checkNotNull(dto);
@@ -81,7 +81,7 @@ public class ComputerController {
 		service.update(id.longValue(), mapper.dtoToComputer(dto));
 	}
 	
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "/delete/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("id") Long id) {
 		service.delete(id);

@@ -13,15 +13,18 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
@@ -36,6 +39,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.excilys.mantegazza.cdb.UserDetailsServiceImpl;
+import com.excilys.mantegazza.cdb.config.filter.JwtRequestFilter;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -49,6 +53,7 @@ import com.zaxxer.hikari.HikariDataSource;
 	"com.excilys.mantegazza.cdb.view" })
 public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
+	
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
@@ -138,24 +143,14 @@ public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcCon
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.csrf().disable()
+		http.csrf().disable().authorizeRequests()
+	        .mvcMatchers("/computer/add", "/computer/edit/**", "/computer/delete/**").hasRole("ADMIN")	//ajouter /save, /edit...
+	        .mvcMatchers("/computers", "/computer/**", "/company/**").authenticated()
+	        .anyRequest().permitAll()
+	        .and()
+	        	.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
 			
-			.authorizeRequests()
-				.antMatchers("/editComputer**", "/addComputer**").hasRole("ADMIN")
-				.antMatchers("/computers**").authenticated()
-				.antMatchers("/login").permitAll()
-			
-			.and()
-			.formLogin()
-				.loginPage("/login")
-				.defaultSuccessUrl("/computers", false)
-				.failureUrl("/login?error=true")		
-			.and()
-			.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login")
-				.deleteCookies("JSESSIONID");
 	}
 
 	@Bean
@@ -181,5 +176,17 @@ public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcCon
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
     }
+
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+	
+	@Bean
+	public JwtRequestFilter jwtRequestFilter() {
+		return new JwtRequestFilter();
+	}
+	
 	
 }

@@ -1,5 +1,9 @@
 package com.excilys.mantegazza.cdb.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import com.excilys.mantegazza.cdb.Company;
 import com.excilys.mantegazza.cdb.CompanyService;
@@ -42,6 +44,11 @@ public class CompanyController {
 		List<EntityModel<CompanyDto>> companies = mapper.companiesToDTOArray(service.getAllCompanies()).stream()
 				.map(assembler::toModel)
 				.collect(Collectors.toList());
+		final ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(5);
+		list.add(5);
+		list.trimToSize();
+		list.add(5);
 		
 		return CollectionModel.of(companies,
 				linkTo(methodOn(CompanyController.class).findAll()).withSelfRel());
